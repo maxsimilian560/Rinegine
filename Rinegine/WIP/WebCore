@@ -1,0 +1,6 @@
+#pragma once
+#ifdef RINEGINE_WEBCORE
+#error The stable version was already connected.
+#endif
+#define RINEGINE_WWEBCORE
+#include "../../modules-wip/WebCore/include/set.h"
