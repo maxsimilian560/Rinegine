@@ -1,3 +1,0 @@
-#pragma once
-#define RINEGINE_NET
-#include "../modules/Net/include/set.h"

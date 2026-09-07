@@ -1,3 +1,0 @@
-#pragma once
-#define RINEGINE_NEURAL
-#include "../modules/Neural/include/set.h"

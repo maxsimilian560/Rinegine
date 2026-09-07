@@ -2,6 +2,22 @@
 
 ## FIX
 
+> Global refactoring  
+
+- Была исправлена деаллокация через SYS_GET_RAW_MEM для Windows, так как MAP_FAILED не определена в Windows сверка с этой переменной будет только   для сборки на Linux  
+
+- Исправлена деаллокация на Linux и Windows, на Linux не просило указывать размер удаляемой памяти, что приводило к утечкам, а на Windows наоборот   требовало, хотя VirtualFree не требует указания размера.  
+
+- Исправлены RG::K::vecN, добавлен деструктор (т.к. union удаляет деструкторы и конструкторы), и исправлен конструктор.  
+
+- Исправлен поиск файлов на Windows  
+
+- Исправлена сборка на Windows, включение cxxabi перенесён из глобального включения в включения для Linux.  
+
+- Исправлена сборка Windows, ошибка двойного определения FileFinder.  
+
+- Аллокатор теперь правильно деаллоцирует память через SYS_DEL_RAW_MEM  
+
 > List fix  
 
 - Исправлена очистка Rinegine::Kernel::List::clear()
@@ -69,6 +85,18 @@
 - Немного подправлен файл WIP.h в модуле WIP  
 
 ## ADD
+
+> Global refactoring  
+
+- Был добавлен класс RG::K::Console для вывода в терминал. WIP  
+
+- Был добавлен класс потока а так же файловый поток и поток ввода/вывода консоли. WIP  
+
+- Был добавлен класс RG::K::String, аналог std::string  
+
+- Добавлена проверка подключения библиотеки -lrg-kernel, если библиотека не подключена в консоли выведется давольно заметная ошибка  
+
+- Были добавлены в RG::K::Util is_trivially_copyable/is_trivially_copyable_v для проверки тривиального копирования типа, и Hash для генерации хеша   (WIP)
 
 > Significant speedup of the allocator and the classes/structures that use it. Improvement of the RG::K::LIST class
 
@@ -146,6 +174,12 @@ RG::K::Flags::has(var_flag,flag) - проверяет есть ли флаг fla
 
 ## REMOVED
 
+> Global refactoring  
+
+- Была убрана идентификация памяти для уменьшения заголовка и из-за избыточности. Идетнификация сейчас будет по адресу памяти  
+
+- Были удалены мусорные файлы, а скрипты сборки вынесены в отдельную папку  
+
 > Array, Allocator and Early init update
 
 - Удалён устаревший флаг RG_GLOBAL_ARRAY_PUSH_RESERVE_PREDER
@@ -159,6 +193,18 @@ RG::K::Flags::has(var_flag,flag) - проверяет есть ли флаг fla
 - Были веременно отключены src реализации в WIP модуле
 
 ## CHANGED
+
+> Global refactoring  
+
+- Была переработана структура фалов. Теперь есть отдельная папка modules-wip для не готовых модулей и модулей в разработке. Изменения в modules-wip   здесь отображаться не будут
+
+- Изменён стиль форматирования  
+
+- В RG::K::Matrix в циклах все int заменены на size_t  
+
+- Слегка доработан и ускорен класс RG::K::LIST  
+
+- Большинство строк в фреймворке заменены с std::string на RG::K::String.  
 
 > Significant speedup of the allocator and the classes/structures that use it. Improvement of the RG::K::LIST class  
 

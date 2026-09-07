@@ -18,10 +18,18 @@ vendor/*
 # !vendor/src/
 # !vendor/include/
 vendor/include/*
-!vendor/include/stb
-!vendor/src/freetype
-!vendor/src/glfw
 vendor/.venv/
 modules/Kernel/include/kernel old.h
 *.o
 *.obj
+test.exe
+#wip
+docs/
+!vendor/
+!vendor/include/
+!vendor/src/
+vendor/include/*
+vendor/src/*
+!vendor/include/stb/
+!vendor/src/freetype/
+!vendor/src/glfw/

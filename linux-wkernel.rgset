@@ -1,0 +1,28 @@
+//Use [path_to_Rinegine]/Rinegine/bin/rgcmd to compile the library. Rinegine must be on the path.
+//Compilation must take place in the project directory. Example: ~/Rinegine to compile Rinegine library(ies)
+//librg-kernel.a is a Linux library. Compilation hasn't been tested on Windows
+set {
+  mode {
+    clear,
+    static,
+    createlib,
+    console,
+    debug
+  },
+  var {
+    compilator = "clang++",
+    compilator32 = "clang++",
+    source = "modules-wip/Kernel/Kernel.cpp",
+    bit = "64",
+    run = false,
+    // name = "rg-kernel",
+    name = "rg-wip-kernel",
+    flags = " -g -Wglobal-constructors -fno-omit-frame-pointer -std=c++23 -Wall -Wextra -Wpedantic -Wreturn-type -Wuninitialized -Wunused -Wconversion -Wshadow -Wnon-virtual-dtor -Wdelete-non-virtual-dtor -std=c++23  -fno-omit-frame-pointer -Wall -Wextra -Wpedantic -Wconversion -Wshadow -O3 -fno-omit-frame-pointer -fno-limit-debug-info -std=c++23  -Wall -Wextra -Wpedantic -Wconversion -Wshadow -march=native -ffast-math -fno-plt "
+  }
+},
+// add{
+//   var{
+    
+//   }
+// }
+
