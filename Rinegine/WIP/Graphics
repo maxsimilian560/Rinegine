@@ -1,0 +1,6 @@
+#pragma once
+#ifdef RINEGINE_GRAPHICS
+#error The stable version was already connected.
+#endif
+#define RINEGINE_WGRAPHICS
+#include "../../modules-wip/Graphics/include/set.hpp"

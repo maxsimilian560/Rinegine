@@ -1,0 +1,31 @@
+//Use [path_to_Rinegine]/Rinegine/bin/rgcmd to compile the library. Rinegine must be on the path.
+//Compilation must take place in the project directory. Example: ~/Rinegine to compile Rinegine library(ies)
+//librg-kernel.a is a Linux library. Compilation hasn't been tested on Windows
+set {
+  mode {
+    clear,
+    static,
+    createlib,
+    console,
+    debug
+  },
+  var {
+    compilator = "clang++",
+    compilator32 = "clang++",
+    source = "modules/Graphics/Graphics.cpp",
+    bit = "64",
+    run = false,
+    name = "rg-graphic",
+    libs = "-L/usr/local/Rinegine -L/usr/local/Rinegine/vendor/x86_64/linux/lib/glad3_3 ",
+    include = "-I/usr/local/Rinegine -I/usr/local/Rinegine/include -I/usr/local/Rinegine/vendor/include -I/usr/local/Rinegine/vendor/include/freetype2 -I/usr/local/Rinegine/vendor/include/glad/3_3/ -O3 -std=c++23 -Wall -Wextra -Wpedantic -Wreturn-type -Wuninitialized -Wunused -Wconversion -Wshadow -Wnon-virtual-dtor -Wdelete-non-virtual-dtor -Wmissing-declarations -Wundefined-func-template -Wno-unused-command-line-argument -Wglobal-constructors -std=c++23 -g -DRG_DEBUG ",
+    link = " -lrg-kernel ",
+    // flags = " -std=c++23 -g "
+    flags = "-O3 -Wglobal-constructors -DRG_DEBUG -std=c++23 -Wall -Wextra -Wpedantic -Wreturn-type -Wuninitialized -Wunused -Wconversion -Wshadow -Wnon-virtual-dtor -Wdelete-non-virtual-dtor -Wmissing-declarations -Wundefined-func-template -Wl,--unresolved-symbols=report-all -std=c++23 -g  "
+  }
+},
+// add{
+//   var{
+    
+//   }
+// }
+

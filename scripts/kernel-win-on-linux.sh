@@ -1,0 +1,5 @@
+#/usr/bin/sh
+source ~/msvc-wine/wrappers/msvcenv.sh
+clang++ -c modules/Kernel/Kernel.cpp -target x86_64-pc-windows-msvc -Xclang -internal-isystem -Xclang /home/maxsimilian560/.wine/drive_c/msvc/VC/Tools/MSVC/14.51.36231/include -Xclang -internal-isystem -Xclang "/home/maxsimilian560/.wine/drive_c/msvc/Windows Kits/10/Include/10.0.26100.0/ucrt" -Xclang -internal-isystem -Xclang "/home/maxsimilian560/.wine/drive_c/msvc/Windows Kits/10/Include/10.0.26100.0/um" -Xclang -internal-isystem -Xclang "/home/maxsimilian560/.wine/drive_c/msvc/Windows Kits/10/Include/10.0.26100.0/shared"  -g -Wglobal-constructors -fno-omit-frame-pointer -O3 -std=c++23 -Wall -Wextra -Wpedantic -Wreturn-type -Wuninitialized -Wunused -Wconversion -Wshadow -Wnon-virtual-dtor -Wdelete-non-virtual-dtor -O0 -Og -std=c++23  -fno-omit-frame-pointer -Wall -Wextra -Wpedantic -Wconversion -Wshadow -g -O3 -g -fno-omit-frame-pointer -fno-limit-debug-info   -O3 -std=c++23 -DRG_DEBUG -DRG_KERNEL_LINKED_INTERNAL -o Kernel.obj
+llvm-ar rc lib/x86-64/win/librg-kernel.a Kernel.obj
+llvm-ar rc lib/x86-64/win/rg-kernel.lib Kernel.obj

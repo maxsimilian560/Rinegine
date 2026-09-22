@@ -1,0 +1,28 @@
+#pragma once
+#ifdef RINEGINE_SHORT
+#error The stable version was already connected.
+#endif
+#define RINEGINE_WSHORT
+namespace RG = Rinegine;
+namespace Rinegine {
+
+#ifdef RINEGINE_WKERNEL
+  namespace K = Kernel;
+#endif
+#ifdef RINEGINE_WGRAPHICS
+  namespace G = Graphics;
+#endif
+#ifdef RINEGINE_WNEt
+  namespace N = Net;
+#endif
+#ifdef RINEGINE_WNEURAL
+  namespace NN = Neural;
+#endif
+#ifdef RINEGINE_WTOKENIZE
+  namespace T = Tokenize;
+#endif
+#ifdef RINEGINE_WWEBCORE
+  namespace WC = WebCore;
+#endif
+
+};
