@@ -14,7 +14,7 @@ namespace Rinegine {
       // static DebugVars _vars; // [done]
 
     public:
-      static uint8_t Log_Level;
+      static uint8 Log_Level;
       Debug();                                // [done]
       Debug(rg_string);                       // [done]
       static void init();                     // [done]

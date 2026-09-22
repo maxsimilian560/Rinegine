@@ -37,12 +37,12 @@ namespace Rinegine::LinkTest::Kernel {
 #ifndef RinegineLib
 #ifdef RG_UTF
 int wmain(int argc, wchar_t* argv[]) {
-  // Rinegine::LinkTest::Kernel::LinkChecker __link_check;
+  Rinegine::LinkTest::Kernel::LinkChecker __link_check;
   return Rinegine::Kernel::InterPoint(argc, argv, Rinegine::Kernel::rg_main);
 }
 #else
 int main(int argc, char* argv[]) {
-  // Rinegine::LinkTest::Kernel::LinkChecker __link_check;
+  Rinegine::LinkTest::Kernel::LinkChecker __link_check;
   return Rinegine::Kernel::InterPoint(argc, argv, Rinegine::Kernel::rg_main);
 }
 #endif

@@ -8,6 +8,7 @@
 // #ifndef RinegineLib
 // #include "earlyinit.hpp"
 // #endif
+#include "predefine.hpp"
 #include "setup.hpp"
 #include "include.h"
 #include "typedef.h"

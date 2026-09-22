@@ -18,7 +18,7 @@ namespace Rinegine::Kernel {
 #endif
   }
   class Console {
-    static bool IsColorSupport;
+    static inline bool IsColorSupport = 0;
     static inline char m_buffer[4096];
     static inline size_t m_buffer_index = 0;
   public:
@@ -35,7 +35,7 @@ namespace Rinegine::Kernel {
         }
       }
 #endif
-      IsColorSupport = IsColorSupported();
+      Rinegine::Kernel::Console::IsColorSupport = IsColorSupported();
       return 0;
     }
     static int Write(Rinegine::Kernel::String);
