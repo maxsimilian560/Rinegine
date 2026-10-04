@@ -33,8 +33,6 @@ vendor/src/*
 !vendor/src/freetype/
 !vendor/src/glfw/
 
-modules/.git/
-modules-wip/.git/
 
 .*
 !/.git/
@@ -44,7 +42,8 @@ modules-wip/.git/
 !.github
 !.git*
 
+modules/.git
+modules-wip/.git
+
 #wip
 docs/
-
-
