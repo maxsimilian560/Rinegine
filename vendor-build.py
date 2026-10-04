@@ -27,6 +27,8 @@ import platform as sys_platform
 #
 import sysconfig
 
+GLOBAL_AUTO_VAR = 0
+
 def detect_externally_managed() -> bool:
     """
     Детектирует PEP 668 маркер.
@@ -54,7 +56,10 @@ def resolve_python_interpreter() -> Path:
         "Specify custom path to existing venv",
         "Attempt system install (will likely fail)"
     ]
-    idx = interactive_choice("Select Python environment strategy:", options, default=0)
+    if GLOBAL_AUTO_VAR:
+        idx = 0
+    else:
+        idx = interactive_choice("Select Python environment strategy:", options, default=0)
     
     if idx == 2:
         log_warn("Bypassing PEP 668 protection. Expect pip failure if strictly enforced.")
@@ -133,7 +138,10 @@ def evaluate_build_necessity(lib_name: str, src_dir: Path, install_dir: Path) ->
     if hash_file.exists() and hash_file.read_text().strip() == current_hash and not ALWAYS_REBUILD:
         log_info(f"{lib_name} topology is static (hash match).")
         options = ["Yes", "No", "Abort", "Always Yes"]
-        idx = interactive_choice(f"Force rebuild of {lib_name}?", options, default=1)
+        if GLOBAL_AUTO_VAR: 
+            idx = 1
+        else: 
+            idx = interactive_choice(f"Force rebuild of {lib_name}?", options, default=1)
         if idx == 1: # No
             log_info(f"Skipping {lib_name} build sequence.")
             return False
@@ -539,11 +547,14 @@ def glad_generate() -> bool:
         "OpenGL 4.6 (Core)",
     ]
     # Индексы: 0=2.0, 1=3.3, 2=4.6. По умолчанию рекомендуется [2] (4.6 Core)
-    selected_indices = interactive_multi_select(
-        "Select target API profiles for Glad2 (comma-separated):", 
-        options, 
-        [2] 
-    )
+    if GLOBAL_AUTO_VAR:
+        selected_indices = [2]
+    else: 
+        selected_indices = interactive_multi_select(
+            "Select target API profiles for Glad2 (comma-separated):", 
+            options, 
+            [2] 
+        )
     
     targets_map = {
         0: "gl:compatibility=2.0",
@@ -884,11 +895,13 @@ def build_freetype(toolchain: Dict, install_dir: Path, build_dir: Path) -> bool:
 # ============================================================================
 
 def main():
+    global GLOBAL_AUTO_VAR
     parser = argparse.ArgumentParser(description="Build Rinegine vendor submodules")
     parser.add_argument("--target", help="Build only one target (e.g., linux:x86_64)")
     parser.add_argument("--all", action="store_true", help="Build all possible targets (no prompts)")
     parser.add_argument("--list-targets", action="store_true", help="List targets and exit")
     parser.add_argument("--detect-host", action="store_true", help="Show host capabilities and exit")
+    parser.add_argument("--auto", action="store_true", help="Auto build")
     args = parser.parse_args()
 
     host = detect_host()
@@ -922,6 +935,10 @@ def main():
     elif args.all:
         targets_to_build = possible_targets
         log_info(f"Building all {len(targets_to_build)} possible targets")
+    elif args.auto:
+        targets_to_build = [f"{host['os']}:{host['arch']}"]
+        print(f"Host: {host['os']}:{host['arch']}")
+
     else:
         log_step("🎯 Target Selection")
         print(f"\nDetected host: {host['os']} / {host['arch']}")
@@ -931,13 +948,32 @@ def main():
         targets_to_build = [possible_targets[i] for i in selected_indices]
         log_info(f"Selected {len(targets_to_build)} target(s)")
 
-    log_step("🔧 Compiler Selection")
-    compiler_name, cc, cxx = select_compiler(host)
+    if args.auto:
+        compilers = host["compilers"]
+        if not compilers:
+            log_error("No C/C++ compiler found (need clang or gcc in PATH)")
+            sys.exit(1)
+        if len(compilers) == 1:
+            compiler_name, cc, cxx = compilers[0]
+            log_info(f"Using compiler: {name}")
+        for i in compilers:
+            if i[0] == "clang":
+                compiler_name, cc, cxx = i
+                break
+        if not compiler_name:
+            compiler_name, cc, cxx = compilers[0]
+        print(f"Compiler: {compiler_name}, {cc}, {cxx}")
+    else:    
+        log_step("🔧 Compiler Selection")
+        compiler_name, cc, cxx = select_compiler(host)
 
     log_step("🚀 Preparation")
     ensure_git_submodules()
     copy_header_libs()
-
+    if args.auto:
+        GLOBAL_AUTO_VAR = 1
+    else:
+        GLOBAL_AUTO_VAR = 0
     log_step("🎯 Phase 1: Glad Generation")
     if not glad_generate():
         log_error("Glad generation failed. Aborting pipeline.")
