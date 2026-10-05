@@ -17,11 +17,11 @@ namespace Rinegine::Kernel {
     SetConsoleTextAttribute(HandleMainConsole, col);
   }
   //   std::wstring Main::WFolder = L""; // TODO
-  //   std::string Main::AFolder = "";   // TODO
+  //   Rinegine::Kernel::String Main::AFolder = "";   // TODO
   //   rg_string Main::Folder = RG_L ""; // TODO
   // #elif defined(RG_SYS_LINUX)
     // std::wstring Main::WFolder = L""; // TODO
-    // std::string Main::AFolder = "";   // TODO
+    // Rinegine::Kernel::String Main::AFolder = "";   // TODO
     // rg_string Main::Folder = RG_L ""; // TODO
 #endif
   uint8_t Debug::Log_Level = 4;
@@ -55,7 +55,8 @@ namespace Rinegine::Kernel {
     DebugVars_safe_get().INIT = true;
     rg_string pathFol = Main::Folder + pat;
     if (!CreateFolder(pathFol)) {
-      addl(Log::WARNING, RG_L "Log folder missing, folder creation error");
+      // addl("Log folder missing, folder creation error", Log::WARNING);
+      RG_LOG_WARNING("Log folder missing, folder creation error");
       pathFol.clear();
     };
     SysTime::update();
@@ -70,11 +71,13 @@ namespace Rinegine::Kernel {
       RG_L "log_" + SysTime::Year() + RG_L "-" + SysTime::Month() + RG_L "-" +
       SysTime::Day() + RG_L "_" + SysTime::Hour() + RG_L "-" +
       SysTime::Minute() + RG_L "-" + SysTime::Second() + RG_L ".txt";
-    addl(Log::INFO, RG_L "Log path: " + (DebugVars_safe_get().path), true,
-      RGLOCK_DEBUG_INLINE);
-    // path =
-    // pathFol+'/'+"log-yy"+to_string(SystemTime.wYear)+"_mm"+to_string(SystemTime.wMonth)+"_dd"+to_string(SystemTime.wDay)+"[h"+to_string(SystemTime.wHour)+"'m"+to_string(SystemTime.wMinute)+"'s"+to_string(SystemTime.wSecond)+"]"+".txt";
-    // addl(Log::INFO,"Debug pre init end");
+
+    // addl(Log::INFO, RG_L "Log path: " + (DebugVars_safe_get().path), true,
+    //   RGLOCK_DEBUG_INLINE);
+    RG_LOG_LOCK_INFO("Log path: " + (DebugVars_safe_get().path))
+      // path =
+      // pathFol+'/'+"log-yy"+to_string(SystemTime.wYear)+"_mm"+to_string(SystemTime.wMonth)+"_dd"+to_string(SystemTime.wDay)+"[h"+to_string(SystemTime.wHour)+"'m"+to_string(SystemTime.wMinute)+"'s"+to_string(SystemTime.wSecond)+"]"+".txt";
+      // addl(Log::INFO,"Debug pre init end");
   }
   // open log after error setter
   void Debug::open_log_after_error(bool i) {
@@ -89,9 +92,10 @@ namespace Rinegine::Kernel {
       return;
     if (!DebugVars_safe_get().INIT)
       init();
-    DebugVars_safe_get().debug.open(DebugVars_safe_get().path, std::ios::app);
+    DebugVars_safe_get().debug.open(DebugVars_safe_get().path.c_str(), std::ios::app);
     if (!DebugVars_safe_get().debug.is_open()) {
-      addl(Log::WARNING, "Error opening log file", true, RGLOCK_DEBUG_INLINE);
+      // addl(Log::WARNING, "Error opening log file", true, RGLOCK_DEBUG_INLINE);
+      RG_LOG_LOCK_WARNING("Error opening log file");
       return;
     }
 
@@ -104,8 +108,8 @@ namespace Rinegine::Kernel {
     if (!DebugVars_safe_get().INIT)
       init();
     if (DebugVars_safe_get().OPEN_SHELL) {
-      addl(Log::INFO, RG_L "Open: " + (DebugVars_safe_get().path), true,
-        RGLOCK_DEBUG_INLINE);
+      // addl(Log::INFO, RG_L "Open: " + (DebugVars_safe_get().path), true, RGLOCK_DEBUG_INLINE);
+      RG_LOG_LOCK_INFO("Open: " + (DebugVars_safe_get().path));
       update();
       Open(DebugVars_safe_get().path);
     }
@@ -119,7 +123,8 @@ namespace Rinegine::Kernel {
   // destructor
   Debug::~Debug() {
     // rg_cout << "[Fallback debug] Debug has deleted" << std::endl;
-    addl(Log::DEBUG, "Debug was destructed", true, RGLOCK_DEBUG_INLINE);
+    // addl(Log::DEBUG, "Debug was destructed", true, RGLOCK_DEBUG_INLINE);
+    RG_LOG_LOCK_DEBUG("Debug was destructed");
     if (DebugVars_safe_get().textErr.size() > 0)
       update();
   }
@@ -127,8 +132,7 @@ namespace Rinegine::Kernel {
   // ADD
   // special
   /// main add to error buffer
-  void Debug::add(rg_string tex, Log::Types type, bool print,
-    rg_string file, int line) {
+  void Debug::add(rg_string tex, Log::Types type, [[maybe_unused]] bool print, rg_string file, int line) {
     if (!RINEGINE_IS_INIT) {
       // Lock::addl(type, tex, print, file, line);
       throw "Rinegine isn't init\n";
@@ -139,15 +143,10 @@ namespace Rinegine::Kernel {
     if (DebugVars_safe_get().oldType != type)
       text += rg_char(10);
     DebugVars_safe_get().oldType = type;
-    // GetLocalTime(&RG_SystemTime);
-    // string text =
-    // to_string(RG_SystemTime.wHour)+":"+to_string(RG_SystemTime.wMinute)+":"+to_string(RG_SystemTime.wSecond)+"|"+tex;
+
     SysTime::update();
-    text += RG_L "[ " + SysTime::Hour() + RG_L ":" + SysTime::Minute() +
-      RG_L ":" + SysTime::Second() + RG_L "." + SysTime::Milliseconds() +
-      RG_L " | " + file +
-      (((line >= 0) ? (RG_L ":" + rg_to_string_(line)) : RG_L "")) +
-      RG_L " ] " + RG_TYPE_DEBUG_STRING[type] + RG_L "\n\t" + tex;
+    text += "[ " + SysTime::Hour() + ":" + SysTime::Minute() + ":" + SysTime::Second() + "." + SysTime::Milliseconds() + " | " + file + (((line >= 0) ? (line >= 0 ? (Rinegine::Kernel::String(":") + Kernel::to_string(line)) : "") : "")) + " ] " + RG_TYPE_DEBUG_STRING[type] + "\n\t" + tex;
+
 #ifdef RG_DEBUG
     if (print) {
 #ifdef RG_SYS_WINDOWS
@@ -187,14 +186,9 @@ namespace Rinegine::Kernel {
 #else
       SetColorConsole(0);
 #endif
-  }
+    }
 #endif
-    // text += rg_char(10);
-    // rg_cout<<"1[[[\n"<<DebugVars_safe_get().textErr<<"\n]]]1"<<std::endl;//TODO
-    // DEBUG!! rg_cout<<"2[[[\n"<<text<<"\n]]]2"<<std::endl;
-    DebugVars_safe_get().textErr += text;
-    // rg_cout<<"3[[[\n"<<DebugVars_safe_get().textErr<<"\n]]]3"<<std::endl;
-    // rg_cout<<"4[[[\n"<<text<<"\n]]]4"<<std::endl;
+
 #ifdef RG_DEBUG_ALWAYS_UPDATE
     Debug::update();
 #endif
@@ -202,32 +196,28 @@ namespace Rinegine::Kernel {
       Debug::stop();
       __builtin_unreachable();
     }
-}
-  // other
-  /// overloaded to add to error buffer
-  // template <class string1, class string2>
-  // void Debug::add(string1 tex, Log::Types type, bool print, string2 file,
-  //   int line) {
-  //   add(rg_to_string(tex), type, print, rg_to_string(file), line);
-  // }
-  // ADDL
-  // special
-  /// main addl to error buffer
-  void Debug::addl(Log::Types type, rg_string text, bool print,
-    rg_string file, int line) {
+  }
+
+
+  void Debug::addl(String text, Log::Types type, bool print,
+    String file, int line) {
     add(text + rg_char(10), type, print, file, line);
   }
-  // other
-  /// overloaded addl to error buffer
-  // template <class string1, class string2>
-  // void Debug::addl(Log::Types type, string1 text, bool print,
-  //   string2 file, int line) {
-  //   addl(type, rg_to_string(text), print, rg_to_string(file), line);
-  // }
-  /*
-    //------------------------------------------------\\
-                  |GetLastErrorString|
-  */
+
+  void Debug::add(const char* text, Log::Types type, bool print, const char* file, int line) {
+    add(String(text), type, print, String(file), line);
+  }
+
+  void Debug::addl(const char* text, Log::Types type, bool print, const char* file, int line) {
+    addl(String(text), type, print, String(file), line);
+  }
+  void Debug::add(std::string text, Log::Types type, bool print, const char* file, int line) {
+    add(String(text), type, print, String(file), line);
+  }
+
+  void Debug::addl(std::string text, Log::Types type, bool print, const char* file, int line) {
+    addl(String(text), type, print, String(file), line);
+  }
 
 #ifdef RG_SYS_WINDOWS
   rg_string GetLastErrorString(DWORD errorCode) {
@@ -251,7 +241,7 @@ namespace Rinegine::Kernel {
 
     char buffer[1024];
     strerror_r((int)errorCode, buffer, sizeof(buffer));
-    return std::string(buffer);
+    return Rinegine::Kernel::String(buffer);
   }
 #endif
 

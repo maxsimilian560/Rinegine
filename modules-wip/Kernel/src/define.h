@@ -36,7 +36,7 @@
 #define rg_cin std::wcin
 #define rg_string std::wstring
 #define rg_char wchar_t
-#define rg_to_string_(in) to_wstring(in)
+// #define rg_to_string_(in) to_wstring(in)
 #define RG_L L""
 #else
 
@@ -44,9 +44,9 @@
 #define rg_ostrem std::ostream
 
 #define rg_cin std::cin
-#define rg_string std::string
+#define rg_string Rinegine::Kernel::String
 #define rg_char char
-#define rg_to_string_(in) to_string(in)
+// #define rg_to_string_(in) to_string(in)
 #define RG_L
 #endif
 

@@ -5,7 +5,7 @@
 //     Rinegine::Kernel::Array<uchar> lexes;// for different lexeme types: operators, data types, etc.
 //     size_t pos = 0;
 //     size_t _main_size_of_chunk = 8192; // 8 KiB default buffer size for preallocated memory blocks
-//     std::string buffer;// buffer    
+//     Rinegine::Kernel::String buffer;// buffer    
 //     Rinegine::Kernel::Array<Rinegine::Kernel::RG_Map<int>> tokens;//tokens itself
 //   public:
 //     void init(){//do not place into constructor

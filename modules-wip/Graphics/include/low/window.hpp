@@ -22,8 +22,8 @@ namespace Rinegine::Graphics{
     DifferenceWindow monedit, winedit;
     int Vsyn = 1;
     Windows_Render_Types Wtype = W_Windowed;
-    std::string name = "Powered by Rinegine";
-    std::string PathToIcon;
+    Rinegine::Kernel::String name = "Powered by Rinegine";
+    Rinegine::Kernel::String PathToIcon;
     GLFWimage picon;
     bool transparent = false;
     bool CenterCursor = false;
@@ -55,7 +55,7 @@ namespace Rinegine::Graphics{
     inline static GLFWmonitor* DefaultMonitor = nullptr;
     inline static Kernel::vec2<size_t> DefaultVirtualWindowSize = { 2000,2000 };
     inline static Rinegine::BYTE OpenGLVersion = 0;
-    inline static std::string OpenGLVersionSTR = "";
+    inline static Rinegine::Kernel::String OpenGLVersionSTR = "";
     private:
     GLFWvidmode* used_vidmode;
     GLFWmonitor* used_monitor;

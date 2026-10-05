@@ -213,7 +213,7 @@ namespace Rinegine {
         // MEM_TAIL* tail = (MEM_TAIL*)(((char*)ptr) + (align - sizeof(MEM_TAIL)));
         // tail->magic1 = RG_MAG_NUM;
         // tail->magic2 = RG_MAG_NUM;
-        RG_LOG_LOCK_MEM(std::string("ID ") + std::to_string(SYS_MEM_ID) + "; " + std::to_string(align) + " bytes of memory allocated (" + std::to_string(bytes) + " bytes were requested)");
+        RG_LOG_LOCK_MEM(Rinegine::Kernel::String("ID ") + std::to_string(SYS_MEM_ID) + "; " + std::to_string(align) + " bytes of memory allocated (" + std::to_string(bytes) + " bytes were requested)");
         RG_LOG_LOCK_MEM(std::format("ID {:d}| {:d} bytes of memory allocated ({:d} bytes were requested)", SYS_MEM_ID, align, bytes));
         ptr->size = align;
         ptr->magic = RG_MAG_NUM;
@@ -244,7 +244,7 @@ namespace Rinegine {
         // MEM_TAIL* tail = (MEM_TAIL*)(((char*)ptr) + (align - sizeof(MEM_TAIL)));
         // tail->magic1 = RG_MAG_NUM;
         // tail->magic2 = RG_MAG_NUM;
-        // RG_LOG_LOCK_MEM(std::string("ID ") + std::to_string(SYS_MEM_ID) + "; " + std::to_string(align) + " bytes of memory allocated (" + std::to_string(bytes) + " bytes were requested)");
+        // RG_LOG_LOCK_MEM(Rinegine::Kernel::String("ID ") + std::to_string(SYS_MEM_ID) + "; " + std::to_string(align) + " bytes of memory allocated (" + std::to_string(bytes) + " bytes were requested)");
         // RG_LOG_LOCK_MEM(std::format("ID {:d}| {:d} bytes of memory allocated ({:d} bytes were requested)", SYS_MEM_ID, align, bytes));
         // ptr->size = align;
         // ptr->magic = RG_MAG_NUM;
@@ -259,7 +259,7 @@ namespace Rinegine {
     inline void SYS_DEL_MEM(MEM_HEAD*& in) {//[done]
       if (in != nullptr) {
         if (in->magic == RG_MAG_NUM) [[likely]] {
-          RG_LOG_LOCK_MEM(std::string("ID: ") + std::to_string(in->id) + "; try deallocate");
+          RG_LOG_LOCK_MEM(Rinegine::Kernel::String("ID: ") + std::to_string(in->id) + "; try deallocate");
           RG_LOG_LOCK_MEM(std::format("ID: {:d}| try deallocate", in->id));
           if (Rinegine::Kernel::Flags::has(in->flags, MEM_FLAG::IS_USED)) [[likely]] {
             if (!Rinegine::Kernel::Flags::has(in->flags, MEM_FLAG::LOCKED)) [[likely]] {
@@ -315,7 +315,7 @@ namespace Rinegine {
       }
       //       if (in != nullptr) {
       //         if (in->magic == RG_MAG_NUM) [[likely]] {
-      //           RG_LOG_LOCK_MEM(std::string("ID: ") + std::to_string(in->id) + "; try deallocate");
+      //           RG_LOG_LOCK_MEM(Rinegine::Kernel::String("ID: ") + std::to_string(in->id) + "; try deallocate");
       //           RG_LOG_LOCK_MEM(std::format("ID: {:d}| try deallocate", in->id));
       //           if (Rinegine::Kernel::Flags::has(in->flags, MEM_FLAG::IS_USED)) [[likely]] {
       //             if (!Rinegine::Kernel::Flags::has(in->flags, MEM_FLAG::LOCKED)) [[likely]] {
@@ -479,9 +479,9 @@ namespace Rinegine {
         // PoolCache* cache = 
         next_init = now_active_pool;
         // now_pool_cache->used_mem = sizeof(MEM_HEAD) + sizeof(PoolCache);
-        // RG_LOG_LOCK_DEBUG(std::string("Check correct sys allocation: size = ") + std::to_string(now_pool->size) + "; mag is " + ((now_pool->magic == RG_MAG_NUM) ? "correct" : "incorrect"));
+        // RG_LOG_LOCK_DEBUG(Rinegine::Kernel::String("Check correct sys allocation: size = ") + std::to_string(now_pool->size) + "; mag is " + ((now_pool->magic == RG_MAG_NUM) ? "correct" : "incorrect"));
         /*======================*/
-        // RG_LOG_LOCK_DEBUG(std::string("Pool is ") + std::string((pool->magic == RG_MAG_NUM) ? "init" : "doesn't init"));
+        // RG_LOG_LOCK_DEBUG(Rinegine::Kernel::String("Pool is ") + Rinegine::Kernel::String((pool->magic == RG_MAG_NUM) ? "init" : "doesn't init"));
         // if (Rinegine::Kernel::Flags::has(pool->flags, MEM_FLAG::LOCKED)) {
           // RG_LOG_LOCK_WARN(std::format("Pool {:d} mem id {:d} already locked", pool->pool_id, pool->id));
         // }
@@ -557,7 +557,7 @@ namespace Rinegine {
         temp2[i] = (char)i;
       }
       // RG_LOG_LOCK_INFO
-      RG_LOG_LOCK_INFO(std::string("Size: ") + std::to_string((((MEM_HEAD*)temp) - 1)->size) + ", mag num is " + (((((MEM_HEAD*)temp) - 1)->magic == RG_MAG_NUM) ? "correct" : "incorrect"));
+      RG_LOG_LOCK_INFO(Rinegine::Kernel::String("Size: ") + std::to_string((((MEM_HEAD*)temp) - 1)->size) + ", mag num is " + (((((MEM_HEAD*)temp) - 1)->magic == RG_MAG_NUM) ? "correct" : "incorrect"));
       RG_LOG_LOCK_INFO("Next");
       RG_LOG_LOCK_INFO("Try deallocate 40 bytes");
       test.deallocate(temp2);

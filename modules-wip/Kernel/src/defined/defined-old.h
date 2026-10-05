@@ -95,13 +95,7 @@ namespace Rinegine {
   }
 
 
-  // #ifdef RG_UTF
-  //   std::vector<std::wstring>& MainArguments =
-  //     Main::WArguments; 
-  // #else
-  //   std::vector<std::string>& MainArguments =
-  //     Main::AArguments; 
-  // #endif
+
     // INTERPOINT
   namespace Kernel {
 

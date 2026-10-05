@@ -7,17 +7,17 @@ namespace Rinegine::Kernel {
 
 	// wstring_convert<codecvt_utf8_utf16<wchar_t>> converter;
 #ifdef RG_SYS_WINDOWS
-	std::wstring utf8_to_utf16(const std::string& str) {
+	std::wstring utf8_to_utf16(const Rinegine::Kernel::String& str) {
 		if (str.empty()) return {};
 		int size_needed = MultiByteToWideChar(CP_UTF8, 0, str.data(), (int)str.size(), nullptr, 0);
 		std::wstring result(size_needed, 0);
 		MultiByteToWideChar(CP_UTF8, 0, str.data(), (int)str.size(), &result[0], size_needed);
 		return result;
 	}
-	std::string utf16_to_utf8(const std::wstring& wstr) {
+	Rinegine::Kernel::String utf16_to_utf8(const std::wstring& wstr) {
 		if (wstr.empty()) return {};
 		int size_needed = WideCharToMultiByte(CP_UTF8, 0, wstr.data(), (int)wstr.size(), nullptr, 0, nullptr, nullptr);
-		std::string result(size_needed, 0);
+		Rinegine::Kernel::String result(size_needed, 0);
 		WideCharToMultiByte(CP_UTF8, 0, wstr.data(), (int)wstr.size(), &result[0], size_needed, nullptr, nullptr);
 		return result;
 	}
@@ -26,7 +26,7 @@ namespace Rinegine::Kernel {
 
 		//из файла utf8 в строку utf8
 
-	std::wstring WFileLoad(std::string path) {
+	std::wstring WFileLoad(Rinegine::Kernel::String path) {
 		//uint temp = 0;
 		std::wstring text;
 
@@ -34,9 +34,9 @@ namespace Rinegine::Kernel {
 		if (path[0] == '"') {
 			path.erase(0, 1);
 			path.erase(path.size() - 1, 1);
-			rg_cout << std::endl << rg_to_string(path) << std::endl;
+			rg_cout << std::endl << (path.c_str()) << std::endl;
 		}
-		file.open(path);
+		file.open(path.c_str());
 
 		//if(!file.is_open()) return L"File no found";
 		if (!file.is_open()) return RG_ERROR_WSTRING;
@@ -53,19 +53,19 @@ namespace Rinegine::Kernel {
 		return endText;
 	}
 	//из обычного фалйа в обычные строки
-	std::string AFileLoad(std::string path) {
+	Rinegine::Kernel::String AFileLoad(Rinegine::Kernel::String path) {
 		//uint temp = 0;
 
 		if (path[0] == '"') {
 			path.erase(0, 1);
 			path.erase(path.size() - 1, 1);
-			rg_cout << std::endl << rg_to_string(path) << std::endl;
+			rg_cout << std::endl << (path.c_str()) << std::endl;
 		}
-		std::string text;
+		Rinegine::Kernel::String text;
 
 		std::ifstream file;
 
-		file.open(path);
+		file.open(path.c_str());
 
 		if (!file.is_open()) return RG_ERROR_STRING;
 		// char temp = file.get();
@@ -81,9 +81,9 @@ namespace Rinegine::Kernel {
 		file.close();
 		return text;
 	}
-	std::wstring WFileLoad(std::wstring path) {
-		return WFileLoad(Rinegine::Kernel::utf8_encode(path));
-	}
+	// std::wstring WFileLoad(std::wstring path) {
+	// 	return WFileLoad(Rinegine::Kernel::utf8_encode(path));
+	// }
 	// #ifdef RG_UTF
 	// 	template <class in_string>
 	// 	rg_string FileLoad(in_string path) {
@@ -99,15 +99,15 @@ namespace Rinegine::Kernel {
 		// }
 
 
-	bool RG_IsFile(std::string path) {
-		std::ifstream test(path);
+	bool RG_IsFile(Rinegine::Kernel::String path) {
+		std::ifstream test(path.c_str());
 		if (test.is_open()) { test.close(); return true; }
 		else { test.close(); return false; }
 	}
 
 	// namespace Rinegine::Kernel {
-	std::string GetTypePath(std::string path) {
-		std::string out;
+	Rinegine::Kernel::String GetTypePath(Rinegine::Kernel::String path) {
+		Rinegine::Kernel::String out;
 		for (long i = (long)path.size() - 1; i >= 0; i--) {
 			if (path[(size_t)i] == '.') {
 				for (size_t j = (size_t)i + 1; j < path.size(); j++) {
@@ -180,7 +180,7 @@ namespace Rinegine::Kernel {
 	// public:
 	bool FileFinderA::eof() { return _eof; }
 
-	FileFindTypeA* FileFinderA::init(const std::string& path) {
+	FileFindTypeA* FileFinderA::init(const Rinegine::Kernel::String& path) {
 		if (!_init) {
 			hFindFile = FindFirstFileA(path.c_str(), &findFileData);
 			if (hFindFile == INVALID_HANDLE_VALUE) {
@@ -284,7 +284,7 @@ namespace Rinegine::Kernel {
 
 	FileFindType* FileFinder::init(const rg_string& path) {
 		if (!_init) {
-			dir = opendir(std::filesystem::path(path).string().c_str());
+			dir = opendir(std::filesystem::path(path.c_str()).string().c_str());
 			if (!dir) {
 				_eof = true;
 				return nullptr;
@@ -342,7 +342,7 @@ namespace Rinegine::Kernel {
 	// public:
 	bool FileFinderA::eof() { return _eof; }
 
-	FileFindType* FileFinderA::init(const std::string& path) {
+	FileFindType* FileFinderA::init(const Rinegine::Kernel::String& path) {
 		if (!_init) {
 			dir = opendir(path.c_str());
 			if (!dir) {
@@ -405,7 +405,7 @@ namespace Rinegine::Kernel {
 	FileFindType* FileFinderW::init(const std::wstring& path) {
 		if (!_init) {
 			// В Linux нет прямой поддержки wchar_t в opendir, конвертируем wstring в UTF-8 string
-			std::string utf8_path = std::filesystem::path(path).string();
+			Rinegine::Kernel::String utf8_path = std::filesystem::path(path).string();
 			dir = opendir(utf8_path.c_str());
 			if (!dir) {
 				_eof = true;
@@ -473,20 +473,20 @@ namespace Rinegine::Kernel {
 			* Use lamda like [&file_out](char& file_char_in){file_out += file_char_in;}
 			*
 			* @template lamda
-			* @param {std::string} path - The path to the file to be read.
+			* @param {Rinegine::Kernel::String} path - The path to the file to be read.
 			* @param {function(char&): void} func - A lambda function that processes each character in the file. The character is passed by reference, so it can be modified.
 			*
 			* @example
 			* // Example usage:
-			* // Collect all characters from a file into a std::string:
-			* std::string result;
+			* // Collect all characters from a file into a Rinegine::Kernel::String:
+			* Rinegine::Kernel::String result;
 			* Read("example.txt", [&result](char& file_char_in) {
 			*     result += file_char_in;
 			* });
 			*/
 	template<typename lamda>
-	void Read(std::string path, lamda func) {
-		std::ifstream file(path);
+	void Read(Rinegine::Kernel::String path, lamda func) {
+		std::ifstream file(path.c_str());
 		char temp = (char)file.get();
 		while (!file.eof()) {
 			func(temp);
@@ -496,55 +496,14 @@ namespace Rinegine::Kernel {
 		file.close();
 	}
 
-	void Write(std::string path, const std::string& in) {
-		std::ofstream file(path);
+	void Write(Rinegine::Kernel::String path, const Rinegine::Kernel::String& in) {
+		std::ofstream file(path.c_str());
 
 		file << in;
 
 		file.close();
 	}
-	/**
-	 * Reads the contents of a file character by character and applies a provided lambda function
-	 * to each character. This is useful for processing large files without loading the entire
-	 * file into memory.
-	 *
-	 * The lambda function should take a `char&` as its parameter, allowing you to modify the
-	 * character if necessary.
-	 *
-	 * The file is automatically closed after reading.
-	 *
-	 * Use lamda like [&file_out](wchar_t& file_char_in){file_out += file_char_in;}
-	 *
-	 * @example
-	 *
-	 * // Example usage:
-	 * // Collect all characters from a file into a std::string:
-	 * std::string result;
-	 * Read(L"example.txt", [&result](wchar_t& file_char_in) {
-	 *     result += file_char_in;
-	 * });
-	 *
-	 * @param {std::wstring} path - The path to the file to be read.
-	 * @param {function(wchar_t&): void} func - A lambda function that processes each character in the file. The character is passed by reference, so it can be modified.
-	 */
-	template<typename lamdaw>
-	void ReadW(const wchar_t* path, lamdaw func) {
-		std::wifstream file(rg_to_stringa(std::wstring(path)));
-		wchar_t temp = (wchar_t)file.get();
-		while (!file.eof()) {
-			func(temp);
-			temp = (wchar_t)file.get();
-		}
-		file.close();
-	}
 
-	void WriteW(const char* path, const std::wstring& in) {
-		std::wofstream file(path, std::ios::out);
-
-		file << in;
-
-		file.close();
-	}
 	// 	}
 	// }
 }

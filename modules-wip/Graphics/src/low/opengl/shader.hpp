@@ -4,10 +4,10 @@ namespace Rinegine {
   namespace Graphics {
     // Rinegine::Graphics::Shader::Uniform Rinegine::Graphics::Shader::Uniform::GetDefault();
     // RawShader::RawShader() = default;
-    RawShader::RawShader(std::string frag, std::string vert) {
+    RawShader::RawShader(Rinegine::Kernel::String frag, Rinegine::Kernel::String vert) {
       init(frag, vert);
     }
-    void RawShader::init(std::string ifrag, std::string ivert) {
+    void RawShader::init(Rinegine::Kernel::String ifrag, Rinegine::Kernel::String ivert) {
       if (INIT)return;
       INIT = true;
       this->frag = ifrag;
@@ -30,8 +30,8 @@ namespace Rinegine {
         vert = DefaultVertexShader_460;
       }
     }
-    std::string RawShader::get_frag() { return frag; }
-    std::string RawShader::get_vert() { return vert; }
+    Rinegine::Kernel::String RawShader::get_frag() { return frag; }
+    Rinegine::Kernel::String RawShader::get_vert() { return vert; }
     const char* RawShader::get_cfrag() { return frag.c_str(); }
     const char* RawShader::get_cvert() { return vert.c_str(); }
 

@@ -4,15 +4,15 @@ namespace Rinegine {
   namespace Graphics {
     struct OpenGL_Param {
       inline static size_t _gl_ver = 0;
-      inline static std::string _gl_ver_str;
-      inline static std::string _gl_vendor_str;
-      inline static std::string _gl_render_str;
-      inline static std::string _gl_ver_glsl_str;
-      inline static std::string _gl_extens_str;
+      inline static Rinegine::Kernel::String _gl_ver_str;
+      inline static Rinegine::Kernel::String _gl_vendor_str;
+      inline static Rinegine::Kernel::String _gl_render_str;
+      inline static Rinegine::Kernel::String _gl_ver_glsl_str;
+      inline static Rinegine::Kernel::String _gl_extens_str;
     };
     struct RawShader {
-      std::string frag;
-      std::string vert;
+      Rinegine::Kernel::String frag;
+      Rinegine::Kernel::String vert;
       bool INIT = false;
     public:
       static const char DefaultFragmentShader_120[];
@@ -25,11 +25,11 @@ namespace Rinegine {
       static const char DefaultVertexShader_460[];
 
       RawShader() = default;
-      RawShader(std::string frag, std::string vert);
-      void init(std::string frag, std::string vert);
+      RawShader(Rinegine::Kernel::String frag, Rinegine::Kernel::String vert);
+      void init(Rinegine::Kernel::String frag, Rinegine::Kernel::String vert);
       void init();
-      std::string get_frag();
-      std::string get_vert();
+      Rinegine::Kernel::String get_frag();
+      Rinegine::Kernel::String get_vert();
       const char* get_cfrag();
       const char* get_cvert();
 
@@ -65,13 +65,13 @@ namespace Rinegine {
 
 
       char temp[2048];
-      std::string log;
+      Rinegine::Kernel::String log;
       if (!vsok) {
         glGetShaderInfoLog(vshader, 2048, nullptr, temp);
         log += "Vertex shaders error:\n";
         log += temp;
         //DEBUG
-        RG_LOG_LOCK_ERROR("Vertex shader compilation error:\n" + (std::string)temp);
+        RG_LOG_LOCK_ERROR("Vertex shader compilation error:\n" + (Rinegine::Kernel::String)temp);
         //DEBUG
       }
       if (!vpok) {
@@ -79,12 +79,12 @@ namespace Rinegine {
         log += "Vertex program error:\n";
         log += temp;
         //DEBUG
-        std::string tempa = temp;
+        Rinegine::Kernel::String tempa = temp;
         if (tempa.size() <= 0) {
           RG_LOG_LOCK_DEBUG("Vertex shader linking error");
         }
         else {
-          RG_LOG_LOCK_DEBUG("Vertex shader linking error:\n" + (std::string)temp);
+          RG_LOG_LOCK_DEBUG("Vertex shader linking error:\n" + (Rinegine::Kernel::String)temp);
         };
         //DEBUG
       }
@@ -93,7 +93,7 @@ namespace Rinegine {
         log += "Fragment shaders error:\n";
         log += temp;
         //DEBUG
-        RG_LOG_LOCK_DEBUG("Fragment shader compilation error:\n" + (std::string)temp);
+        RG_LOG_LOCK_DEBUG("Fragment shader compilation error:\n" + (Rinegine::Kernel::String)temp);
         //DEBUG
       }
       if (!fpok) {
@@ -101,12 +101,12 @@ namespace Rinegine {
         log += "Fragment program error:\n";
         log += temp;
         //DEBUG
-        std::string tempa = temp;
+        Rinegine::Kernel::String tempa = temp;
         if (tempa.size() <= 0) {
           RG_LOG_LOCK_DEBUG("Fragment shader linking error");
         }
         else {
-          RG_LOG_LOCK_DEBUG("Fragment shader linking error:\n" + (std::string)temp);
+          RG_LOG_LOCK_DEBUG("Fragment shader linking error:\n" + (Rinegine::Kernel::String)temp);
         };
         //DEBUG
       }
