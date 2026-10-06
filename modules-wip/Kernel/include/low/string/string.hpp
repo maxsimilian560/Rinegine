@@ -105,7 +105,7 @@ namespace Rinegine {
       Base_String(const Base_String&) = default;
 
       const type* c_str() const { return m_buffer.data() ? m_buffer.data() : ""; }
-      const type* data() const { return m_buffer.data() ? m_buffer.data() : ""; }
+      type* data() { return m_buffer.data(); }
 
       size_t size() const { return m_buffer.size(); }
       size_t length() const noexcept {

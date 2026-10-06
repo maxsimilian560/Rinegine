@@ -35,8 +35,9 @@ namespace Rinegine::LinkTest::Kernel {
 
 
 #ifndef RinegineLib
-namespace Rinegine::Kernel{}
-int rg_main();
+// namespace Rinegine::Kernel{
+//   int rg_main();
+// }
 int main(int argc, char* argv[]) {
   Rinegine::LinkTest::Kernel::LinkChecker __link_check;
   return Rinegine::Kernel::InterPoint(argc, argv, Rinegine::Kernel::rg_main);
