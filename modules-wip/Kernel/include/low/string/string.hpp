@@ -267,7 +267,7 @@ namespace Rinegine {
       return result;
     }
 
-    typedef Base_String<char> String;
+    // typedef Base_String<char> String;
     
     
     

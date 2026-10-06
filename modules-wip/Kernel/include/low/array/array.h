@@ -157,7 +157,7 @@ namespace Rinegine {
         return reinterpret_cast<const type*>(RawArray::data) + RawArray::size;
       }
 
-      type& back() noexcept { return *(RawArray::data + RawArray::size - 1); }
+      type& back() noexcept { return *(type*)(RawArray::data + RawArray::size - 1); }
       const type& back() const noexcept {
         return *(RawArray::data + RawArray::size - 1);
       }

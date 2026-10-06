@@ -48,36 +48,36 @@ namespace Rinegine {
         size_t count = 0;
         size_t i = 0;
 
-        
+
 #if defined(__SSE4_1__)
-    
-    
+
+
         while ((process_until_zero || (i + 16 <= input_len)) && (!wc_str || static_cast<int>(count + 16) <= cch_wc)) {
           if (process_until_zero && mb_str[i] == '\0') break;
 
-          
+
           __m128i chunk = _mm_loadu_si128(reinterpret_cast<const __m128i*>(&mb_str[i]));
 
-          
+
           int mask = _mm_movemask_epi8(chunk);
 
-          
+
           if (process_until_zero) {
             __m128i zero_cmp = _mm_cmpeq_epi8(chunk, _mm_setzero_si128());
             int zero_mask = _mm_movemask_epi8(zero_cmp);
             if (zero_mask != 0) {
-              break; 
+              break;
             }
           }
 
           if (mask == 0) {
-            
+
             if (wc_str) {
-              
+
               __m128i low = _mm_cvtepu8_epi16(chunk);
               _mm_storeu_si128(reinterpret_cast<__m128i*>(&wc_str[count]), low);
 
-              
+
               __m128i high = _mm_cvtepu8_epi16(_mm_srli_si128(chunk, 8));
               _mm_storeu_si128(reinterpret_cast<__m128i*>(&wc_str[count + 8]), high);
             }
@@ -85,12 +85,12 @@ namespace Rinegine {
             count += 16;
           }
           else {
-            break; 
+            break;
           }
         }
 #endif
 
-        
+
         uint32_t state = 0;
         uint32_t cp = 0;
 
@@ -129,7 +129,7 @@ namespace Rinegine {
             }
           }
           else if (state == 1) {
-            state = 0; 
+            state = 0;
           }
         }
 
@@ -144,7 +144,7 @@ namespace Rinegine {
 
 
       static int wide_char_to_multi_byte(
-        unsigned int code_page,[[maybe_unused]] unsigned long flags,
+        unsigned int code_page, [[maybe_unused]] unsigned long flags,
         const char16_t* wc_str, int cch_wc,
         char* mb_str, int cb_mb,
         const char* default_char, int* used_default_char
@@ -158,37 +158,37 @@ namespace Rinegine {
         size_t count = 0;
         size_t i = 0;
 
-        
+
 #if defined(__SSE4_1__)
         while ((process_until_zero || (i + 16 <= input_len)) && (!mb_str || static_cast<int>(count + 16) <= cb_mb)) {
           if (process_until_zero && wc_str[i] == 0) break;
 
-          
+
           __m128i chunk1 = _mm_loadu_si128(reinterpret_cast<const __m128i*>(&wc_str[i]));
           __m128i chunk2 = _mm_loadu_si128(reinterpret_cast<const __m128i*>(&wc_str[i + 8]));
 
-          
-          
+
+
           __m128i packed = _mm_packus_epi16(chunk1, chunk2);
 
-          
+
           __m128i ascii_mask1 = _mm_cmpeq_epi16(_mm_andnot_si128(_mm_set1_epi16(0x00FF), chunk1), _mm_setzero_si128());
           __m128i ascii_mask2 = _mm_cmpeq_epi16(_mm_andnot_si128(_mm_set1_epi16(0x00FF), chunk2), _mm_setzero_si128());
 
           int m1 = _mm_movemask_epi8(ascii_mask1);
           int m2 = _mm_movemask_epi8(ascii_mask2);
 
-          
+
           if (process_until_zero) {
             __m128i zero1 = _mm_cmpeq_epi16(chunk1, _mm_setzero_si128());
             __m128i zero2 = _mm_cmpeq_epi16(chunk2, _mm_setzero_si128());
             if (_mm_movemask_epi8(zero1) != 0 || _mm_movemask_epi8(zero2) != 0) {
-              break; 
+              break;
             }
           }
 
           if (m1 == 0xFFFF && m2 == 0xFFFF) {
-            
+
             if (mb_str) {
               _mm_storeu_si128(reinterpret_cast<__m128i*>(&mb_str[count]), packed);
             }
@@ -196,12 +196,12 @@ namespace Rinegine {
             count += 16;
           }
           else {
-            break; 
+            break;
           }
         }
 #endif
 
-        
+
         while (true) {
           if (process_until_zero) {
             if (wc_str[i] == 0) break;
@@ -262,14 +262,14 @@ namespace Rinegine {
       }
 
 #ifdef RG_SYS_WINDOWS
-      auto* base_utf8_to_utf16 = MultiByteToWideChar;
-      auto* base_utf16_to_utf8 = WideCharToMultiByte;
+      inline auto* base_utf8_to_utf16 = MultiByteToWideChar;
+      inline auto* base_utf16_to_utf8 = WideCharToMultiByte;
 #else
-      auto* base_utf8_to_utf16 = multi_byte_to_wide_char;
-      auto* base_utf16_to_utf8 = wide_char_to_multi_byte;
+      inline auto* base_utf8_to_utf16 = multi_byte_to_wide_char;
+      inline auto* base_utf16_to_utf8 = wide_char_to_multi_byte;
 #endif
       template <con_string Tin, con_wstring Tout>
-      static Tout utf8_to_utf16(const Tin& utf8_str) {
+      Tout utf8_to_utf16(const Tin& utf8_str) {
         if (utf8_str.empty()) {
           return Tout();
         }

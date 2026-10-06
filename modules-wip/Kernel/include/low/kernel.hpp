@@ -288,18 +288,18 @@ namespace Rinegine {
       static RG_ENCODE_VALUE get(Rinegine::Kernel::String);
     };
     
-#ifdef RG_SYS_WINDOWS
-    std::wstring utf8_to_utf16(const Rinegine::Kernel::String& str);
-    Rinegine::Kernel::String utf16_to_utf8(const std::wstring& wstr);
-#endif
-    Rinegine::Kernel::String AFileLoad(Rinegine::Kernel::String path);
-    std::wstring WFileLoad(Rinegine::Kernel::String path);
-    std::wstring WFileLoad(std::wstring path);
+// #ifdef RG_SYS_WINDOWS
+//     std::wstring utf8_to_utf16(const Rinegine::Kernel::String& str);
+//     Rinegine::Kernel::String utf16_to_utf8(const std::wstring& wstr);
+// #endif
+    Rinegine::Kernel::String FileLoad(Rinegine::Kernel::String path);
+    // std::wstring WFileLoad(Rinegine::Kernel::String path);
+    // std::wstring WFileLoad(std::wstring path);
 
-    template <class in_string>
-    rg_string FileLoad(in_string path) {
-      return AFileLoad(rg_to_stringa(path));
-    }
+    // template <class in_string>
+    // rg_string FileLoad(in_string path) {
+    //   return AFileLoad(rg_to_stringa(path));
+    // }
     
         
     

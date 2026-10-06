@@ -7,55 +7,24 @@ namespace Rinegine::Kernel {
 
 	
 #ifdef RG_SYS_WINDOWS
-	std::wstring utf8_to_utf16(const Rinegine::Kernel::String& str) {
-		if (str.empty()) return {};
-		int size_needed = MultiByteToWideChar(CP_UTF8, 0, str.data(), (int)str.size(), nullptr, 0);
-		std::wstring result(size_needed, 0);
-		MultiByteToWideChar(CP_UTF8, 0, str.data(), (int)str.size(), &result[0], size_needed);
-		return result;
-	}
-	Rinegine::Kernel::String utf16_to_utf8(const std::wstring& wstr) {
-		if (wstr.empty()) return {};
-		int size_needed = WideCharToMultiByte(CP_UTF8, 0, wstr.data(), (int)wstr.size(), nullptr, 0, nullptr, nullptr);
-		Rinegine::Kernel::String result(size_needed, 0);
-		WideCharToMultiByte(CP_UTF8, 0, wstr.data(), (int)wstr.size(), &result[0], size_needed, nullptr, nullptr);
-		return result;
-	}
+	// std::wstring utf8_to_utf16(const Rinegine::Kernel::String& str) {
+	// 	if (str.empty()) return {};
+	// 	int size_needed = MultiByteToWideChar(CP_UTF8, 0, str.data(), (int)str.size(), nullptr, 0);
+	// 	std::wstring result(size_needed, 0);
+	// 	MultiByteToWideChar(CP_UTF8, 0, str.data(), (int)str.size(), &result[0], size_needed);
+	// 	return result;
+	// }
+	// Rinegine::Kernel::String utf16_to_utf8(const std::wstring& wstr) {
+	// 	if (wstr.empty()) return {};
+	// 	int size_needed = WideCharToMultiByte(CP_UTF8, 0, wstr.data(), (int)wstr.size(), nullptr, 0, nullptr, nullptr);
+	// 	Rinegine::Kernel::String result(size_needed, 0);
+	// 	WideCharToMultiByte(CP_UTF8, 0, wstr.data(), (int)wstr.size(), &result[0], size_needed, nullptr, nullptr);
+	// 	return result;
+	// }
 #endif
-	// namespace Rinegine::Kernel {
-
-		
-
-	std::wstring WFileLoad(Rinegine::Kernel::String path) {
-		
-		std::wstring text;
-
-		std::ifstream file;
-		if (path[0] == '"') {
-			path.erase(0, 1);
-			path.erase(path.size() - 1, 1);
-			rg_cout << std::endl << (path.c_str()) << std::endl;
-		}
-		file.open(path.c_str());
-
-		
-		if (!file.is_open()) return RG_ERROR_WSTRING;
-
-		wchar_t temp = file.get();
-		while (!file.eof()) {
-			text += temp;
-			temp = file.get();
-			
-		}
-		
-		std::wstring endText = text;
-		file.close();
-		return endText;
-	}
 	
-	Rinegine::Kernel::String AFileLoad(Rinegine::Kernel::String path) {
-		
-
+	Rinegine::Kernel::String FileLoad(Rinegine::Kernel::String path) {
+	
 		if (path[0] == '"') {
 			path.erase(0, 1);
 			path.erase(path.size() - 1, 1);
@@ -70,10 +39,6 @@ namespace Rinegine::Kernel {
 		if (!file.is_open()) return RG_ERROR_STRING;
 		
 		
-		
-		
-		
-		
 		int ch;
 		while ((ch = file.get()) != EOF) {
 			text += (char)(ch);
@@ -81,17 +46,6 @@ namespace Rinegine::Kernel {
 		file.close();
 		return text;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	
@@ -122,13 +76,8 @@ namespace Rinegine::Kernel {
 
 
 #ifdef RG_SYS_WINDOWS
-	
-	
-	
-	
-	
 
-	
+	//[TODO this is probably doesn't work]
 	bool FileFinder::eof() { return _eof; }
 
 	FileFindType* FileFinder::init(const rg_string& path) {
@@ -173,14 +122,11 @@ namespace Rinegine::Kernel {
 	
 	
 	
-	
-	
-	
 
-	
-	bool FileFinderA::eof() { return _eof; }
+	/* 
+	bool FileFinder::eof() { return _eof; }
 
-	FileFindTypeA* FileFinderA::init(const Rinegine::Kernel::String& path) {
+	FileFindType* FileFinder::init(const Rinegine::Kernel::String& path) {
 		if (!_init) {
 			hFindFile = FindFirstFileA(path.c_str(), &findFileData);
 			if (hFindFile == INVALID_HANDLE_VALUE) {
@@ -196,7 +142,7 @@ namespace Rinegine::Kernel {
 		return &findFileData;
 	}
 
-	FileFindTypeA* FileFinderA::next() {
+	FileFindType* FileFinder::next() {
 		if (!_init) {
 			RG_LOG_LOCK_ERROR("FileFinder is not initialized");
 			return nullptr;
@@ -208,7 +154,7 @@ namespace Rinegine::Kernel {
 		return &findFileData;
 	}
 
-	void FileFinderA::close() {
+	void FileFinder::close() {
 		if (_init) {
 			FindClose(hFindFile);
 			_init = false;
@@ -216,60 +162,11 @@ namespace Rinegine::Kernel {
 		}
 	}
 
-	FileFinderA::~FileFinderA() {
+	FileFinder::~FileFinderA() {
 		close();
 	}
 	
-
-	
-		
-		
-		
-		
-
-	
-	bool FileFinderW::eof() { return _eof; }
-
-	FileFindTypeW* FileFinderW::init(const std::wstring& path) {
-		if (!_init) {
-			hFindFile = FindFirstFileW(path.c_str(), &findFileData);
-			if (hFindFile == INVALID_HANDLE_VALUE) {
-				_eof = true;
-				return nullptr;
-			}
-			_init = true;
-		}
-		else {
-			RG_LOG_LOCK_ERROR("FileFinder is already initialized");
-			if (!FindNextFileW(hFindFile, &findFileData)) { _eof = true; return nullptr; }
-		}
-		return &findFileData;
-	}
-
-	FileFindTypeW* FileFinderW::next() {
-		if (!_init) {
-			RG_LOG_LOCK_ERROR("FileFinder is not initialized");
-			return nullptr;
-		}
-		if (!FindNextFileW(hFindFile, &findFileData)) {
-			_eof = true;
-			return nullptr;
-		}
-		return &findFileData;
-	}
-
-	void FileFinderW::close() {
-		if (_init) {
-			FindClose(hFindFile);
-			_init = false;
-			_eof = false;
-		}
-	}
-
-	FileFinderW::~FileFinderW() {
-		close();
-	}
-	
+*/
 
 #elif defined(RG_SYS_LINUX)
 

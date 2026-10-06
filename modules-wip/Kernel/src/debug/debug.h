@@ -99,7 +99,7 @@ namespace Rinegine::Kernel {
       return;
     }
 
-    DebugVars_safe_get().debug << to_stringa(DebugVars_safe_get().textErr);
+    DebugVars_safe_get().debug << DebugVars_safe_get().textErr;
     DebugVars_safe_get().debug.close();
     DebugVars_safe_get().textErr.clear();
   }

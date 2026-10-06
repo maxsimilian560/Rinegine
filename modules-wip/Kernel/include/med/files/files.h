@@ -4,10 +4,10 @@
 namespace Rinegine::Kernel {
 
 	
-#ifdef RG_SYS_WINDOWS
-	std::wstring utf8_to_utf16(const Rinegine::Kernel::String& str);
-	Rinegine::Kernel::String utf16_to_utf8(const std::wstring& wstr);
-#endif
+// #ifdef RG_SYS_WINDOWS
+// 	std::wstring utf8_to_utf16(const Rinegine::Kernel::String& str);
+// 	Rinegine::Kernel::String utf16_to_utf8(const std::wstring& wstr);
+// #endif
 	// namespace Rinegine::Kernel {
 
 		
