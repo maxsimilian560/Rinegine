@@ -1,0 +1,513 @@
+#pragma once
+
+namespace Rinegine {
+  
+  int Kernel::RG_CMD(Rinegine::Kernel::String command, bool print) {
+    RG_LOG_LOCK_INFO("Command run: \"" + rg_to_string(command) + "\"", print);
+    return system(command.c_str());
+    (void)print;
+  }
+  
+  bool RINEGINE_IS_INIT = true;
+  int RG_ERROR_PROGRAM = 0;
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  int TryCatch(std::function<void()> func) {
+    try {
+      func();
+      return 0;
+    }
+    catch (Rinegine::Error error) {
+      RG_ERROR_PROGRAM = error;
+      if (error != Error::RG_OWN_ERROR) {
+        Kernel::Debug::no_close();
+        RG_LOG_LOCK_CRITICAL(RG_L "Code = " + rg_to_string_(int(error)) +
+          RG_L ". " + Error::Code[error]);
+        RG_LOG_LOCK_INFO(RG_L "Open: " + (Kernel::Debug::log_path()));
+        Kernel::Debug::update();
+        Kernel::RG_CMD(Kernel::Debug::log_path().c_str());
+      }
+      RG_LOG_LOCK_DEBUG("Exit code: " + Kernel::to_string(error));
+      return error;
+      exit(error);
+    }
+    catch (std::exception& e) {
+      RG_LOG_LOCK_CRITICAL("Standart error: " + Rinegine::Kernel::String(e.what()));
+      RG_LOG_LOCK_INFO(RG_L "Open: " + (Kernel::Debug::log_path()));
+      Kernel::Debug::update();
+      Kernel::RG_CMD(Kernel::Debug::log_path().c_str());
+      return 1;
+    }
+    catch (Rinegine::Kernel::String error) {
+      RG_LOG_LOCK_CRITICAL("String error: " + error);
+      RG_LOG_LOCK_INFO(RG_L "Open: " + (Kernel::Debug::log_path()));
+      Kernel::Debug::update();
+      Kernel::RG_CMD(Kernel::Debug::log_path().c_str());
+      return 1;
+    }
+    
+    
+    
+    
+    
+    
+    
+    catch (char* error) {
+      RG_LOG_LOCK_CRITICAL("char error: " + Rinegine::Kernel::String(error));
+      RG_LOG_LOCK_INFO(RG_L "Open: " + (Kernel::Debug::log_path()));
+      Kernel::Debug::update();
+      Kernel::RG_CMD(Kernel::Debug::log_path().c_str());
+      return 1;
+    }
+    
+    
+    
+    
+    
+    
+    
+    catch (...) {
+      RG_LOG_LOCK_CRITICAL("Unknown error");
+      return -1;
+    }
+  }
+
+
+  
+  
+  
+  
+  
+  
+  
+    
+  namespace Kernel {
+    
+    
+    int InterPoint(int argc, char** argv, int (*own_main)()) {
+#if defined(RG_SYS_WINDOWS) && defined(RG_UTF)
+      _setmode(_fileno(stdout), _O_U16TEXT);
+      _setmode(_fileno(stdin), _O_U16TEXT);
+      _setmode(_fileno(stderr), _O_U16TEXT);
+#endif
+      Rinegine::Kernel::Allocator::GetDefault().init();
+      int exit_code = 0;
+      RG_CATCH_ERROR{
+        (void)argc;
+        (void)argv;
+
+        #ifdef RG_SYS_WINDOWS
+        Main::Arguments.resize((size_t)argc + 1);
+        for (int i = 1; i <= argc; i++) {
+          Main::Arguments[i] = argv[i - 1];
+        }
+        char onearg[MAX_PATH];
+        GetModuleFileNameA(NULL, onearg, MAX_PATH);//[TODO!]
+        Main::Arguments[0] = onearg;
+        #else
+        Main::Arguments.resize((size_t)argc);
+        for (int i = 0; i < argc; i++) {
+          Main::Arguments[(size_t)i] = argv[i];
+        }
+
+        #endif
+        if (Main::Arguments.size() > 0)
+          Main::InitFolder(Main::Arguments[0]);
+        exit_code = own_main();
+      }
+      RG_ERROR_LOG;
+      return exit_code;
+    };
+
+
+  }
+  
+#ifdef RG_SYS_WINDOWS
+  std::wstring Kernel::utf8_decode(const std::string& str) {
+    if (str.empty())
+      return std::wstring();
+    int SizeWstr =
+      MultiByteToWideChar(CP_UTF8, 0, &str[0], (int)str.size(), NULL, 0);
+    std::wstring str_to_wstr(SizeWstr, 0);
+    MultiByteToWideChar(CP_UTF8, 0, &str[0], (int)str.size(), &str_to_wstr[0],
+      SizeWstr);
+    return str_to_wstr;
+  }
+  std::string Kernel::utf8_encode(const std::wstring& wstr) {
+    if (wstr.empty())
+      return std::string();
+    int size_needed = WideCharToMultiByte(CP_UTF8, 0, &wstr[0], (int)wstr.size(),
+      NULL, 0, NULL, NULL);
+    std::string strTo(size_needed, 0);
+    WideCharToMultiByte(CP_UTF8, 0, &wstr[0], (int)wstr.size(), &strTo[0],
+      size_needed, NULL, NULL);
+    return strTo;
+  }
+
+#else
+
+#endif //! DECODE ENCODE UNICODE
+  
+
+  //! rg_to_string
+  
+  int RG_KEYS[350];
+  int RG_KEYS_TEST[350];
+  int RG_MOUSE[10] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+
+  int Kernel::KeyIs(int in, bool sticky = 1) {
+    int out = RG_KEYS[in];
+    if (sticky) {
+      RG_KEYS[in] = false;
+    }
+    return out;
+  }
+  int Kernel::KeyIsPress(int in, bool sticky = 1) {
+    int out = (RG_KEYS[in] == 1);
+    if (sticky) {
+      RG_KEYS[in] = false;
+    }
+
+    return out;
+  }
+
+  int Kernel::TestKeyIs(int in, bool sticky = 1) {
+    int out = RG_KEYS_TEST[in];
+    if (sticky) {
+      RG_KEYS_TEST[in]--;
+    }
+    return out;
+  }
+  //! Keys
+  
+#ifdef RG_SYS_WINDOWS
+  struct Kernel::SysTime::SysTimeVar {
+    SYSTEMTIME SystemTime;
+  };
+  Kernel::SysTime::SysTimeVar Kernel::SysTime::_vars;
+  void Kernel::SysTime::update() {
+    GetLocalTime(&_vars.SystemTime);
+  }
+  
+  Rinegine::Kernel::String Kernel::SysTime::Year() {
+    return Kernel::to_string(_vars.SystemTime.wYear);
+  }
+  Rinegine::Kernel::String Kernel::SysTime::Month() {
+    Rinegine::Kernel::String temp = Kernel::to_string(_vars.SystemTime.wMonth);
+    return ((temp.size() == 1 ? "0" : "") + temp);
+  }
+  Rinegine::Kernel::String Kernel::SysTime::DayOfWeek() {
+    return Kernel::to_string(_vars.SystemTime.wDayOfWeek);
+  }
+  Rinegine::Kernel::String Kernel::SysTime::Day() {
+    Rinegine::Kernel::String temp = Kernel::to_string(_vars.SystemTime.wDay);
+    return ((temp.size() == 1 ? "0" : "") + temp);
+  }
+  Rinegine::Kernel::String Kernel::SysTime::Hour() {
+    Rinegine::Kernel::String temp = Kernel::to_string(_vars.SystemTime.wHour);
+    return Rinegine::Kernel::String((temp.length() == 1 ? "0" : "") + temp);
+  }
+  Rinegine::Kernel::String Kernel::SysTime::Minute() {
+    Rinegine::Kernel::String temp = Kernel::to_string(_vars.SystemTime.wMinute);
+    return ((temp.size() == 1 ? "0" : "") + temp);
+  }
+  Rinegine::Kernel::String Kernel::SysTime::Second() {
+    Rinegine::Kernel::String temp = Kernel::to_string(_vars.SystemTime.wSecond);
+    return ((temp.size() == 1 ? "0" : "") + temp);
+  }
+  Rinegine::Kernel::String Kernel::SysTime::Milliseconds() {
+    Rinegine::Kernel::String temp = Kernel::to_string(_vars.SystemTime.wMilliseconds);
+    return ((temp.size() == 1 ? "000"
+      : temp.size() == 2 ? "00"
+      : temp.size() == 3 ? "0"
+      : "") +
+      temp);
+  }
+#else
+  struct Kernel::SysTime::SysTimeVar {
+    std::chrono::system_clock::time_point SystemTime;
+  };
+  Kernel::SysTime::SysTimeVar Kernel::SysTime::_vars;
+  void Kernel::SysTime::update() {
+    _vars.SystemTime = std::chrono::system_clock::now();
+  }
+
+  Rinegine::Kernel::String Kernel::SysTime::Year() {
+    time_t now_c = std::chrono::system_clock::to_time_t(_vars.SystemTime);
+    tm* now_tm = localtime(&now_c);
+    return Kernel::to_string(1900 + now_tm->tm_year);
+  }
+
+  Rinegine::Kernel::String Kernel::SysTime::Month() {
+    time_t now_c = std::chrono::system_clock::to_time_t(_vars.SystemTime);
+    tm* now_tm = localtime(&now_c);
+    Rinegine::Kernel::String temp = Kernel::to_string(1 + now_tm->tm_mon);
+    return (temp.size() == 1 ? "0" : "") + temp;
+  }
+
+  Rinegine::Kernel::String Kernel::SysTime::DayOfWeek() {
+    time_t now_c = std::chrono::system_clock::to_time_t(_vars.SystemTime);
+    tm* now_tm = localtime(&now_c);
+    return Kernel::to_string(now_tm->tm_wday);
+  }
+
+  Rinegine::Kernel::String Kernel::SysTime::Day() {
+    time_t now_c = std::chrono::system_clock::to_time_t(_vars.SystemTime);
+    tm* now_tm = localtime(&now_c);
+    Rinegine::Kernel::String temp = Kernel::to_string(now_tm->tm_mday);
+    return (temp.size() == 1 ? "0" : "") + temp;
+  }
+
+  Rinegine::Kernel::String Kernel::SysTime::Hour() {
+    time_t now_c = std::chrono::system_clock::to_time_t(_vars.SystemTime);
+    tm* now_tm = localtime(&now_c);
+    Rinegine::Kernel::String temp = Kernel::to_string(now_tm->tm_hour);
+    return (temp.size() == 1 ? "0" : "") + temp;
+  }
+
+  Rinegine::Kernel::String Kernel::SysTime::Minute() {
+    time_t now_c = std::chrono::system_clock::to_time_t(_vars.SystemTime);
+    tm* now_tm = localtime(&now_c);
+    Rinegine::Kernel::String temp = Kernel::to_string(now_tm->tm_min);
+    return (temp.size() == 1 ? "0" : "") + temp;
+  }
+
+  Rinegine::Kernel::String Kernel::SysTime::Second() {
+    time_t now_c = std::chrono::system_clock::to_time_t(_vars.SystemTime);
+    tm* now_tm = localtime(&now_c);
+    Rinegine::Kernel::String temp = Kernel::to_string(now_tm->tm_sec);
+    return (temp.size() == 1 ? "0" : "") + temp;
+  }
+
+  Rinegine::Kernel::String Kernel::SysTime::Milliseconds() {
+    auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(
+      _vars.SystemTime.time_since_epoch()) %
+      1000;
+    Rinegine::Kernel::String temp = Kernel::to_string(ms.count());
+    return Rinegine::Kernel::String(3 - temp.size(), '0') + temp;
+  }
+#endif
+
+  
+
+
+
+#if defined(RG_SYS_LINUX)
+  void Kernel::SetColorConsole(WORD col) {
+    rg_cout << "\x1b[" + Kernel::to_string(col) + "m";
+  }
+  void Kernel::SetTrueColorConsole(Kernel::vec3<uint8_t> in,
+    Rinegine::CONSOLE_COLOR type) {
+    if (type == Rinegine::CONSOLE_COLOR::C_BACKGROUND)
+      rg_cout << "\x1b[48;2;" << Kernel::to_string(in.r) << ";"
+      << Kernel::to_string(in.g) << ";" << Kernel::to_string(in.b) << "m";
+    else
+      rg_cout << "\x1b[38;2;" << Kernel::to_string(in.r) << ";"
+      << Kernel::to_string(in.g) << ";" << Kernel::to_string(in.b) << "m";
+  }
+#else 
+  void Kernel::SetColorConsole(WORD col) {
+    rg_cout << "\nTrying to change color\nError! MacOS (and other OS other than Windows, Linux and Android) is not supported\n";
+    (void)col;
+  }
+#endif
+  //! SetColorCMD
+  
+#ifdef RG_SYS_WINDOWS
+  bool Kernel::isSubstringAt(const char& a, const Rinegine::Kernel::String& b) {
+    for (size_t i = 0; i < b.size(); ++i) {
+      if ((&a)[i] != b[i] || (&a)[i] == '\0') {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  bool Kernel::isSubstringAt(const wchar_t& a, const std::wstring& b) {
+    for (size_t i = 0; i < b.size(); ++i) {
+      if ((&a)[i] != b[i] || (&a)[i] == '\0') {
+        return false;
+      }
+    }
+    return true;
+  }
+  bool Kernel::isSubstringAt(const Rinegine::Kernel::String& a, const Rinegine::Kernel::String& b) {
+    for (size_t i = 0; i < b.size(); ++i) {
+      if ((a)[i] != b[i] || (a)[i] == '\0') {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  bool Kernel::isSubstringAt(const Rinegine::Kernel::String& a, const std::wstring& b) {
+    for (size_t i = 0; i < b.size(); ++i) {
+      if ((a)[i] != b[i] || (a)[i] == '\0') {
+        return false;
+      }
+    }
+    return true;
+  }
+#else
+  bool Kernel::isSubstringAt(const char& a, const Rinegine::Kernel::String& b) {
+    return (b.size() > 0 && a == b[0]);
+  }
+
+  bool Kernel::isSubstringAt(const wchar_t& a, const std::wstring& b) {
+    return (b.size() > 0 && a == b[0]);
+  }
+
+  bool Kernel::isSubstringAt(const Rinegine::Kernel::String& a, const Rinegine::Kernel::String& b) {
+    return (b.size() >= a.size() && b.compare(0, a.size(), a) == 0);
+  }
+
+  bool Kernel::isSubstringAt(const Rinegine::Kernel::String& a, const std::wstring& b) {
+    return (b.size() >= a.size() &&
+      std::wstring(b.begin(), (b.begin() + (long)a.size())) ==
+      std::wstring(a.begin(), a.end()));
+  }
+#endif // TODO!!!
+  //! Substring//TODO!!!!
+  
+#ifdef RG_SYS_WINDOWS
+  void Kernel::Open(Rinegine::Kernel::String path) {
+    ShellExecuteA(0, "open", path.c_str(), NULL, NULL, SW_SHOWDEFAULT);
+  }
+
+  void Kernel::Open(std::wstring path) {
+    ShellExecuteW(0, L"open", path.c_str(), NULL, NULL, SW_SHOWDEFAULT);
+  }
+#elif defined(RG_SYS_LINUX)
+  void Kernel::Open(Rinegine::Kernel::String path) {
+    
+    
+    system(("xdg-open " + path).c_str());
+    
+    
+    
+  }
+
+  void Kernel::Open(std::wstring path) {
+    
+    
+    system(("xdg-open " + Rinegine::Kernel::String(path.begin(), path.end())).c_str());
+    
+    
+    
+  }
+#else
+  void Kernel::Open(Rinegine::Kernel::String path) {
+    rg_cout << "\nTrying to open file\nError! MacOS (and other OS other than Windows, Linux and Android) is not supported\n";
+    (void)path;
+  }
+  void Kernel::Open(std::wstring path) {
+    rg_cout << "\nTrying to open file\nError! MacOS (and other OS other than Windows, Linux and Android) is not supported\n";
+    (void)path;
+  }
+#endif
+  //! Open
+  Rinegine::Kernel::String Kernel::tolowstr(Rinegine::Kernel::String str) {
+    std::transform(str.begin(), str.end(), str.begin(),
+      [](unsigned char c) { return std::tolower(c); });
+    return str;
+  }
+
+  std::wstring Kernel::tolowwstr(std::wstring str) {
+    std::transform(str.begin(), str.end(), str.begin(), [](wchar_t c) {
+      return towlower(static_cast<wint_t>(c));
+      });
+    return str;
+  }
+  //! tolowstr
+#ifdef RG_SYS_WINDOWS
+  int Kernel::RunProgram(ConfigRunProgram conf) {
+    if (conf.path == "err")return 0;
+    if (conf.assinhrone) {
+      
+      
+      LPCSTR tempConstChar = conf.path.c_str();
+      LPSTR tempChar = (char*)Rinegine::Kernel::Allocator::GetDefault().allocate(sizeof(char) * conf.path.size());
+      
+      for (int i = 0; i < conf.path.size() && conf.path[i] != '\0'; i++) {
+        tempChar[i] = conf.path[i];
+      }
+      STARTUPINFOA sti = { 0 };
+      PROCESS_INFORMATION pi = { 0 };
+      
+      RG_LOG_LOCK_INFO("Create new process: '" + Rinegine::Kernel::String(tempChar) + "' in " + (conf.otherCMD ? "other " : "same ") + "terminal");
+      int out = CreateProcessA(tempConstChar, NULL, NULL, NULL, false, (conf.otherCMD ? CREATE_NEW_CONSOLE : INHERIT_PARENT_AFFINITY), NULL, NULL, &sti, &pi);//TODO
+      if (!out)RG_LOG_LOCK_ERROR("Error create new process");
+
+      Rinegine::Kernel::Allocator::GetDefault().deallocate(tempChar);
+      return out;
+      /*if(conf.InItFol){
+        return CreateProcess(NULL,tempChar,NULL,NULL,false,(conf.otherCMD?CREATE_NEW_CONSOLE:INHERIT_PARENT_AFFINITY),NULL,NULL,&sti,&pi);
+      }else{
+        return CreateProcess(tempConstChar,NULL,NULL,NULL,false,(conf.otherCMD?CREATE_NEW_CONSOLE:INHERIT_PARENT_AFFINITY),NULL,NULL,&sti,&pi);//TODO
+      }*/
+
+      return 0;
+    }
+    else {
+      return RG_CMD(conf.path);
+    }
+    return 0;
+  }
+#elif defined(RG_SYS_LINUX)
+  int Kernel::RunProgram(ConfigRunProgram conf) { // [exp]
+    if (conf.path == "err") return 0;
+
+    if (conf.assinhrone) {
+      RG_LOG_LOCK_INFO("Forking new process: '" + conf.path + "' in " +
+        (conf.otherCMD ? "new terminal" : "background"));
+
+      pid_t pid = fork();
+      if (pid == -1) {
+        RG_LOG_LOCK_ERROR("fork() failed");
+        return 0;
+      }
+
+      if (pid == 0) {
+        
+        // TODO: поддержка запуска в новом терминале (conf.otherCMD)
+        execl("/bin/sh", "sh", "-c", conf.path.c_str(), (char*)nullptr);
+        
+        perror("execl failed");
+        _exit(127); 
+      }
+      else {
+        
+        RG_LOG_LOCK_DEBUG("Started background PID: " + Kernel::to_string(pid));
+        return 1; 
+      }
+    }
+    else {
+      return RG_CMD(conf.path); 
+    }
+    return 0;
+  }
+#endif
+  
+} // namespace Rinegine

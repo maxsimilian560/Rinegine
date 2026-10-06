@@ -1,0 +1,12 @@
+#pragma once
+#include "debug/set.hpp"
+#include "allocator/set.hpp"
+#include "array/set.hpp"
+#include "string/set.hpp"
+#include "types/set.hpp"
+#include "pointer/set.hpp"
+#include "stream/set.hpp"
+#include "map/set.hpp"
+#include "defined/set.hpp"
+#include "main.hpp"
+#include "kernel.hpp"

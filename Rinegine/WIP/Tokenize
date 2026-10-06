@@ -1,0 +1,6 @@
+#pragma once
+#ifdef RINEGINE_TOKENIZE
+#error The stable version was already connected.
+#endif
+#define RINEGINE_WTOKENIZE
+#include "../../modules-wip/include/Tokenize.h"
