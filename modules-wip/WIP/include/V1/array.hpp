@@ -10,7 +10,7 @@ namespace Rinegine {
       void* data = nullptr;
       size_t _size = 0;
     public:
-      // size_t sizetype = 0;
+      
       virtual void init(size_t nsize) {
         if (data) { RG_LOG_LOCK_ERROR(std::format("RawArray error: mem already init"));return; }
         else {

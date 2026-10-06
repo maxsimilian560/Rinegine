@@ -1,4 +1,4 @@
-// #pragma once
+#pragma once
 #define RinegineLib
 #define RinegineKernel
 #include "include/set.hpp"

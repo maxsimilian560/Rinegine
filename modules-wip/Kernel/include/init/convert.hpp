@@ -48,36 +48,36 @@ namespace Rinegine {
         size_t count = 0;
         size_t i = 0;
 
-        // --- СЕКЦИЯ SIMD (ДЛЯ УСКОРЕНИЯ ОБРАБОТКИ ASCII) ---
+        
 #if defined(__SSE4_1__)
-    // Запускаем SIMD-пасс только если у нас есть запас данных в буфере (минимум 16 байт)
-    // и если в выходном буфере достаточно места для записи (или идет подсчет размера)
+    
+    
         while ((process_until_zero || (i + 16 <= input_len)) && (!wc_str || static_cast<int>(count + 16) <= cch_wc)) {
           if (process_until_zero && mb_str[i] == '\0') break;
 
-          // Загружаем 16 байт из UTF-8 строки
+          
           __m128i chunk = _mm_loadu_si128(reinterpret_cast<const __m128i*>(&mb_str[i]));
 
-          // Маска старших бит: если хоть один байт >= 0x80, результат не будет нулевым
+          
           int mask = _mm_movemask_epi8(chunk);
 
-          // Если это строка до нуля, проверяем наличие '\0' внутри этого чанка
+          
           if (process_until_zero) {
             __m128i zero_cmp = _mm_cmpeq_epi8(chunk, _mm_setzero_si128());
             int zero_mask = _mm_movemask_epi8(zero_cmp);
             if (zero_mask != 0) {
-              break; // Есть терминальный ноль, выходим на побайтовый разбор
+              break; 
             }
           }
 
           if (mask == 0) {
-            // Чанк содержит чистый ASCII. Расширяем байты в 16-битные слова и пишем
+            
             if (wc_str) {
-              // Младшие 8 байт -> 8 элементов char16_t
+              
               __m128i low = _mm_cvtepu8_epi16(chunk);
               _mm_storeu_si128(reinterpret_cast<__m128i*>(&wc_str[count]), low);
 
-              // Старшие 8 байт -> следующие 8 элементов char16_t
+              
               __m128i high = _mm_cvtepu8_epi16(_mm_srli_si128(chunk, 8));
               _mm_storeu_si128(reinterpret_cast<__m128i*>(&wc_str[count + 8]), high);
             }
@@ -85,12 +85,12 @@ namespace Rinegine {
             count += 16;
           }
           else {
-            break; // Обнаружен мультибайтовый символ (например, кириллица), выходим на DFA
+            break; 
           }
         }
 #endif
 
-        // --- ФОЛЛБЭК СЕКЦИЯ (БЫСТРЫЙ КОНЕЧНЫЙ АВТОМАТ) ---
+        
         uint32_t state = 0;
         uint32_t cp = 0;
 
@@ -129,7 +129,7 @@ namespace Rinegine {
             }
           }
           else if (state == 1) {
-            state = 0; // Скипаем битый байт
+            state = 0; 
           }
         }
 
@@ -158,37 +158,37 @@ namespace Rinegine {
         size_t count = 0;
         size_t i = 0;
 
-        // --- СЕКЦИЯ SIMD (ДЛЯ УСКОРЕНИЯ ОБРАБОТКИ UTF-16 -> UTF-8) ---
+        
 #if defined(__SSE4_1__)
         while ((process_until_zero || (i + 16 <= input_len)) && (!mb_str || static_cast<int>(count + 16) <= cb_mb)) {
           if (process_until_zero && wc_str[i] == 0) break;
 
-          // Загружаем 16 символов char16_t (нужно два регистра по 128 бит)
+          
           __m128i chunk1 = _mm_loadu_si128(reinterpret_cast<const __m128i*>(&wc_str[i]));
           __m128i chunk2 = _mm_loadu_si128(reinterpret_cast<const __m128i*>(&wc_str[i + 8]));
 
-          // Проверяем, лежат ли все 16 символов в диапазоне ASCII (то есть старший байт каждого wchar равен 0)
-          // Для этого "схлопываем" их с насыщением в один байт
+          
+          
           __m128i packed = _mm_packus_epi16(chunk1, chunk2);
 
-          // Сравниваем исходные чанки с маской 0x00FF. Если они равны, то это чистый ASCII.
+          
           __m128i ascii_mask1 = _mm_cmpeq_epi16(_mm_andnot_si128(_mm_set1_epi16(0x00FF), chunk1), _mm_setzero_si128());
           __m128i ascii_mask2 = _mm_cmpeq_epi16(_mm_andnot_si128(_mm_set1_epi16(0x00FF), chunk2), _mm_setzero_si128());
 
           int m1 = _mm_movemask_epi8(ascii_mask1);
           int m2 = _mm_movemask_epi8(ascii_mask2);
 
-          // Если в режиме process_until_zero, проверяем на наличие '\0'
+          
           if (process_until_zero) {
             __m128i zero1 = _mm_cmpeq_epi16(chunk1, _mm_setzero_si128());
             __m128i zero2 = _mm_cmpeq_epi16(chunk2, _mm_setzero_si128());
             if (_mm_movemask_epi8(zero1) != 0 || _mm_movemask_epi8(zero2) != 0) {
-              break; // Обнаружен ноль, выходим
+              break; 
             }
           }
 
           if (m1 == 0xFFFF && m2 == 0xFFFF) {
-            // Все 16 символов — ASCII! Записываем результат сужения байт в выходной буфер
+            
             if (mb_str) {
               _mm_storeu_si128(reinterpret_cast<__m128i*>(&mb_str[count]), packed);
             }
@@ -196,12 +196,12 @@ namespace Rinegine {
             count += 16;
           }
           else {
-            break; // Попался не-ASCII символ, выходим в обычный цикл
+            break; 
           }
         }
 #endif
 
-        // --- ФОЛЛБЭК СЕКЦИЯ (ОБЫЧНЫЙ ЦИКЛ С ПРЯМОЙ ЗАПИСЬЮ) ---
+        
         while (true) {
           if (process_until_zero) {
             if (wc_str[i] == 0) break;

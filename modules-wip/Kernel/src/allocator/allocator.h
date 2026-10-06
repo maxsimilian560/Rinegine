@@ -5,13 +5,13 @@ namespace Rinegine::Kernel {
 #define CACHE_LINE_SIZE_BYTE 64
 #endif
 
-  // Rinegine::Kernel::Allocator Rinegine::Kernel::Allocator::GetDefault() = Rinegine::Kernel::Allocator();
-  // Инкапсуляция макроса в типобезопасную constexpr переменную
-  // const size_t Allocator::page_size() = low_level::get_page_size();
+  
+  
+  
   const std::size_t low_level::CACHE_LINE_SIZE = CACHE_LINE_SIZE_BYTE;
 
   static_assert((low_level::CACHE_LINE_SIZE& (low_level::CACHE_LINE_SIZE - 1)) == 0, "CACHE_LINE_SIZE must be a power of 2");
-  // class Allocator {
+  
 
   struct Allocator::ChainNode {
     BYTE* prev = nullptr;
@@ -20,17 +20,17 @@ namespace Rinegine::Kernel {
     size_t cell_used = 0;
   };
 
-  // BYTE* Allocator::pool = nullptr;
-  // BYTE* Allocator::next = nullptr;
-  // size_t Allocator::size_of_allocate = 1;
-  // inline static BYTE* free_cells = nullptr;
+  
+  
+  
+  
   size_t Allocator::allocator_count = 0;
 
   Allocator::Allocator() {
     allocator_count++;
     current_pool = nullptr;
     current_end = nullptr;
-    // if (!pool)
+    
     init();
   }
   void Allocator::init() {
@@ -45,8 +45,8 @@ namespace Rinegine::Kernel {
     next = Rinegine::Kernel::low_level::align_ptr_to_cache_line(current_pool + sizeof(ChainNode));
   }
   BYTE* Allocator::allocate(size_t in) {
-    // if (!current_pool) [[unlikely]] init();
-    // in = Rinegine::Kernel::low_level::align_to_cache_line(in);
+    
+    
 
     if (next + in >= current_end) [[unlikely]] {
       size_of_allocate = rg_max(rg_min(Allocator::max_alloc_page_size, Allocator::page_size() * Allocator::base_alloc_page_count * ((size_of_allocate / 2) + 1)), /*Rinegine::Kernel::low_level::align_to_cache_line(in)*/ in + low_level::CACHE_LINE_SIZE);
@@ -59,7 +59,7 @@ namespace Rinegine::Kernel {
       current_end = ((ChainNode*)next_pool)->end;
       current_pool = next_pool;
       next = Rinegine::Kernel::low_level::align_ptr_to_cache_line(current_pool + sizeof(ChainNode));
-      // next = current_pool + sizeof(ChainNode);
+      
     }
     ((ChainNode*)current_pool)->cell_used++;
     BYTE* out = next;
@@ -103,9 +103,9 @@ namespace Rinegine::Kernel {
       }
     }
   }
-  // alignas(Allocator) static char default_storage[sizeof(Allocator)];
-  // Rinegine::Kernel::Allocator& Rinegine::Kernel::Allocator::GetDefault() = *new (default_storage) Allocator();
-  // Rinegine::Kernel::Allocator& Rinegine::Kernel::Allocator::GetDefault() = Rinegine::Kernel::Allocator::instance();
-  // };
+  
+  
+  
+  
 
 }

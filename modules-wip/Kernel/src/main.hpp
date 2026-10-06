@@ -16,10 +16,10 @@ namespace Rinegine {
     void Main::InitFolder(const Rinegine::Kernel::String& exePath) {
       if (folders_initialized) return;
 
-      // new (storage_WFolder) std::wstring(rg_to_stringw(Rinegine::Kernel::String(exePath)));
+      
       new (storage_Folder) Rinegine::Kernel::String(exePath);
-      // new (storage_Folder)  rg_string(rg_to_string(Rinegine::Kernel::String(exePath)));
-      // new (storage_Folder)  Rinegine::Kernel::String((exePath));//TODO
+      
+      
 
 
       folders_initialized = true;

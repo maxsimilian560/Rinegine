@@ -11,7 +11,7 @@ namespace Rinegine::Graphics{
     W_Windowed,
   };
   struct DifferenceWindow{
-    double quotx = 1, quoty = 1, difx = 1, dify = 1;//quotient,difference //for windows.h
+    double quotx = 1, quoty = 1, difx = 1, dify = 1;
   };
 
   struct Window_Settings{

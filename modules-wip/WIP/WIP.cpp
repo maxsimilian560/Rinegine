@@ -1,4 +1,4 @@
-// #pragma once
+#pragma once
 #define RinegineLib
 #define RinegineLibWIP
 

@@ -4,13 +4,13 @@ namespace Rinegine {
 
 namespace Lock {
 
-// template <class type> struct CountPointers {
-//   inline static int count = 0;
-//   inline static int size = 0;
-//   inline static type *max_pointer = nullptr;
-//   inline static type *min_pointer = nullptr;
-// };
-// inline static unsigned long long int MemUsed = 0;
+
+
+
+
+
+
+
 inline static std::atomic_ullong MemUsed = 0;
 } // namespace Lock
 void *Kernel::Lock::s_new(const unsigned long long &size,
@@ -149,13 +149,13 @@ void Kernel::Lock::s_delete(void *in, unsigned int typesize) {
     Rinegine::Lock::MemUsed -=
         size * typesize + sizeof(unsigned long long) + sizeof(char) * 2;
 
-    // unsigned long long *clearsize = ((unsigned long long *)(in)) - 1;
+    
     // *clearsize = 0;
     free(Rinegine::Kernel::s_getraw(in));
-    // in = nullptr;
+    
   } else {
     RG_LOG_LOCK_ERROR("Memory Deallocation is failed, array is not RG type");
-    // in = nullptr;
+    
   }
 }
 void *Kernel::Lock::s_fast_new(const unsigned long long &size,

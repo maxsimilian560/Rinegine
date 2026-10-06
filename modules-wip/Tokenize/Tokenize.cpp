@@ -1,4 +1,4 @@
-// #pragma once
+
 #define RinegineLib
 #define RinegineWTokenize
 

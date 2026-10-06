@@ -2,10 +2,10 @@
 
 namespace Rinegine {
   namespace Kernel {
-    // struct RawArray {
-    // BYTE* RawArray::data = nullptr;
-    // size_t RawArray::real_size = 0;
-    // size_t RawArray::size = 0;
+    
+    
+    
+    
     RawArray::RawArray() :data(nullptr), real_size(0), size(0) {};
 
     RawArray::RawArray(const RawArray& other) :data(nullptr), real_size(0), size(0) {
@@ -128,6 +128,6 @@ namespace Rinegine {
         Kernel::Allocator::GetDefault().deallocate(data);
       }
     }
-    // };
+    
   }
 }

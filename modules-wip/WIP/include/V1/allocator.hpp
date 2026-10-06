@@ -8,14 +8,14 @@ namespace Rinegine {
   namespace Lock {
 
     inline static std::atomic_ullong MemUsed = 0;
-    // magic nums
+    
     static int Magic_Num = 8 + (sizeof(size_t));
   };
   void* WIP::Lock::s_new(const size_t& size, const size_t& typesize) { // todo                     ||
-    // only for linux yet, sorry||
-    // unoptimazed yet
+    
+    
     if (!notseeitmsgmore) {
-      //RG_LOG_LOCK_INFO("At the moment s_new is not ready and it is better to use "
+      
         "standard alternatives");
       notseeitmsgmore = 1;
     }
@@ -33,10 +33,10 @@ namespace Rinegine {
         raw_newmem = mmap(nullptr, rsize, PROT_READ | PROT_WRITE,
           MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
         if (raw_newmem == MAP_FAILED)
-          //RG_LOG_LOCK_LOCK_ERROR("Memory allocate error, retry: " + std::to_string(i) + "/" + std::to_string(30));
+          
       }
       if (raw_newmem == MAP_FAILED)
-        //RG_LOG_LOCK_LOCK_CRITICAL("MEMORY ALLOCATE ERROR");
+        
     }
     if (sizeof(size_t) != 8) { // todo replace to engine init
       RG_LOG_LOCK_CRITICAL("Your architecture unsupported yet");
@@ -53,11 +53,11 @@ namespace Rinegine {
     void* out = (void*)(((char*)raw_newmem) + Rinegine::Lock::Magic_Num);
     Rinegine::Lock::MemUsed += rsize;
 
-    //RG_LOG_LOCK_LOCK_MEM("Mem aloc: " + std::to_string(rsize) +
+    
       "b, type: " + std::to_string(typesize));
 #ifdef RG_MEM_LIMIT
     if (Rinegine::Lock::MemUsed >= RG_MEM_LIMIT)
-      //RG_LOG_LOCK_LOCK_CRITICAL("Memory limit exceeded");
+      
 #endif
     return out;
   }
@@ -80,7 +80,7 @@ namespace Rinegine {
 
   size_t WIP::Lock::s_get_size(const void* in) {
     if (!s_memtest(in))
-      //RG_LOG_LOCK_LOCK_CRITICAL("s_get_size: array is not rg type");
+      
     return (((size_t*)(in)) - 1)[0];
   }
 
@@ -158,21 +158,21 @@ namespace Rinegine {
       ((size * typesize + Rinegine::Lock::Magic_Num) + page_size - 1) /
       page_size * page_size;
 
-    // free(Rinegine::Lock::s_getraw(in));
+    
     if (munmap((void*)((char*)in - Rinegine::Lock::Magic_Num), rsize) == -1) {
-      //RG_LOG_LOCK_ERROR("s_delete deallocate error");
+      
       return SD_DEALOC_ERROR;
     }
-    //RG_LOG_LOCK_LOCK_MEM("Mem clean: " + std::to_string(rsize) +
+    
       "b, type: " + std::to_string(typesize));
     Rinegine::Lock::MemUsed -= rsize;
     return SD_NO_ERR;
-    //
+    
   }
   void* WIP::Lock::s_fast_new(const size_t& size, const size_t& typesize) {
     char* newmem = (char*)malloc(size * typesize + sizeof(size_t) + sizeof(size_t) + sizeof(char) * 2);
     if (!newmem) {
-      //RG_LOG_LOCK_LOCK_ERROR("Fast alloc failed, try standard alloc");
+      
       void* out = WIP::Lock::s_new(size, typesize);
       return out;
     }
@@ -202,7 +202,7 @@ namespace Rinegine {
 
   size_t WIP::Lock::s_get_typesize(const void* in) {
     if (!s_memtest(in)) {
-      //RG_LOG_LOCK_LOCK_CRITICAL("s_get_typesize: array is not RG type");
+      
     }
     return *((size_t*)((size_t*)(in)-1) - 1);
   }
@@ -212,11 +212,11 @@ namespace Rinegine {
 
 
 
-//[===============================================]//
+//[===============================================]
 #pragma once
 
-// === CODE === //
-//low level func namespace
+
+
 namespace Rinegine {
   namespace WIP {
 
@@ -255,13 +255,13 @@ namespace Rinegine {
       IS_USED = 1 << 1,
       LOCKED = 1 << 2,
       READ_ONLY = 1 << 3,
-      // EXECUTABLE =,
+      
       //[CUSTOM AND SUPPORT]
       IS_POOL = 1 << 16,
       IS_FREE_LIST = 1 << 17,
       NO_TAIL = 1 << 18,
       CUSTOM_POOL = 1 << 19,
-      // IS_MAIN_POOL = 1 << 17,
+      
 
     };
     //[operators for correct work flags]
@@ -285,7 +285,7 @@ namespace Rinegine {
         );
     }
 
-    // Для += и -= (set/clear):
+    
     inline MEM_FLAG& operator|=(MEM_FLAG& a, MEM_FLAG b) {//[done]
       a = a | b;
       return a;
@@ -296,9 +296,9 @@ namespace Rinegine {
       return a;
     }
 
-    // struct MEM_DATA {
-    //   void* data;
-    // };
+    
+    
+    
     //[mag num for check mem]
     constexpr uint32_t RG_MAG_NUM = ('R' << 0) | ('G' << 8) | ('M' << 16) | ('G' << 24);//[done]
     //[head mem structure]
@@ -326,10 +326,10 @@ namespace Rinegine {
         return (MEM_TAIL*)(((char*)this) + (((MEM_HEAD*)this)->size - sizeof(MEM_TAIL)));
       }
     };
-    // constexpr size_t MEM_TAIL_SIZE = sizeof(MEM_TAIL);
-    // constexpr size_t MEM_HEAD_SIZE = sizeof(MEM_HEAD);
-    // constexpr size_t MEM_HEADnTAIL_SIZE = (sizeof(MEM_HEAD)+sizeof(MEM_TAIL));
-    // constexpr size_t MEM_CELL_SIZE = (sizeof(MEM_CELL)); ////not need yet
+    
+    
+    
+    
     //[sys mem id for id all of mem head]
     static thread_local uint32_t SYS_MEM_ID = 0;
     static thread_local uint32_t SYS_POOL_ID = 0;
@@ -351,13 +351,13 @@ namespace Rinegine {
         RG_LOG_LOCK_CRITICAL("Allocator: fault alloc new page");
       }
       else {
-        // //RG_LOG_LOCK_DEBUG("ptr of pool: "+std::to_string((long long)ptr)+", ptr of tail: "+std::format("{x}",(long long)(MEM_TAIL*)((char*)ptr) + align - sizeof(MEM_TAIL))+", size of tail: "+std::to_string(sizeof(MEM_TAIL)));
-        //RG_LOG_LOCK_DEBUG(std::format("ptr of pool: {:#x}, ptr of tail: {:#x}, size of tail: {:d}", (long long)ptr, (long long)(MEM_TAIL*)(((char*)ptr) + align - sizeof(MEM_TAIL)), sizeof(MEM_TAIL)));
+        
+        
         MEM_TAIL* tail = (MEM_TAIL*)(((char*)ptr) + (align - sizeof(MEM_TAIL)));
         tail->magic1 = RG_MAG_NUM;
         tail->magic2 = RG_MAG_NUM;
-        // //RG_LOG_LOCK_MEM(Rinegine::Kernel::String("ID ") + std::to_string(SYS_MEM_ID) + "; " + std::to_string(align) + " bytes of memory allocated (" + std::to_string(bytes) + " bytes were requested)");
-        //RG_LOG_LOCK_MEM(std::format("ID {:d}| {:d} bytes of memory allocated ({:d} bytes were requested)", SYS_MEM_ID, align, bytes));
+        
+        
         ptr->size = align;
         ptr->magic = RG_MAG_NUM;
         ptr->id = SYS_MEM_ID++;
@@ -370,48 +370,48 @@ namespace Rinegine {
     inline void SYS_DEL_MEM(MEM_HEAD*& in) {//[done]
       if (in != nullptr) {
         if (in->magic == RG_MAG_NUM) [[likely]] {
-          // //RG_LOG_LOCK_MEM(Rinegine::Kernel::String("ID: ") + std::to_string(in->id) + "; try deallocate");
-          //RG_LOG_LOCK_MEM(std::format("ID: {:d}| try deallocate", in->id));
+          
+          
           if (Rinegine::Kernel::Flags::has(in->flags, MEM_FLAG::IS_USED)) [[likely]] {
             if (!Rinegine::Kernel::Flags::has(in->flags, MEM_FLAG::LOCKED)) [[likely]] {
               MEM_TAIL* tail = (MEM_TAIL*)(((char*)in) + ((in->size) - sizeof(MEM_TAIL)));
               if (tail->magic1 != tail->magic2 || tail->magic2 != RG_MAG_NUM) [[unlikely]] {
                 RG_LOG_LOCK_CRITICAL("The memory tail for identifier " + std::to_string(in->id) + " is corrupted, but the cell will still be cleared and the program will continue to work. In case of any crash, it is necessary to track the movement of memory under identifier " + std::to_string(in->id) + ".");
               }
-              // //RG_LOG_LOCK_MEM(std::to_string(in->size) + " bytes of memory deallocated");
-              //RG_LOG_LOCK_MEM(std::format("ID: {:d}| {:d} bytes of memory deallocated", in->id, in->size));
-              //RG_LOG_LOCK_DEBUG(std::format("ptr of pool: {:#x}, ptr of tail: {:#x}, size of tail: {:d}", (long long)in, (long long)(MEM_TAIL*)(((char*)in) + in->size - sizeof(MEM_TAIL)), sizeof(MEM_TAIL)));
+              
+              
+              
               in->flags = 0;
               in->magic = 0;
               in->size = 0;
 #ifdef RG_SYS_WINDOWS
               VirtualFree(in, 0, MEM_RELEASE);
 #elif defined(RG_SYS_LINUX)
-              // //RG_LOG_LOCK_WARN("Mem has not been cleared for debug!");
+              
               munmap(in, in->size);
 #else
-              //RG_LOG_LOCK_ERROR("SYS_DEL_MEM: For what?");
+              
 #endif
               in = nullptr;
             }
             else {
-              // //RG_LOG_LOCK_ERROR("SYS_DEL_MEM: mem " + std::to_string((long long)in) + " is locked");
-              //RG_LOG_LOCK_ERROR(std::format("SYS_DEL_MEM: mem {:#x} is locked", ((long long)in)));
+              
+              
             }
           }
           else {
-            // //RG_LOG_LOCK_ERROR("SYS_DEL_MEM: mem " + std::to_string((long long)in) + " isn't allocated");
-            //RG_LOG_LOCK_ERROR(std::format("SYS_DEL_MEM: mem {:#x} isn't allocated", ((long long)in)));
+            
+            
           }
         }
         else {
-          // //RG_LOG_LOCK_ERROR("SYS_DEL_MEM: mem " + std::to_string((long long)in) + " isn't allocated or isn't Rinegine type");
-          //RG_LOG_LOCK_ERROR(std::format("SYS_DEL_MEM: mem {:#x} isn't allocated or isn't Rinegine type", ((long long)in)));
+          
+          
         }
       }
       else {
-        // //RG_LOG_LOCK_ERROR("SYS_DEL_MEM: mem " + std::to_string((long long)in) + " is nullptr");
-        //RG_LOG_LOCK_ERROR(std::format("SYS_DEL_MEM: mem {:#x} is nullptr", ((long long)in)));
+        
+        
       }
     }
     //[mem pool for storage mem cells and other mem pools]
@@ -419,12 +419,12 @@ namespace Rinegine {
       MEM_HEAD* pool = nullptr;
       void init() {
         if (pool)return;
-        //RG_LOG_LOCK_DEBUG("Create new pool");
+        
         pool = SYS_GET_MEM(Allocator::page_size());
         pool->pool_id = SYS_POOL_ID++;
       }
       void destruct() {
-        //RG_LOG_LOCK_DEBUG("Delete pool");
+        
         SYS_DEL_MEM(pool);
       }
     };
@@ -446,9 +446,9 @@ namespace Rinegine {
           return 0;
         }
         else {
-          //RG_LOG_LOCK_ERROR(std::format("Memory id {:d} from pool id {:d} is corrupted!", head->id, head->pool_id));
+          
         }
-        //RG_LOG_LOCK_ERROR("MEM_CELL_TEST Error: ptr is not rg type");
+        
       }
       return 1;
     }
@@ -458,32 +458,32 @@ namespace Rinegine {
     //[Allocator class, for allocate/deallocate mem cells]
     class Allocator {
 
-      // MEM_HEA data;
+      
       inline static thread_local MEM_POOL pool;
-      // inline static thread_local uint32_t pool_size[510]; [TODO] in plans
+      
       struct PoolCache {
         MEM_HEAD* near_free;
         size_t used_mem;
-        // size_t 
+        
       };
-      // void prepare_cell(MEM_HEAD* in, size_t size) {
-      //   in->size = size;
-      //   in->flags = static_cast<uint32_t>(MEM_FLAG::IS_USED);
-      //   in->id = SYS_MEM_ID++;
-      //   in->magic = RG_MAG_NUM;
-      // }
+      
+      
+      
+      
+      
+      
     public:
       //[constructor]
       Allocator() {
-        //RG_LOG_LOCK_DEBUG("Create new Allocator");
+        
         pool.init();
-        //RG_LOG_LOCK_DEBUG(Rinegine::Kernel::String("Pool is ") + Rinegine::Kernel::String((pool.pool->magic == RG_MAG_NUM) ? "init" : "doesn't init"));
+        
         if (Rinegine::Kernel::Flags::has(pool.pool->flags, MEM_FLAG::LOCKED)) {
-          //RG_LOG_LOCK_WARN(std::format("Pool {:d} mem id {:d} already locked", pool.pool->pool_id, pool.pool->id));
+          
         }
         else {
           Rinegine::Kernel::Flags::set(pool.pool->flags, MEM_FLAG::LOCKED);
-          //RG_LOG_LOCK_MEM(std::format("Pool {:d} mem id {:d} now is locked", pool.pool->pool_id, pool.pool->id));
+          
         }
       }
       void reallocate(void* ptr, size_t nsize) {
@@ -495,25 +495,25 @@ namespace Rinegine {
         deallocate(ptr);
       }
       inline void* get_pool_base(void* cell_ptr) {
-        // ~(PAGE_SIZE - 1) создаёт маску 0x...FFFFF000
+        
         return (void*)((uintptr_t)cell_ptr & ~(Allocator::page_size() - 1));
       }
       //[allocate]
       void* allocate(size_t bytes) {
         //[get pool array for easer get pools from main pool]
         //[HEAD|*pool_array*|TAIL]
-        // MEM_HEAD* pool_array_new = (pool.pool+1);
+        
         MEM_HEAD** pool_array = (MEM_HEAD**)(pool.pool + 1);
-        //RG_LOG_LOCK_DEBUG(std::format("pool_array: {:#x}", (long long)(pool_array)));
+        
         //[free or not (pool)]
         bool valid_pool = false;
         //[out var, may be unuseles]
-        // void* out = nullptr;
-        // while (!valid_pool) {
+        
+        
          //[calc count pool in main pool (pool of pools)]
-        // size_t count_pools_from_main_pool = ((pool.pool->size - sizeof(MEM_HEAD)) / sizeof(MEM_HEAD*) - sizeof(MEM_TAIL));
+        
         size_t count_pools_from_main_pool = (pool.pool->size - sizeof(MEM_HEAD) - sizeof(MEM_TAIL)) / sizeof(MEM_HEAD*);
-        //RG_LOG_LOCK_DEBUG(Rinegine::Kernel::String("run allocate try, pool array count is ") + std::to_string(count_pools_from_main_pool));
+        
         //[check every pool in main pool]
         for (size_t i = 0; i < count_pools_from_main_pool && !valid_pool;i++) {
           //[now pool, tested pool]
@@ -529,17 +529,17 @@ namespace Rinegine {
                   //[get pool cache]
                   PoolCache* cache = (PoolCache*)(now_pool + 1);
                   //[if pool used mem more then count for alloc plus other structure slop]
-                  //RG_LOG_LOCK_DEBUG(std::format("Pool id {:d}, mem id {:d}, size {:d}, used mem {:d}, try alloc {:d}, check of free {:d}", now_pool->pool_id, now_pool->id, now_pool->size, cache->used_mem, bytes, bytes + sizeof(PoolCache) + sizeof(MEM_HEAD) + sizeof(MEM_TAIL)));
-                  //RG_LOG_LOCK_DEBUG(std::format("size of mem head {:d}, size of mem tail {:d}, size of pool cache {:d}", sizeof(MEM_HEAD), sizeof(MEM_TAIL), sizeof(PoolCache)));
+                  
+                  
                   //[if free size not enough]
 
                   /*
                   if (cache->near_free->size < (bytes + sizeof(MEM_HEAD) + sizeof(MEM_TAIL))) {
-                    //RG_LOG_LOCK_DEBUG("Tested cell debug: cache near free: {:#x}, size {:d}, m_h {:d}, m_t {:d}, next mem {:#x}", cache->near_free, cache->near_free->size, sizeof(MEM_HEAD), sizeof(MEM_TAIL), (((char*)cache->near_free) + cache->near_free->size + sizeof(MEM_HEAD) + sizeof(MEM_TAIL)));
+                    
                     head_out = (MEM_HEAD*)(((char*)cache->near_free) + cache->near_free->size + sizeof(MEM_HEAD) + sizeof(MEM_TAIL));
                     while (head_out->size < (bytes + sizeof(MEM_HEAD) + sizeof(MEM_TAIL))) {
                       if (Rinegine::Kernel::Flags::has(cache->near_free->flags, MEM_FLAG::INIT))
-                        //RG_LOG_LOCK_DEBUG("Tested cell debug: now free: {:#x}, size {:d}, m_h {:d}, m_t {:d}, next mem {:#x}", head_out, head_out->size, sizeof(MEM_HEAD), sizeof(MEM_TAIL), (((char*)head_out) + head_out->size + sizeof(MEM_HEAD) + sizeof(MEM_TAIL)));
+                        
                       head_out = (MEM_HEAD*)(((char*)head_out) + head_out->size + sizeof(MEM_HEAD) + sizeof(MEM_TAIL));
 
                     }
@@ -551,7 +551,7 @@ namespace Rinegine {
                     MEM_HEAD* head_out = cache->near_free;
                     if (Rinegine::Kernel::Flags::has(head_out->flags, MEM_FLAG::INIT)) {
                       while (head_out->size < (bytes /*+ sizeof(MEM_HEAD) + sizeof(MEM_TAIL)*/)) {//todo there may be a bug
-                        //RG_LOG_LOCK_DEBUG(std::format("Tested cell debug: now free: {:#x}, size {:d}, m_h {:d}, m_t {:d}, next mem {:#x}", (long long)head_out, head_out->size, sizeof(MEM_HEAD), sizeof(MEM_TAIL), (long long)(((char*)head_out) + head_out->size + sizeof(MEM_HEAD) + sizeof(MEM_TAIL))));
+                        
                         head_out = (MEM_HEAD*)(((char*)head_out) + head_out->size + sizeof(MEM_HEAD) + sizeof(MEM_TAIL));
                         if (MEM_CELL_TEST(head_out)) {
                           RG_LOG_LOCK_CRITICAL("Whath the logs");
@@ -564,7 +564,7 @@ namespace Rinegine {
                       return head_out + 1;
                     }
                     else {
-                      //RG_LOG_LOCK_DEBUG(std::format("Check correct sys allocation: size = {:d}; mag is {:s}", now_pool->size, (now_pool->magic == RG_MAG_NUM) ? "correct" : "incorrect"));
+                      
                       //[fill mem vars]
                       head_out->size = bytes;
                       head_out->magic = RG_MAG_NUM;
@@ -578,7 +578,7 @@ namespace Rinegine {
 
                       MEM_HEAD* next_cell = (MEM_HEAD*)(tail + 1);
                       if (cache->near_free > next_cell)cache->near_free = next_cell;
-                      // cache->near_free = (MEM_HEAD*)(tail + 1);
+                      
                       cache->used_mem += bytes + sizeof(MEM_TAIL) + sizeof(MEM_HEAD);
                       return head_out + 1;
                     }
@@ -597,7 +597,7 @@ namespace Rinegine {
               RG_LOG_LOCK_CRITICAL("magic num is break... this is placeholder, late will be added fixes the pool (i think)");
             }
           }
-          else { // {if now_pool == nullptr}
+          else { 
             //[if pool isn't init, should it init -> then mem get page from size]
             pool_array[i] = SYS_GET_MEM(std::max(bytes + sizeof(MEM_HEAD) * 2 + sizeof(MEM_TAIL) * 2 + sizeof(PoolCache), Allocator::page_size() * ALLOC_PAGE_COUNT * (i + 1)));
             pool_array[i]->pool_id = SYS_POOL_ID++;
@@ -606,12 +606,12 @@ namespace Rinegine {
             //[HEAD of cell]
             PoolCache* cache = (PoolCache*)(now_pool + 1);
             MEM_HEAD* head_out = (MEM_HEAD*)(cache + 1);
-            //RG_LOG_LOCK_DEBUG(Rinegine::Kernel::String("Check correct sys allocation: size = ") + std::to_string(now_pool->size) + "; mag is " + ((now_pool->magic == RG_MAG_NUM) ? "correct" : "incorrect"));
+            
             //[fill mem vars]
             head_out->size = bytes;
             head_out->magic = RG_MAG_NUM;
             head_out->flags = static_cast<uint32_t>(MEM_FLAG::IS_USED | MEM_FLAG::CUSTOM_POOL | MEM_FLAG::INIT);
-            // head_out->flags = static_cast<uint32_t>(MEM_FLAG::IS_USED);
+            
             head_out->id = SYS_MEM_ID++;
             head_out->pool_id = (uint32_t)i;
 
@@ -620,13 +620,13 @@ namespace Rinegine {
             tail->magic2 = RG_MAG_NUM;
 
 
-            // cache->near_free = (MEM_HEAD*)(((char*)(head_out + 1)) + bytes + sizeof(MEM_TAIL));
-            // MEM_HEAD* next_cell = (MEM_HEAD*)(tail + 1);
-            // if (cache->near_free > next_cell)cache->near_free = next_cell;
+            
+            
+            
 
             cache->near_free = (MEM_HEAD*)(tail + 1);
-            // rg_cout << (long long)((((char*)(head_out + 1)) + bytes + sizeof(MEM_TAIL)) - (long long)head_out) << std::endl;
-            // rg_cout << (sizeof(MEM_HEAD) * 2 + sizeof(MEM_TAIL) * 2 + bytes);
+            
+            
             //[POOL_MEM_HEAD|POOL_CACHE|MEM_HEAD|data|TAIL|POOL_TAIL]
             cache->used_mem = bytes + sizeof(MEM_TAIL) * 2 + sizeof(MEM_HEAD) * 2 + sizeof(PoolCache);
             return head_out + 1;
@@ -639,16 +639,16 @@ namespace Rinegine {
       }
       void deallocate(void* in) {
         if (MEM_CELL_TEST(in)) {
-          //RG_LOG_LOCK_ERROR(std::format("deallocate: in ptr isn't RG type"));
+          
           return;
         }
         MEM_HEAD* head = ((MEM_HEAD*)in) - 1;
         if (!Rinegine::Kernel::Flags::has(head->flags, MEM_FLAG::IS_USED)) {
-          //RG_LOG_LOCK_WARN(std::format("deallocate: mem {:d} already dealocated", head->id));
+          
           return;
         }
         if (!Rinegine::Kernel::Flags::has(head->flags, MEM_FLAG::CUSTOM_POOL)) {
-          //RG_LOG_LOCK_WARN("deallocate: No optimization was applied because the MEM_FLAG::CUSTOM_POOL flag was disabled.");
+          
         }
         else {
           MEM_HEAD** pool_array = (MEM_HEAD**)(pool.pool + 1);
@@ -657,18 +657,18 @@ namespace Rinegine {
           cache->used_mem -= head->size + sizeof(MEM_TAIL) + sizeof(MEM_HEAD);
         }
         Rinegine::Kernel::Flags::clear(head->flags, MEM_FLAG::IS_USED);
-        //RG_LOG_LOCK_MEM(std::format("Mem {:d} has been deallocated", head->id));
+        
       }
-      // void test() {
-      //   //RG_LOG_LOCK_DEBUG("pool == " + std::to_string((long long)pool.pool));
-      // }
+      
+      
+      
       void clear() {
         if (pool.pool == nullptr) {
-          //RG_LOG_LOCK_MEM("pool already free");
+          
           return;
         }
         if (pool.pool->magic == RG_MAG_NUM) {
-          // size_t count = ((pool.pool->size - sizeof(MEM_HEAD)) / sizeof(MEM_HEAD*) - sizeof(MEM_TAIL));
+          
           size_t count = (pool.pool->size - sizeof(MEM_HEAD) - sizeof(MEM_TAIL)) / sizeof(MEM_HEAD*);
           MEM_HEAD** pool_array = (MEM_HEAD**)(pool.pool + 1);
           for (size_t i = 0; i < count;i++) {
@@ -680,7 +680,7 @@ namespace Rinegine {
         else {
           RG_LOG_LOCK_CRITICAL("How and for what??");
         }
-        //RG_LOG_LOCK_DEBUG("Some allocator has clearing successfullyl!");
+        
       }
       ~Allocator() {
         clear();
@@ -707,7 +707,7 @@ namespace Rinegine {
       for (int i = 0;i < 20;i++) {
         temp[i] = (char)i;
       }
-      // //RG_LOG_LOCK_INFO("Next");
+      
       RG_LOG_LOCK_INFO("Next");
       RG_LOG_LOCK_INFO("Try init 40 bytes");
       char* temp2 = (char*)test.allocate(40);
@@ -717,8 +717,8 @@ namespace Rinegine {
       for (int i = 0;i < 40;i++) {
         temp2[i] = (char)i;
       }
-      // //RG_LOG_LOCK_INFO
-      // //RG_LOG_LOCK_INFO(Rinegine::Kernel::String("Size: ") + std::to_string((((MEM_HEAD*)temp) - 1)->size) + ", mag num is " + (((((MEM_HEAD*)temp) - 1)->magic == RG_MAG_NUM) ? "correct" : "incorrect"));
+      
+      
       RG_LOG_LOCK_INFO("Next");
       RG_LOG_LOCK_INFO("Try deallocate 40 bytes");
       test.deallocate(temp2);
@@ -737,12 +737,12 @@ namespace Rinegine {
 
 
     //[VISUAL ALLOCATOR]
-    //*|  MAIN POOL                   | //[DONE]//
-    //*|  [HEAD|Pools pointers|TAIL]  | //[DONE]//
-    //*|  Other pools                 | //[DONE]//
-    //*|  [HEAD|CACHE|mem cells|TAIL] | //[DONE]//
-    //*|  Mem cells                   | //[DONE]//
-    //*|  [HEAD|data|TAIL]            | //[DONE]//
+    //*|  MAIN POOL                   | //[DONE]
+    //*|  [HEAD|Pools pointers|TAIL]  | //[DONE]
+    //*|  Other pools                 | //[DONE]
+    //*|  [HEAD|CACHE|mem cells|TAIL] | //[DONE]
+    //*|  Mem cells                   | //[DONE]
+    //*|  [HEAD|data|TAIL]            | //[DONE]
 
     //[TODO NOTE]
     //[+1] Do mem head

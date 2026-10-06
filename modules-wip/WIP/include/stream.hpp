@@ -43,15 +43,15 @@ namespace Rinegine {
     }*/
     // [Stream realization]
     enum STREAM_FLAG : uint32_t {
-      STREAM_READABLE = 1 << 0,   // Поток поддерживает чтение
-      STREAM_WRITABLE = 1 << 1,   // Поток поддерживает запись
-      STREAM_BUFFERED = 1 << 2,   // Буферизация включена
-      STREAM_OWN_BUF = 1 << 3,   // Поток владеет буфером (освободит при destroy)
-      STREAM_EOF = 1 << 4,   // Достигнут конец потока
-      STREAM_ERROR = 1 << 5,   // Ошибка операции
+      STREAM_READABLE = 1 << 0,   
+      STREAM_WRITABLE = 1 << 1,   
+      STREAM_BUFFERED = 1 << 2,   
+      STREAM_OWN_BUF = 1 << 3,   
+      STREAM_EOF = 1 << 4,   
+      STREAM_ERROR = 1 << 5,   
     };
 
-    // template<size_t N>
+    
     struct StreamResult {
       size_t bytes;
       int err;
@@ -143,7 +143,7 @@ namespace Rinegine {
         return r;
       }
       constexpr StreamResult write(const void* src, size_t len) {
-        // --- ПРОВЕРКИ ---
+        
         if (!Kernel::Flags::has(flags, STREAM_WRITABLE)) {
           Kernel::Flags::set(flags, STREAM_ERROR);
           return { 0, -1 };
@@ -151,7 +151,7 @@ namespace Rinegine {
         if (Kernel::Flags::has(flags, STREAM_ERROR)) return { 0, -1 };
         if (!ops || !ops->write_raw) return { 0, -1 };
 
-        // if (!buffer) return ops->write_raw(handle, src, len);
+        
         if (!buffer) {
           StreamResult r = ops->write_raw(handle, src, len);
           if (!r.ok()) Kernel::Flags::set(flags, STREAM_ERROR);

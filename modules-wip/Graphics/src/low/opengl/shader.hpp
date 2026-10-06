@@ -2,8 +2,8 @@
 
 namespace Rinegine {
   namespace Graphics {
-    // Rinegine::Graphics::Shader::Uniform Rinegine::Graphics::Shader::Uniform::GetDefault();
-    // RawShader::RawShader() = default;
+    
+    
     RawShader::RawShader(Rinegine::Kernel::String frag, Rinegine::Kernel::String vert) {
       init(frag, vert);
     }
@@ -38,7 +38,7 @@ namespace Rinegine {
 
 
 
-    // }RawShader_Standart;
+    
 
 
     void Shader::init(RawShader& shader) {

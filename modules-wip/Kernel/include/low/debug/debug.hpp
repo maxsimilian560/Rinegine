@@ -11,7 +11,7 @@ namespace Rinegine {
 
     class Debug {       // [done]
       struct DebugVars; // [done]
-      // static DebugVars _vars; // [done]
+      
 
       public:
       static uint8 Log_Level;
@@ -36,21 +36,21 @@ namespace Rinegine {
 
       static void add(std::string, Log::Types, bool, const char*, int);
       static void addl(std::string, Log::Types, bool, const char*, int);
-      // //*special add/addl for dif os
-      // static void add(String, Log::Types, bool, String, int); // [done]
+      
+      
 
-      // template <class string1, class string2>
-      // static void add(string1, Log::Types, bool, string2, int);   // [done]
+      
+      
 
-      // static void addl(Log::Types, String, bool, String, int); // [done]
+      
 
-      // static void addl(const char* in, Log::Types type, bool print, const char* file, int line){
+      
 
-      // }
+      
 
-      // static void add(const char* in, Log::Types type, bool print, const char* file, int line){
+      
 
-      // }
+      
     }; // [done]
   } // namespace Kernel
 } // namespace Rinegine

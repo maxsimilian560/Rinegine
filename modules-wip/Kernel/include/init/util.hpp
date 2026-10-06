@@ -18,7 +18,7 @@
 #ifndef _GLIBCXX_USE_NOEXCEPT
 #define _GLIBCXX_USE_NOEXCEPT noexcept
 #endif
-//Utils
+
 namespace Rinegine::Kernel::Util {
 #if defined(__clang__) && __has_builtin(__is_trivially_destructible)
 #undef __has_trivial_destructor
@@ -196,27 +196,27 @@ namespace Rinegine::Kernel::Util {
     }
   };
 
-  // template <> struct Hash<Kernel::String_view> {
-  //   inline size_t operator()(std::string_view key) const noexcept {
-  //     size_t hash = 14695981039346656037ULL;
-  //     for (char c : key) {
-  //       hash ^= static_cast<unsigned char>(c);
-  //       hash *= 1099511628211ULL;
-  //     }
-  //     return hash;
-  //   }
-  // };
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
-  // template <> struct Hash<Kernel::String32_view> {
-  //   inline size_t operator()(std::u32string_view key) const noexcept {
-  //     size_t hash = 14695981039346656037ULL;
-  //     for (char32_t cp : key) {
-  //       hash ^= static_cast<size_t>(cp);
-  //       hash *= 1099511628211ULL;
-  //     }
-  //     return hash;
-  //   }
-  // };
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
 
   template <typename T> struct add_rvalue_reference { using type = T&&; };
@@ -243,7 +243,7 @@ namespace Rinegine::Kernel::Util {
 
 
 
-  //HASH
+  
   template <typename From, typename To>
   concept convertible_to = is_convertible_v<From, To>;
 

@@ -2,7 +2,7 @@
 
 namespace Rinegine::Graphics{
 
-  // class Window {
+  
 
   void Window::set_vidmode(GLFWvidmode* in){
     used_vidmode = in;
@@ -16,7 +16,7 @@ namespace Rinegine::Graphics{
     return window;
   }
 
-  // Window::Window() = default;
+  
   Window::Window(Window_Settings& set){
     init(set);
   }
@@ -28,7 +28,7 @@ namespace Rinegine::Graphics{
       settings.FullscreanResolution.x = (uint)DefaultVidmode->width;
       settings.FullscreanResolution.y = (uint)DefaultVidmode->height;
     }
-    glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, settings.transparent); //прозрачность окна вкл/откл(по-умол. выкл)
+    glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, settings.transparent); 
     glfwWindowHint(GLFW_DECORATED, ((settings.Wtype == W_Windowed) ? 1 : 0));
     glfwWindowHint(GLFW_CENTER_CURSOR, settings.CenterCursor);
     glfwWindowHint(GLFW_SAMPLES, settings.MSAA);
@@ -78,7 +78,7 @@ namespace Rinegine::Graphics{
     glfwMakeContextCurrent(window);
 
     if (!gladLoadGL((GLADloadfunc)glfwGetProcAddress)){
-      // Не игнорировать. Фиксировать причину, а не симптом.
+      
       throw std::runtime_error("Failed to initialize GLAD: no active context or unsupported GL version");
     }
 
@@ -87,7 +87,7 @@ namespace Rinegine::Graphics{
       throw std::runtime_error("glGetString returned NULL despite successful GLAD init");
     }
 
-    // const GLubyte* raw_ver = glGetString(GL_VERSION);
+    
     if (raw_ver != nullptr){
       size_t major = 0, minor = 0, patch = 0;
 
@@ -130,20 +130,20 @@ namespace Rinegine::Graphics{
       Window::DefaultOpenGL_Param._gl_extens_str = reinterpret_cast<const char*>(raw_ext);
     }
 #endif
-    //glEnable(GL_TEXTURE_2D); 	//Разрешить использование текстур
-    glEnable(GL_DEPTH_TEST);  	//Проверка глубины
+    
+    glEnable(GL_DEPTH_TEST);  	
 #ifdef RG_OPENGL_LEGACY_PROFILE
-    glEnable(GL_ALPHA_TEST); 	  //Разрешить прозрачность 
+    glEnable(GL_ALPHA_TEST); 	  
 #endif
-    glEnable(GL_BLEND); 		    //Разрешить смешивание
-    //glEnable(GL_CULL_FACE); 	//Разрешить обрезание нивидимых обьектов(треугольников)
-    //glCullFace(GL_BACK);		  //Отрезание задних треугольнико
-    //glFrontFace(GL_CCW);		  //Указание на лицевую сторону (против/по часовой стрелки (CW/CCW))
+    glEnable(GL_BLEND); 		    
+    
+    
+    
     glDepthFunc(GL_LEQUAL);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
-    if (settings.MSAAon)glEnable(GL_MULTISAMPLE);//Сглаживание
+    if (settings.MSAAon)glEnable(GL_MULTISAMPLE);
     else glDisable(GL_MULTISAMPLE);
 
     settings.winedit.quotx = (double)settings.resolution.x / (double)DefaultVirtualWindowSize.x;
@@ -217,5 +217,5 @@ namespace Rinegine::Graphics{
   bool Window::is_init() const{
     return INIT;
   }
-  // };
+  
 }

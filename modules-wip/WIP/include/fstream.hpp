@@ -3,14 +3,14 @@
 namespace Rinegine::WIP {
   namespace File {
     enum struct FLAG : uint32_t {
-      READ = 1 << 0,   // Читать
-      WRITE = 1 << 1,   // Писать
-      CREATE = 1 << 2,   // Создать если нет
-      APPEND = 1 << 3,   // Дописывать в конец
-      TRUNC = 1 << 4,   // Очистить если существует
-      BINARY = 1 << 5,   // Бинарный режим (только Windows, на Linux игнор)
+      READ = 1 << 0,   
+      WRITE = 1 << 1,   
+      CREATE = 1 << 2,   
+      APPEND = 1 << 3,   
+      TRUNC = 1 << 4,   
+      BINARY = 1 << 5,   
     };
-    // ОБЩЕЕ — не зависит от ОС
+    
     inline constexpr FLAG operator~(FLAG f) noexcept {
       return static_cast<FLAG>(~static_cast<unsigned>(f));
     }
@@ -48,13 +48,13 @@ namespace Rinegine::WIP {
     static int64_t tell(void* handle);
     static int64_t size(void* handle);
     inline const StreamOps ops = { .read_raw = read_raw,.write_raw = write_raw,.close = close,.seek = seek,.tell = tell,.size = size };
-    // ПЛАТФОРМЕННОЕ — разное на Linux/Windows
+    
 #if defined(__linux__) || defined(__ANDROID__)
-    // read_raw, write_raw, open
+    
     Stream open(const char* path, uint32_t flags) {
       int os_flags = 0;
 
-      // Транслируем наши флаги → POSIX флаги
+      
       if ((flags & File::FLAG::READ) && (flags & File::FLAG::WRITE))
         os_flags = O_RDWR;
       else if (flags & File::FLAG::READ)
@@ -66,7 +66,7 @@ namespace Rinegine::WIP {
       if (flags & File::FLAG::TRUNC)   os_flags |= O_TRUNC;
       if (flags & File::FLAG::APPEND)  os_flags |= O_APPEND;
 
-      // Открываем
+      
       int fd = ::open(path, os_flags, 0644);  // 0644 = права для нового файла
       if (fd < 0) {
         Stream s{};
@@ -74,7 +74,7 @@ namespace Rinegine::WIP {
         return s;
       }
 
-      // Собираем Stream
+      
       Stream s;
       s.handle = (void*)(intptr_t)fd;
       s.flags = 0;
@@ -87,8 +87,8 @@ namespace Rinegine::WIP {
     static StreamResult read_raw(void* handle, void* dst, size_t len) {
       int fd = (int)(intptr_t)handle;
       ssize_t r = ::read(fd, dst, len);
-      if (r < 0) return { 0, -1 };       // ошибка ОС
-      return { (size_t)r, 0 };            // прочитали r байт (может быть < len — EOF)
+      if (r < 0) return { 0, -1 };       
+      return { (size_t)r, 0 };            
     }
 
     static StreamResult write_raw(void* handle, const void* src, size_t len) {
@@ -112,11 +112,11 @@ namespace Rinegine::WIP {
     }
     static int64_t size(void* handle) {
       int fd = (int)(intptr_t)handle;
-      // Сохраняем текущую позицию
+      
       int64_t cur = ::lseek(fd, 0, SEEK_CUR);
-      // Идём в конец, узнаём позицию
+      
       int64_t end = ::lseek(fd, 0, SEEK_END);
-      // Возвращаемся обратно
+      
       ::lseek(fd, cur, SEEK_SET);
       return end;
     }
@@ -126,27 +126,27 @@ namespace Rinegine::WIP {
       return static_cast<FLAG>(~static_cast<unsigned>(f));
     }
 
-    // Разрешаем побитовое И
+    
     inline constexpr unsigned operator&(FLAG lhs, FLAG rhs) noexcept {
       return static_cast<unsigned>(lhs) & static_cast<unsigned>(rhs);
     }
 
-    // Разрешаем побитовое ИЛИ
+    
     inline constexpr unsigned operator|(FLAG lhs, FLAG rhs) noexcept {
       return static_cast<unsigned>(lhs) | static_cast<unsigned>(rhs);
     }
 
-    // Разрешаем побитовое исключающее ИЛИ
+    
     inline constexpr unsigned operator^(FLAG lhs, FLAG rhs) noexcept {
       return static_cast<unsigned>(lhs) ^ static_cast<unsigned>(rhs);
     }
 
-    // Разрешаем &=
+    
     inline constexpr FLAG& operator&=(FLAG& lhs, FLAG rhs) noexcept {
       return lhs = static_cast<FLAG>(static_cast<unsigned>(lhs) & static_cast<unsigned>(rhs));
     }
 
-    // Разрешаем |=
+    
     inline constexpr FLAG& operator|=(FLAG& lhs, FLAG rhs) noexcept {
       return lhs = static_cast<FLAG>(static_cast<unsigned>(lhs) | static_cast<unsigned>(rhs));
     }
@@ -157,7 +157,7 @@ namespace Rinegine::WIP {
     inline constexpr FLAG& operator&=(FLAG& lhs, unsigned rhs) noexcept { return lhs = static_cast<FLAG>(static_cast<unsigned>(lhs) & rhs); }
     inline constexpr FLAG& operator|=(FLAG& lhs, unsigned rhs) noexcept { return lhs = static_cast<FLAG>(static_cast<unsigned>(lhs) | rhs); }*/
 
-    // read_raw, write_raw, open
+    
     Stream open(const char* path, uint32_t flags) {
       DWORD access = 0;
       if (flags & File::FLAG::READ)  access |= GENERIC_READ;
@@ -165,11 +165,11 @@ namespace Rinegine::WIP {
 
       DWORD disposition = OPEN_EXISTING;
       if (flags & File::FLAG::CREATE && flags & File::FLAG::TRUNC)
-        disposition = CREATE_ALWAYS;         // всегда новый
+        disposition = CREATE_ALWAYS;         
       else if (flags & File::FLAG::CREATE)
-        disposition = OPEN_ALWAYS;           // открыть или создать
+        disposition = OPEN_ALWAYS;           
       else if (flags & File::FLAG::WRITE)
-        disposition = TRUNCATE_EXISTING;     // очистить
+        disposition = TRUNCATE_EXISTING;     
 
       HANDLE h = CreateFileA(path, access, FILE_SHARE_READ, nullptr,
         disposition, FILE_ATTRIBUTE_NORMAL, nullptr);
@@ -213,7 +213,7 @@ namespace Rinegine::WIP {
     }
     static int64_t tell(void* handle) {
       LARGE_INTEGER pos;
-      // if (!SetFilePointerEx((HANDLE)handle, { 0 }, &pos, FILE_CURRENT)) return -1;
+      
       if (!SetFilePointerEx((HANDLE)handle, LARGE_INTEGER{ 0, 0 }, &pos, FILE_CURRENT)) return -1;
       return pos.QuadPart;
     }

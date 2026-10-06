@@ -7,7 +7,7 @@ namespace Rinegine::LinkTest::Kernel {
     #pragma comment(linker, "/FAILIFMISMATCH:RINEGINE_KERNEL_LINKED=1")
     void ERROR_likely_you_forgot_to_link_lrg_kernel();
   #else
-    // --- ОКРУЖЕНИЕ MINGW / GNU-таргет на Windows ---
+    
     void ERROR_likely_you_forgot_to_link_lrg_kernel() __asm__(
         "\n\n============================================================\n"
         "❌ RINEGINE LINK ERROR:\n"
@@ -16,7 +16,7 @@ namespace Rinegine::LinkTest::Kernel {
     );
   #endif
 #else
-  // --- ОКРУЖЕНИЕ LINUX (Твой рабочий цветной вариант) ---
+  
   void ERROR_likely_you_forgot_to_link_lrg_kernel() __asm__(
       "\n\n\033[1;31m============================================================\n"
       "❌ RINEGINE LINK ERROR:\n"

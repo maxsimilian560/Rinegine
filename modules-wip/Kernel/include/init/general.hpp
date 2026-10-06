@@ -197,7 +197,7 @@ template <typename T>
   for (type name = count; name-- > 0;)
 
                 //todo
-                // ==================== STRING & STREAM TYPE SWITCHING ====================
+                
 
     /**
      * @def rg_cout
@@ -252,7 +252,7 @@ template <typename T>
 #define RG_Lc
 
 
-           // ==================== DEBUG & TRACE MACROS ====================
+           
 
            /**
             * @def elif
@@ -266,15 +266,15 @@ template <typename T>
 #define to_rrvalue(type) const type  // todo
 
 
-            //             /**
+            
             //              * @def RG_GLOBAL_ARRAY_PUSH_RESERVE_PREDER
             //              * @brief Default reserve size for dynamic arrays (e.g., in vector growth).
             //              * @value 16
             //              * @ingroup config
             //              */
-            // #ifndef RG_GLOBAL_ARRAY_PUSH_RESERVE_PREDER
-            // #define RG_GLOBAL_ARRAY_PUSH_RESERVE_PREDER 16
-            // #endif
+            
+            
+            
 
                          /**
                           * @def RG_ERROR_STRING
@@ -290,11 +290,11 @@ template <typename T>
                            */
 #define RG_ERROR_WSTRING L"E6filenofound"
 
-                           // other
+                           
 
-                           // #ifndef RinegineLib
+                           
 
-                           // --- Temporary counters for debugging ---
+                           
                            /**
                             * @var rg_count_temp
                             * @brief Global counter for use with `rg_count` macro.
@@ -310,7 +310,7 @@ template <typename T>
  * @ingroup debug
  * @par Example:
  * @code
- * rg_count; // Output: 5, main.cpp:42
+ * rg_count; 
  * @endcode
  */
 #define rg_count                                                               \
@@ -346,53 +346,53 @@ template <typename T>
   * @ingroup debug
   */
 #define rg_count_deb_clear rg_count_temp_deb = 0
-  // #endif
+  
 
-  // to_string
+  
 
 
 
    //TODO description
 
-// inline std::wstring rg_to_stringw(const std::string& str) { return Rinegine::Kernel::utf8_decode(str); }
-// inline std::wstring rg_to_stringw(const std::wstring& str) { return str; }
-// inline std::string rg_to_stringa(const std::string& str) { return str; }
-// inline std::string rg_to_stringa(const std::wstring& str) { return Rinegine::Kernel::utf8_encode(str); }
 
 
 
-// inline rg_string rg_to_string(const int& in) { return rg_to_string_(in); }
-// inline rg_string rg_to_string(const std::string& str) { return Rinegine::Kernel::utf8_decode(str); }
-// inline rg_string rg_to_string(const char* str) { return Rinegine::Kernel::utf8_decode(std::string(str)); }
-// inline rg_string rg_to_string(const wchar_t* str) { return std::wstring(str); }
 
 
 
-// inline std::wostream& operator<<(std::wostream& out, const std::string& text) {
-//   std::wstring decoded = Rinegine::Kernel::utf8_decode(text);
-//   return out.write(decoded.data(), decoded.size());
-// }
-// #else
-// inline std::string rg_to_string(const std::string& str) { return str; }
-// inline std::string rg_to_string(const std::wstring& str) { return Rinegine::Kernel::utf8_encode(str); }
-// inline std::wstring rg_to_stringw(const Rinegine::Kernel::String& str) { return Rinegine::Kernel::utf8_decode(str); }
-// inline std::wstring rg_to_stringw(const std::wstring& str) { return str; }
 
-// inline rg_string rg_to_string(const int& in) { return rg_to_string_(in); }
 
-// inline rg_string rg_to_string(const char* str) { /*return Rinegine::Kernel::String(str);*/RG_LOG_CRITICAL("UTF flag useless now, please remove this flag"); }
-// inline rg_string rg_to_string(const wchar_t* str) { /*return Rinegine::Kernel::utf8_encode(std::wstring(str));*/RG_LOG_CRITICAL("UTF flag useless now, please remove this flag"); }
-// inline rg_string rg_to_stringa(const Rinegine::Kernel::String& str) { return str; }
-// inline rg_string rg_to_stringa(const std::wstring& str) { return Rinegine::Kernel::utf8_encode(str); }
-// #define rg_to_string(in) in
-// inline std::ostream& operator<<(std::ostream& out, const std::wstring& text) {
-// 	Rinegine::Kernel::String encoded = Rinegine::Kernel::utf8_encode(text);
-// 	return out.write(encoded.data(), encoded.size());
-// }
-// #endif
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //TODO^description
 
-   // DEBUG
+   
 #define GET_MACRO(_1, _2, NAME, ...) NAME
 
 #define RG_LOG_FATAL(...)                                                      \
@@ -628,7 +628,7 @@ template <typename T>
   Rinegine::Kernel::Debug::addl(__msg,Rinegine::Log::MEM,  true, __FILE__,     \
                                 __LINE__)
 #endif
-#else//RG_DEBUG
+#else
 
 #define RG_LOG_DEBUG(...){}
 #define RG_LOG_INFO(...){}
@@ -642,7 +642,7 @@ template <typename T>
 #define RG_LOG_LOCK_WARNING(...){}
 #define RG_LOG_LOCK_ERROR(...){}
 #define RG_LOG_LOCK_MEM(...){}
-#endif//RG_DEBUG
+#endif
 
 
 namespace Rinegine {

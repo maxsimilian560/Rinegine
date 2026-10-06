@@ -16,13 +16,13 @@ namespace Rinegine::Kernel {
     static HANDLE HandleMainConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(HandleMainConsole, col);
   }
-  //   std::wstring Main::WFolder = L""; // TODO
-  //   Rinegine::Kernel::String Main::AFolder = "";   // TODO
-  //   rg_string Main::Folder = RG_L ""; // TODO
-  // #elif defined(RG_SYS_LINUX)
-    // std::wstring Main::WFolder = L""; // TODO
-    // Rinegine::Kernel::String Main::AFolder = "";   // TODO
-    // rg_string Main::Folder = RG_L ""; // TODO
+  
+  
+  
+  
+    
+    
+    
 #endif
   uint8_t Debug::Log_Level = 4;
   struct Debug::DebugVars {
@@ -38,13 +38,13 @@ namespace Rinegine::Kernel {
     static DebugVars instance;
     return instance;
   }
-  // Debug::DebugVars Debug::DebugVars_safe_get();
-  // constructors
+  
+  
   Debug::Debug() { init(RG_L "Logs"); }
   Debug::Debug(rg_string pat) { init(pat); }
   // init
   void Debug::init() {
-    // rg_cout << "[Fallback debug] Debug has init\n";
+    
     if (DebugVars_safe_get().INIT)
       return;
     init(RG_L "Logs");
@@ -55,7 +55,7 @@ namespace Rinegine::Kernel {
     DebugVars_safe_get().INIT = true;
     rg_string pathFol = Main::Folder + pat;
     if (!CreateFolder(pathFol)) {
-      // addl("Log folder missing, folder creation error", Log::WARNING);
+      
       RG_LOG_WARNING("Log folder missing, folder creation error");
       pathFol.clear();
     };
@@ -72,21 +72,21 @@ namespace Rinegine::Kernel {
       SysTime::Day() + RG_L "_" + SysTime::Hour() + RG_L "-" +
       SysTime::Minute() + RG_L "-" + SysTime::Second() + RG_L ".txt";
 
-    // addl(Log::INFO, RG_L "Log path: " + (DebugVars_safe_get().path), true,
-    //   RGLOCK_DEBUG_INLINE);
+    
+    
     RG_LOG_LOCK_INFO("Log path: " + (DebugVars_safe_get().path))
-      // path =
-      // pathFol+'/'+"log-yy"+to_string(SystemTime.wYear)+"_mm"+to_string(SystemTime.wMonth)+"_dd"+to_string(SystemTime.wDay)+"[h"+to_string(SystemTime.wHour)+"'m"+to_string(SystemTime.wMinute)+"'s"+to_string(SystemTime.wSecond)+"]"+".txt";
-      // addl(Log::INFO,"Debug pre init end");
+      
+      
+      
   }
-  // open log after error setter
+  
   void Debug::open_log_after_error(bool i) {
     DebugVars_safe_get().OPEN_SHELL = i;
   }
   void Debug::open_shell(bool i) { DebugVars_safe_get().OPEN_SHELL = i; }
-  // path to log
+  
   rg_string Debug::log_path() { return DebugVars_safe_get().path; }
-  // update error buffer
+  
   void Debug::update() {
     if (DebugVars_safe_get().textErr.empty())
       return;
@@ -94,7 +94,7 @@ namespace Rinegine::Kernel {
       init();
     DebugVars_safe_get().debug.open(DebugVars_safe_get().path.c_str(), std::ios::app);
     if (!DebugVars_safe_get().debug.is_open()) {
-      // addl(Log::WARNING, "Error opening log file", true, RGLOCK_DEBUG_INLINE);
+      
       RG_LOG_LOCK_WARNING("Error opening log file");
       return;
     }
@@ -103,12 +103,12 @@ namespace Rinegine::Kernel {
     DebugVars_safe_get().debug.close();
     DebugVars_safe_get().textErr.clear();
   }
-  // emergency stop
+  
   void Debug::stop() {
     if (!DebugVars_safe_get().INIT)
       init();
     if (DebugVars_safe_get().OPEN_SHELL) {
-      // addl(Log::INFO, RG_L "Open: " + (DebugVars_safe_get().path), true, RGLOCK_DEBUG_INLINE);
+      
       RG_LOG_LOCK_INFO("Open: " + (DebugVars_safe_get().path));
       update();
       Open(DebugVars_safe_get().path);
@@ -118,23 +118,23 @@ namespace Rinegine::Kernel {
     throw(Error::RG_OWN_ERROR);
     __builtin_unreachable();
   }
-  // set up to not close program after critical error
+  
   void Debug::no_close() { DebugVars_safe_get().noclose = 1; }
-  // destructor
+  
   Debug::~Debug() {
-    // rg_cout << "[Fallback debug] Debug has deleted" << std::endl;
-    // addl(Log::DEBUG, "Debug was destructed", true, RGLOCK_DEBUG_INLINE);
+    
+    
     RG_LOG_LOCK_DEBUG("Debug was destructed");
     if (DebugVars_safe_get().textErr.size() > 0)
       update();
   }
-  // ADD/ADDL
-  // ADD
-  // special
-  /// main add to error buffer
+  
+  
+  
+  
   void Debug::add(rg_string tex, Log::Types type, [[maybe_unused]] bool print, rg_string file, int line) {
     if (!RINEGINE_IS_INIT) {
-      // Lock::addl(type, tex, print, file, line);
+      
       throw "Rinegine isn't init\n";
     }
     if (type > Log_Level)
@@ -152,17 +152,17 @@ namespace Rinegine::Kernel {
 #ifdef RG_SYS_WINDOWS
       if (type ==
         Log::CRITICAL)   // todo add color enum for windows like on the linux
-        SetColorTCMD(0x5); // system("color 74");
+        SetColorTCMD(0x5); 
       if (type == Log::ERR)
-        SetColorTCMD(0x4); // system("color 74");
+        SetColorTCMD(0x4); 
       if (type == Log::WARNING)
-        SetColorTCMD(0xe); // system("color 76");
+        SetColorTCMD(0xe); 
       if (type == Log::INFO)
-        SetColorTCMD(0x8); // system("color 76");
+        SetColorTCMD(0x8); 
       if (type == Log::DEBUG)
-        SetColorTCMD(0xf); // system("color 76");
+        SetColorTCMD(0xf); 
       if (type == Log::MEM)
-        SetColorTCMD(0xf); // system("color 76");
+        SetColorTCMD(0xf); 
 #elif defined(RG_SYS_LINUX)
       if (type == Log::CRITICAL) {
         SetColorConsole(CONSOLE_COLOR::C_WHITE + CONSOLE_COLOR::C_TEXT);

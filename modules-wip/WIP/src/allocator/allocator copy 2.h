@@ -8,21 +8,21 @@ namespace Rinegine {
 
     inline static std::atomic_ullong MemUsed = 0;
 
-    // magic nums
+    
     static int Magic_Num = 8 + (sizeof(size_t));
   } // namespace Lock
 
   //** Allocator
   void Kernel::Allocator::init() {
     if (_main_map == nullptr) {
-      // std::cout << "init" << std::endl;
+      
       RG_LOG_LOCK_MEM("Allocator init");
       _main_map = s_map(1);
       g_page_mask = ~(uintptr_t)(Rinegine::Kernel::Lock::page_size - 1);
     }
   }
   void Kernel::Allocator::push(size_t in) {
-    // std::cout << "push" << std::endl;
+    
     RG_LOG_LOCK_MEM("Push " + std::to_string(in) + " page(s)");
     Kernel::Allocator::_map* addr = s_map(in);
 
@@ -30,7 +30,7 @@ namespace Rinegine {
       Kernel::Allocator::_map* mmin = rg_min(addr, _main_map);
       Kernel::Allocator::_map* mmax = rg_max(addr, _main_map);
       if (size_t(mmax) - size_t(mmin) == Rinegine::Kernel::Lock::page_size * in) {
-        // std::cout << "prev: " << (int)mmax->magnum[2] << std::endl;
+        
         mmin->_mem.next = &mmax->_mem;
         mmin->magnum[2] += mmax->magnum[2];
         mmax->magnum[0] = 0;
@@ -68,12 +68,12 @@ namespace Rinegine {
 
     Kernel::Allocator::_map* out =
       (Kernel::Allocator::_map*)mmap(addr, rsize, prot, flags, fd, offset);
-    // std::cout << "Map address: " << out << std::endl;
+    
     if (out == (MAP_FAILED) || out == nullptr || out == NULL) {
       RG_LOG_LOCK_MEM(
-        "Allocator error; s_map error;"); // +
-      // rg_string(strerror(errno)));//todo
-      // fix
+        "Allocator error; s_map error;"); 
+      
+      
       RG_LOG_LOCK_CRITICAL(
         "s_map error, perhaps there is not enough space, see previous log");
     }
@@ -85,9 +85,9 @@ namespace Rinegine {
     return out;
   }
   void* Kernel::Allocator::s_new(size_t count, size_t type_size) {
-    // If there is potentially not enough space in the heap
+    
     if ((count * type_size + sizeof(Kernel::Allocator::_map::mem) * 1) >
-      // actual size > pagesize * count merged pages - header //todo remove
+      
       Rinegine::Kernel::Lock::page_size * _main_map->magnum[2] - sizeof(_map)) {
       RG_LOG_LOCK_MEM("map less then new array size, push new page...");
       RG_LOG_LOCK_MEM("size array + head: " +
@@ -115,8 +115,8 @@ namespace Rinegine {
           Kernel::Allocator::_map::mem* next = out->next;
           Kernel::Allocator::_map::mem* next2 = out;
           while (next != nullptr && next->init == false) {
-            // std::cout << "Cell " << size_t(next2) << " and " << size_t(next)
-            // << " merged" << std::endl;
+            
+            
             next2 = next;
             next = next->next;
           }
@@ -161,7 +161,7 @@ namespace Rinegine {
       size_t temp =
         (size_t(_main_map) + Kernel::Lock::page_size * _main_map->magnum[2]) -
         (size_t(out) + sizeof(Kernel::Allocator::_map::mem));
-      // }
+      
 
       size_t temp2 =
         (count * type_size + sizeof(Kernel::Allocator::_map::mem) * 2);
@@ -185,12 +185,12 @@ namespace Rinegine {
       else {
         RG_LOG_LOCK_MEM("No free space in old page, create new page...");
         push();
-        // print_map();
+        
         return s_new(count, type_size);
       }
     }
     out->init = true;
-    // print_map();
+    
     return (out + 1);
   }
   void Kernel::Allocator::s_free(void* in) {
@@ -231,8 +231,8 @@ namespace Rinegine {
     }
   }
   //! Allocator
-  /////
-  // LOW LEVEL ALLOC
+  
+  
   void* Kernel::Lock::s_page(size_t count, void* addr, int prot, int flags,
     int fd, off_t offset) {
     if (count == 0) {
@@ -246,11 +246,11 @@ namespace Rinegine {
       Rinegine::Lock::MemUsed += rsize;
     }
     else {
-      // int err = errno;
+      
       RG_LOG_LOCK_ERROR("Mem page alloc: " + std::to_string(rsize) +
         "b has failed: " + strerror(errno));
     }
-    // errno;
+    
     return raw_mem;
   }
   void Kernel::s_depage(void* addr, size_t count) {
@@ -272,12 +272,12 @@ namespace Rinegine {
     }
   }
 
-  /////
+  
   void*
     Kernel::Lock::s_new(const size_t& size,
       const size_t& typesize) { // todo                     ||
-    // only for linux yet, sorry||
-    // unoptimazed yet
+    
+    
     if (!notseeitmsgmore) {
       RG_LOG_INFO("At the moment s_new is not ready and it is better to use "
         "standard alternatives");
@@ -424,7 +424,7 @@ namespace Rinegine {
       ((size * typesize + Rinegine::Lock::Magic_Num) + page_size - 1) /
       page_size * page_size;
 
-    // free(Rinegine::Kernel::s_getraw(in));
+    
     if (munmap((void*)((char*)in - Rinegine::Lock::Magic_Num), rsize) == -1) {
       RG_LOG_ERROR("s_delete deallocate error");
       return SD_DEALOC_ERROR;
@@ -433,7 +433,7 @@ namespace Rinegine {
       "b, type: " + std::to_string(typesize));
     Rinegine::Lock::MemUsed -= rsize;
     return SD_NO_ERR;
-    //
+    
   }
   void* Kernel::Lock::s_fast_new(const unsigned long long& size,
     const unsigned long long& typesize) {

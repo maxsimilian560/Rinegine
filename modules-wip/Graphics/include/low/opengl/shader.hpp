@@ -70,15 +70,15 @@ namespace Rinegine {
         glGetShaderInfoLog(vshader, 2048, nullptr, temp);
         log += "Vertex shaders error:\n";
         log += temp;
-        //DEBUG
+        
         RG_LOG_LOCK_ERROR("Vertex shader compilation error:\n" + (Rinegine::Kernel::String)temp);
-        //DEBUG
+        
       }
       if (!vpok) {
         glGetProgramInfoLog(vshader, 2048, nullptr, temp);
         log += "Vertex program error:\n";
         log += temp;
-        //DEBUG
+        
         Rinegine::Kernel::String tempa = temp;
         if (tempa.size() <= 0) {
           RG_LOG_LOCK_DEBUG("Vertex shader linking error");
@@ -86,21 +86,21 @@ namespace Rinegine {
         else {
           RG_LOG_LOCK_DEBUG("Vertex shader linking error:\n" + (Rinegine::Kernel::String)temp);
         };
-        //DEBUG
+        
       }
       if (!fsok) {
         glGetShaderInfoLog(fshader, 2048, nullptr, temp);
         log += "Fragment shaders error:\n";
         log += temp;
-        //DEBUG
+        
         RG_LOG_LOCK_DEBUG("Fragment shader compilation error:\n" + (Rinegine::Kernel::String)temp);
-        //DEBUG
+        
       }
       if (!fpok) {
         glGetProgramInfoLog(fshader, 2048, nullptr, temp);
         log += "Fragment program error:\n";
         log += temp;
-        //DEBUG
+        
         Rinegine::Kernel::String tempa = temp;
         if (tempa.size() <= 0) {
           RG_LOG_LOCK_DEBUG("Fragment shader linking error");
@@ -108,7 +108,7 @@ namespace Rinegine {
         else {
           RG_LOG_LOCK_DEBUG("Fragment shader linking error:\n" + (Rinegine::Kernel::String)temp);
         };
-        //DEBUG
+        
       }
     }
     class Shader {
@@ -153,10 +153,10 @@ namespace Rinegine {
           return out;
         }
       };
-      // static Uniform StandartShaderUniform;
+      
 
     private:
-      // inline static Uniform StandartShaderUniform;
+      
       uint prog;
       bool INIT = false;
 
@@ -168,7 +168,7 @@ namespace Rinegine {
       bool is_init();
       void prepare();
     };
-    // inline static Shader::Uniform StandartShaderUniform;
+    
 
 
   }

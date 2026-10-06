@@ -36,7 +36,7 @@
 #define rg_cin std::wcin
 #define rg_string std::wstring
 #define rg_char wchar_t
-// #define rg_to_string_(in) to_wstring(in)
+
 #define RG_L L""
 #else
 
@@ -46,23 +46,23 @@
 #define rg_cin std::cin
 #define rg_string Rinegine::Kernel::String
 #define rg_char char
-// #define rg_to_string_(in) to_string(in)
+
 #define RG_L
 #endif
 
 static uint rg_count_temp = 0; // todo
 
-// #define rg_count                                                               \
-//   rg_cout << (rg_count_temp++) << ", " << __FILE__ << ":" << __LINE__ << endl
 
-// #define rg_count_clear rg_count_temp = 0
 
-// static int rg_count_temp_deb = 0; // todo
-// #define rg_count_deb                                                           \
-//   RG_LOG_LOCK_DEBUG(to_string(rg_count_temp_deb++) +                           \
-//                     ", line: " + to_string(__LINE__))
 
-// #define rg_count_deb_clear rg_count_temp_deb = 0
+
+
+
+
+
+
+
+
 
 #define elif else if
 

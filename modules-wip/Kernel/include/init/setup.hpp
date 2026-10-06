@@ -2,10 +2,10 @@
 #undef RG_HERE_FILE_NAME
 #define RG_HERE_FILE_NAME "kernel/setup"
 
-// #if __cplusplus < 202302L
-// #define ___FATAL_ERROR_STOP_COMPILATION___  <Rinegine Framework requires C++23 or higher. Please add '-std=c++23' to your compiler flags.> 
-// #include ___FATAL_ERROR_STOP_COMPILATION___
-// #endif
+
+
+
+
 
 #if __cplusplus < 202302L
 namespace Rinegine::CompileTest {
@@ -38,8 +38,8 @@ static_assert(true, "Rinegine Framework requires C++23 or higher.");
 #define UINT_MAX 4294967295
 #endif
 
-// #define rg_min(num1, num2) (num1 < num2 ? num1 : num2)
-// #define rg_max(num1, num2) (num1 > num2 ? num1 : num2)
+
+
 
 
 #define rg_cout std::cout
@@ -60,7 +60,7 @@ static_assert(true, "Rinegine Framework requires C++23 or higher.");
 
 
 
-// #define RG_DEPRECATED_MACRO(name) 
+
 
 #ifdef _WIN32
 #define RG_WIN          RG_DEPRECATED_MACRO(RG_WIN)
@@ -79,7 +79,7 @@ static_assert(true, "Rinegine Framework requires C++23 or higher.");
 #define RG_LNX          RG_DEPRECATED_MACRO(RG_LNX)
 #define RG_LNXos        RG_DEPRECATED_MACRO(RG_LNXos)
 #endif
-// #warning "Macros RG_WIN, RG_WINos, RG_Win, RG_Winos, RG_Windows, RG_Windowsos, RG_Linux, RG_Linuxos, RG_LINUX, RG_LINUXos, RG_LNX and RG_LNXos is outdated! Use modern alternative.")
+
 
 #ifdef _WIN32
 #define RG_SYS_WINDOWS
@@ -130,7 +130,7 @@ namespace Rinegine {
 
 
 
-//TYPES
+
 
 typedef __UINT8_TYPE__ uint8;
 typedef __UINT16_TYPE__ uint16;
@@ -143,7 +143,7 @@ typedef __UINT64_TYPE__ uint64;
 
 #ifdef DO_NOT_ENABLE_THIS_FLAG_UNLESS_YOU_WANT_TO_BREAK_THE_BUILD
 /*clang*/
-//-march=native
+
 #define _LP64 1
 #define __ADX__ 1
 #define __AES__ 1
@@ -610,7 +610,7 @@ typedef __UINT64_TYPE__ uint64;
 #define linux 1
 #define unix 1
 
-//default build
+
 #define _LP64 1
 #define __ATOMIC_ACQUIRE 2
 #define __ATOMIC_ACQ_REL 4
@@ -1022,7 +1022,7 @@ typedef __UINT64_TYPE__ uint64;
 #define linux 1
 #define unix 1
 /*gcc*/
-//-march=native
+
 #define __AVX512F__ 1
 #define __UINT_LEAST16_MAX__ 0xffff
 #define __FLT16_HAS_QUIET_NAN__ 1
@@ -1497,7 +1497,7 @@ typedef __UINT64_TYPE__ uint64;
 #define __ATOMIC_ACQ_REL 4
 #define __SSE4A__ 1
 
-//default build
+
 #define __DBL_MIN_EXP__ (-1021)
 #define __LDBL_MANT_DIG__ 64
 #define __UINT_LEAST16_MAX__ 0xffff

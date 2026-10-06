@@ -1,39 +1,39 @@
 #pragma once
 
 namespace Rinegine {
-  // Console input
+  
   int Kernel::RG_CMD(std::string command, bool print) {
     RG_LOG_LOCK_INFO("Command run: \"" + rg_to_string(command) + "\"", print);
     return system(command.c_str());
     (void)print;
   }
-  // TRY CATCH ERRORS
+  
   bool RINEGINE_IS_INIT = true;
   int RG_ERROR_PROGRAM = 0;
 
-  // const rg_string ErrorCode[]{
-  //     RG_L "NULL",                                             //-1
-  //     RG_L "Error creating window.",                           // 0
-  //     RG_L "Font loading error.",                              // 1
-  //     RG_L "Font not found.",                                  // 2
-  //     RG_L "Out of RAM memory.",                               // 3
-  //     RG_L "Symbol not found.",                                // 4
-  //     RG_L "GLFW initialization error.",                       // 5
-  //     RG_L "File not found.",                                  // 6
-  //     RG_L "RG_Array access error, RG_Array size = 0.",        // 7
-  //     RG_L "RG_Array access error, RG_Array size < [i].",      // 8
-  //     RG_L "RG_Array access error, RG_Array size - i > size.", // 9
-  //     RG_L "The loaded texture has fewer color channels supported (less than "
-  //          "4).",                                              // 10
-  //     RG_L "Incorrect use of the material creation function.", // 11
-  //     RG_L "RG_Matrix access error, RG_Matrix size = 0 or width < "
-  //          "getPoint(width).", // 12
-  //     RG_L "RG_LoadTexture(string path) - the wrong path was passed to the "
-  //          "function.",                                        // 13
-  //     RG_L "RG_FindPlanet(string) could not find the planet.", // 14
-  //     RG_L "RG_GetBlockType could not find the block.",        // 15
-  //     RG_L "RG_GetTexture could not find the texture.",        // 16
-  // };
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   int TryCatch(std::function<void()> func) {
     try {
       func();
@@ -96,7 +96,7 @@ namespace Rinegine {
 
 
 
-    // INTERPOINT
+    
   namespace Kernel {
 
     int InterPoint(int argc, char** argv, int (*own_main)()) {
@@ -179,7 +179,7 @@ namespace Rinegine {
       return exit_code;
     };
   }
-  // DECODE ENCODE UNICODE
+  
 #ifdef RG_SYS_WINDOWS
   std::wstring Kernel::utf8_decode(const std::string& str) {
     if (str.empty())return std::wstring();
@@ -211,9 +211,9 @@ namespace Rinegine {
 
     const char* in_buf = str.c_str();
     size_t in_bytes_left = str.size();
-    size_t out_buf_size = str.size() * 2; // Примерный размер под UTF-16
+    size_t out_buf_size = str.size() * 2; 
     char* out_buf =
-      (char*)calloc(out_buf_size + 2, sizeof(char)); // +2 для завершающего \0
+      (char*)calloc(out_buf_size + 2, sizeof(char)); 
     char* out_ptr = out_buf;
     size_t out_bytes_left = out_buf_size;
 
@@ -257,8 +257,8 @@ namespace Rinegine {
     const char* in_buf = reinterpret_cast<const char*>(wstr.c_str());
     size_t in_bytes_left = wstr.size() * sizeof(wchar_t);
     size_t out_buf_size =
-      wstr.size() * 4; // Максимум 4 байта на один символ в UTF-8
-    char* out_buf = (char*)calloc(out_buf_size + 1, sizeof(char)); // +1 для '\0'
+      wstr.size() * 4; 
+    char* out_buf = (char*)calloc(out_buf_size + 1, sizeof(char)); 
     char* out_ptr = out_buf;
     size_t out_bytes_left = out_buf_size;
 
@@ -289,7 +289,7 @@ namespace Rinegine {
   }
 
 #endif //! DECODE ENCODE UNICODE
-  // Lock::addl
+  
   namespace Kernel::Lock {
 
     struct LogVars {
@@ -297,7 +297,7 @@ namespace Rinegine {
       int _logs = 0;
     }_vars;
   }
-  // Kernel::Lock::LogVars Kernel::Lock::;
+  
 
   void Kernel::Lock::addl(Log::Types type, std::string text, bool print,
     std::string file, int line) {
@@ -327,66 +327,66 @@ namespace Rinegine {
     _vars.TempError += char(4);
     _vars._logs++;
   } //! Lock::addl
-  // rg_to_string
-  std::wstring Kernel::to_stringw(const std::string& str) { // std::string to std::wstring
+  
+  std::wstring Kernel::to_stringw(const std::string& str) { 
     return Kernel::utf8_decode(str);
   }
-  std::string Kernel::to_stringa(const std::wstring& str) { // std::wstring to std::string
+  std::string Kernel::to_stringa(const std::wstring& str) { 
     return Kernel::utf8_encode(str);
   }
-  std::wstring Kernel::to_stringw(const std::wstring& str) { // std::wstring to std::wstring
+  std::wstring Kernel::to_stringw(const std::wstring& str) { 
     return str;
   }
-  std::string Kernel::to_stringa(const std::string& str) { // std::string to std::string
+  std::string Kernel::to_stringa(const std::string& str) { 
     return str;
   }
 #ifdef RG_UTF
-  std::wstring Kernel::to_string(const std::string& str) { // std::string to std::wstring
+  std::wstring Kernel::to_string(const std::string& str) { 
     return Kernel::utf8_decode(str);
   }
-  std::wstring Kernel::to_string(const std::wstring& str) { // std::wstring to std::wstring
+  std::wstring Kernel::to_string(const std::wstring& str) { 
     return str;
   }
 #else
-  std::string Kernel::to_string(const std::wstring& str) { // std::wstring to std::string
+  std::string Kernel::to_string(const std::wstring& str) { 
     return Kernel::utf8_encode(str);
   }
-  std::string Kernel::to_string(const std::string& str) { // std::string to std::string
+  std::string Kernel::to_string(const std::string& str) { 
     return str;
   }
 #endif
   //! rg_to_string
 
-  // POINTs
+  
   // 2D
-  // template <class type> bool Kernel::POINT2D<type>::operator==(POINT2D<type> p) {
-  //   if (x == p.x && y == p.y)
-  //     return true;
-  //   return false;
-  // }
-  // template <class type> bool Kernel::POINT2D<type>::operator>=(POINT2D<type> p) {
-  //   if (x >= p.x && y >= p.y)
-  //     return true;
-  //   return false;
-  // }
-  // template <class type> bool Kernel::POINT2D<type>::operator<=(POINT2D<type> p) {
-  //   if (x <= p.x && y <= p.y)
-  //     return true;
-  //   return false;
-  // }
-  // template <class type> bool Kernel::POINT2D<type>::operator>(POINT2D<type> p) {
-  //   if (x > p.x && y > p.y)
-  //     return true;
-  //   return false;
-  // }
-  // template <class type> bool Kernel::POINT2D<type>::operator<(POINT2D<type> p) {
-  //   if (x < p.x && y < p.y)
-  //     return true;
-  //   return false;
-  // }
-  // template <class type> type &Kernel::POINT2D<type>::operator[](uint i) {
-  //   return (&x)[i % 2];
-  // }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   //! 2D
   // 3D
   template <class type> bool Kernel::POINT3D<type>::operator==(POINT3D<type> p) {
@@ -424,7 +424,7 @@ namespace Rinegine {
   }
   //! 3D
   // !POINTs
-  // COLORs
+  
   // 3D
   template <class type> bool Kernel::COLOR3D<type>::operator==(COLOR3D<type> c) {
     if (r == c.r && g == c.g && b == c.b)
@@ -477,7 +477,7 @@ namespace Rinegine {
   }
   //! 4D
   //! COLORs
-  // Keys
+  
   int RG_KEYS[350];
   int RG_KEYS_TEST[350];
   int RG_MOUSE[10] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -506,7 +506,7 @@ namespace Rinegine {
     return out;
   }
   //! Keys
-  // SysTime
+  
 #ifdef RG_SYS_WINDOWS
   struct Kernel::SysTime::SysTimeVar {
     SYSTEMTIME SystemTime;
@@ -515,7 +515,7 @@ namespace Rinegine {
   void Kernel::SysTime::update() {
     GetLocalTime(&_vars.SystemTime);
   }
-  // W
+  
   std::wstring Kernel::SysTime::YearW() {
     return std::to_wstring(_vars.SystemTime.wYear);
   }
@@ -550,7 +550,7 @@ namespace Rinegine {
       : L"") +
       temp);
   }
-  // A
+  
   std::string Kernel::SysTime::YearA() {
     return std::to_string(_vars.SystemTime.wYear);
   }
@@ -757,7 +757,7 @@ namespace Rinegine {
     return Kernel::SysTime::MillisecondsA();
   }
 #endif
-  // SetColorCMD
+  
 
 #if defined(RG_SYS_LINUX)
   void Kernel::SetColorConsole(WORD col) {
@@ -779,7 +779,7 @@ namespace Rinegine {
   }
 #endif
   //! SetColorCMD
-  // Substring//TODO!!!!
+  
 #ifdef RG_SYS_WINDOWS
   bool Kernel::isSubstringAt(const char& a, const std::string& b) {
     for (size_t i = 0; i < b.size(); ++i) {
@@ -835,7 +835,7 @@ namespace Rinegine {
   }
 #endif // TODO!!!
   //! Substring//TODO!!!!
-  // Open
+  
 #ifdef RG_SYS_WINDOWS
   void Kernel::Open(std::string path) {
     ShellExecuteA(0, "open", path.c_str(), NULL, NULL, SW_SHOWDEFAULT);
@@ -846,21 +846,21 @@ namespace Rinegine {
   }
 #elif defined(RG_SYS_LINUX)
   void Kernel::Open(std::string path) {
-    // std::filesystem::path fs_path(path);
-    // if (std::filesystem::exists(fs_path) || check) {
+    
+    
     system(("xdg-open " + path).c_str());
-    // } else {
-    // RG_LOG_LOCK_DEBUG("Open: path '" + path + "' does not exist");
-    // }
+    
+    
+    
   }
 
   void Kernel::Open(std::wstring path) {
-    // std::filesystem::path fs_path(path);
-    // if (std::filesystem::exists(fs_path) || check) {
+    
+    
     system(("xdg-open " + std::string(path.begin(), path.end())).c_str());
-    // } else {
-    // RG_LOG_LOCK_DEBUG(L"Open: path '" + path + L"' does not exist");
-    // }
+    
+    
+    
   }
 #else
   void Kernel::Open(std::string path) {
@@ -890,17 +890,17 @@ namespace Rinegine {
   int Kernel::RunProgram(ConfigRunProgram conf) {
     if (conf.path == "err")return 0;
     if (conf.assinhrone) {
-      //char* tempChar = (char*)calloc(conf.path.size(),sizeof(char));
-      //LPCSTR tempChar = RG::s_new<char>(conf.path.size());
+      
+      
       LPCSTR tempConstChar = conf.path.c_str();
       LPSTR tempChar = Rinegine::Kernel::s_new<char>(conf.path.size());
-      //RG_LOG_LOCK_DEBUG("Path '"+conf.path+"' size = "+to_string(conf.path.size()));
+      
       for (int i = 0; i < conf.path.size() && conf.path[i] != '\0'; i++) {
         tempChar[i] = conf.path[i];
       }
       STARTUPINFOA sti = { 0 };
       PROCESS_INFORMATION pi = { 0 };
-      //CreateProcess(NULL,tempChar,NULL,NULL,false,NULL/**/,NULL,NULL/**/,NULL/**/,NULL/**/);
+      
       RG_LOG_LOCK_INFO("Create new process: '" + std::string(tempChar) + "' in " + (conf.otherCMD ? "other " : "same ") + "terminal");
       int out = CreateProcessA(tempConstChar, NULL, NULL, NULL, false, (conf.otherCMD ? CREATE_NEW_CONSOLE : INHERIT_PARENT_AFFINITY), NULL, NULL, &sti, &pi);//TODO
       if (!out)RG_LOG_LOCK_ERROR("Error create new process");
@@ -935,24 +935,24 @@ namespace Rinegine {
       }
 
       if (pid == 0) {
-        // Дочерний процесс
+        
         // TODO: поддержка запуска в новом терминале (conf.otherCMD)
         execl("/bin/sh", "sh", "-c", conf.path.c_str(), (char*)nullptr);
-        // Если execl вернулся — ошибка
+        
         perror("execl failed");
-        _exit(127); // стандартный код ошибки exec
+        _exit(127); 
       }
       else {
-        // Родитель: процесс запущен, не ждём
+        
         RG_LOG_LOCK_DEBUG("Started background PID: " + std::to_string(pid));
-        return 1; // успех (аналог TRUE в WinAPI)
+        return 1; 
       }
     }
     else {
-      return RG_CMD(conf.path); // блокирующий вызов через system()
+      return RG_CMD(conf.path); 
     }
     return 0;
   }
 #endif
-  ///
+  
 } // namespace Rinegine

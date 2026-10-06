@@ -39,7 +39,7 @@ namespace Rinegine {
 	MPress,
 	MRelease,
 };
-// struct Kernel::Mapdata{
+
   
-// };
+
 } // namespace Rinegine

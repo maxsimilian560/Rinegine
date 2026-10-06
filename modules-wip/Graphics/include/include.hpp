@@ -37,4 +37,3 @@
 inline FT_Face DefFace;
 inline FT_Library library;
 
-// double RG_Render_Distance[2] = {10,10};

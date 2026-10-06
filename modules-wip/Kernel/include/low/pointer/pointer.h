@@ -9,22 +9,22 @@ namespace Rinegine {
       // init test
       bool is_init() const;
 
-      // POINTER GET
+      
       void* get() const;
 
-      // CONSTRUCTORs
+      
       Raw_Pointer();
       Raw_Pointer(void* in);
-      // В Raw_Pointer можно добавить:
+      
       Raw_Pointer(const Raw_Pointer&) = default;
       Raw_Pointer& operator=(const Raw_Pointer&) = default;
       Raw_Pointer(Raw_Pointer&&) = default;
       Raw_Pointer& operator=(Raw_Pointer&&) = default;
 
-      // INITs
+      
       void init();
       void init(void* in);
-      // OPERATORs
+      
       Raw_Pointer& operator=(void* in);
       void* operator->();
 

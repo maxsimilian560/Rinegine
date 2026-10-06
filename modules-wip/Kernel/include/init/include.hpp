@@ -33,7 +33,7 @@
 #include <chrono>
 #include <ctime>
 #include <stdexcept>
-//i thing this is useless, but will see 
+
 #include <type_traits>
 
 #if defined(RG_SYS_LINUX)

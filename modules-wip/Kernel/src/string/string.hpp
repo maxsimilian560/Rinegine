@@ -34,7 +34,7 @@ namespace Rinegine {
         return m_buffer.size() > 0 ? m_buffer.size() - 1 : 0;
       }
 
-      // --- То, чего точно не хватает для базовой работы ---
+      
 
       // 1. Добавление символов / строк (Конкатенация)
       String& operator+=(const char* str) {
@@ -46,7 +46,7 @@ namespace Rinegine {
         m_buffer.reserve(current_len + append_len + 1);
 
         if (!m_buffer.empty()) {
-          m_buffer.pop_back(); // Убираем старый '\0'
+          m_buffer.pop_back(); 
         }
 
         for (size_t i = 0; i < append_len; ++i) {
@@ -80,7 +80,7 @@ namespace Rinegine {
       }
     };
 
-    // Сложение строк: String s = s1 + " world";
+    
     inline String operator+(String lhs, const char* rhs) {
       lhs += rhs;
       return lhs;

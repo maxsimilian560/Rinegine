@@ -4,8 +4,8 @@ namespace Rinegine {
   namespace Graphics {
 
 
-    //функции для шедеров
-    //VERTEX
+    
+    
     void Vertex3d(double x, double y, double z) {
       glVertexAttrib3d((uint)Shader::Uniform::GetDefault().vertex_array_pos, x, y, z);
     }
@@ -16,7 +16,7 @@ namespace Rinegine {
       glVertexAttrib2f((uint)Shader::Uniform::GetDefault().vertex_array_pos, x, y);
     }
 
-    //COLOR
+    
     void ColorSet(bool type) {
       glUniform1i(Shader::Uniform::GetDefault().ColorSet, type);
     }
@@ -37,21 +37,21 @@ namespace Rinegine {
 
 
 
-    //POINTERS
+    
     void VertexPointer(int size, uint type, int stride, const void* pointer) {
       glVertexAttribPointer((uint)Shader::Uniform::GetDefault().vertex_array_pos, size, type, 1, stride, pointer);
-      //glVertexPointer(size,type,stride,pointer);
+      
     }
 
 
     void ColorPointer(int size, uint type, int stride, const void* pointer) {
       glVertexAttribPointer((uint)Shader::Uniform::GetDefault().color_array_pos, size, type, 1, stride, pointer);
-      //glColorPointer(size,type,stride,pointer);
+      
     }
 
     void TexCoordPointer(int size, uint type, int stride, const void* pointer) {
       glVertexAttribPointer((uint)Shader::Uniform::GetDefault().texture_coord_array_pos, size, type, 1, stride, pointer);
-      //glColorPointer(size,type,stride,pointer);
+      
     }
 
 
@@ -64,11 +64,11 @@ namespace Rinegine {
 
 
 
-    //////////////////////////////////////////////////////////////////////////////////////////
+    
 
 
 
-    //PERSPECT
+    
     void Frustum(float left, float right, float bottom, float top, float zNear, float zFar, Kernel::Matrix <float>& mat, bool use) {
       float FurstumMat[16] =
       {
@@ -103,7 +103,7 @@ namespace Rinegine {
       mat.reInit(4, 4, Shader::Uniform::GetDefault().IdentityMat);
     }
 
-    //MATRIX
+    
     void LoadMatrixf(Kernel::Matrix<float>& m) {
       glUniformMatrix4fv(Shader::Uniform::GetDefault().u_projMat, 1, 0, m.get());
     }
@@ -130,7 +130,7 @@ namespace Rinegine {
       if (use)glUniformMatrix4fv(Shader::Uniform::GetDefault().u_projMat, 1, 0, mat.get());
     }
 
-    //ROTATEf
+    
     void Rotatef(float a, float x, float y, float z, Kernel::Matrix <float>& mat, bool use) {
       float c = (float)cos(a / (float)180.f * (float)M_PI);
       float s = (float)sin(a / (float)180.f * (float)M_PI);
@@ -146,12 +146,12 @@ namespace Rinegine {
         0							,0							,0							,1
       };
 
-      //MultyMat4(projMat,rotateMat,projMat);
+      
       mat *= rotateMat;
       if (use)glUniformMatrix4fv(Shader::Uniform::GetDefault().u_projMat, 1, 0, mat.get());
     }
 
-    //SCALEF
+    
     void Scalef(float x, float y, float z, Kernel::Matrix <float>& mat, bool use) {
 
       float scaleMat[16] =
@@ -162,13 +162,13 @@ namespace Rinegine {
         0,0,0,1
       };
 
-      //MultyMat4(projMat,scaleMat,projMat);
+      
       mat *= scaleMat;
       if (use)glUniformMatrix4fv(Shader::Uniform::GetDefault().u_projMat, 1, 0, mat.get());
     }
 
 
-    //TRANSFORM
+    
     void Translatef(float x, float y, float z, Kernel::Matrix <float>& mat, bool use) {
 
       float TranslMat[16] =

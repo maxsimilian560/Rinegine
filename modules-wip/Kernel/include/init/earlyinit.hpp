@@ -4,7 +4,7 @@
 #pragma clang diagnostic ignored "-Wglobal-constructors"
 #endif
 
-// extern "C" BOOL WINAPI _CRT_INIT(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved);
+
 
 
 namespace Rinegine::Kernel {

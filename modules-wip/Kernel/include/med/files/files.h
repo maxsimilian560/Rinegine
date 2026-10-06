@@ -3,17 +3,17 @@
 #define RG_HERE_FILE_NAME "def/files"
 namespace Rinegine::Kernel {
 
-	// wstring_convert<codecvt_utf8_utf16<wchar_t>> converter;
+	
 #ifdef RG_SYS_WINDOWS
 	std::wstring utf8_to_utf16(const Rinegine::Kernel::String& str);
 	Rinegine::Kernel::String utf16_to_utf8(const std::wstring& wstr);
 #endif
 	// namespace Rinegine::Kernel {
 
-		//из файла utf8 в строку utf8
+		
 
 	std::wstring WFileLoad(Rinegine::Kernel::String path);
-	//из обычного фалйа в обычные строки
+	
 	Rinegine::Kernel::String AFileLoad(Rinegine::Kernel::String path);
 	std::wstring WFileLoad(std::wstring path);
 
@@ -26,9 +26,9 @@ namespace Rinegine::Kernel {
 
 
 #ifdef RG_SYS_WINDOWS
-	// typedef WIN32_FIND_DATA FileFindType;
-	// typedef WIN32_FIND_DATAA FileFindTypeA;
-	// typedef WIN32_FIND_DATAW FileFindTypeW;
+	
+	
+	
 	struct FileFindType : public WIN32_FIND_DATA {
 		rg_string get_name() {
 			return this->cFileName;
@@ -46,7 +46,7 @@ namespace Rinegine::Kernel {
 	};
 	class FileFinder {
 		HANDLE hFindFile;
-		FileFindType findFileData; // Используем объект, а не указатель
+		FileFindType findFileData; 
 		bool _init = false;
 		bool _eof = false;
 
@@ -61,7 +61,7 @@ namespace Rinegine::Kernel {
 	};
 	class FileFinderA {
 		HANDLE hFindFile;
-		FileFindTypeA findFileData; // Используем объект, а не указатель
+		FileFindTypeA findFileData; 
 		bool _init = false;
 		bool _eof = false;
 
@@ -78,7 +78,7 @@ namespace Rinegine::Kernel {
 
 	class FileFinderW {
 		HANDLE hFindFile;
-		FileFindTypeW findFileData; // Используем объект, а не указатель
+		FileFindTypeW findFileData; 
 		bool _init = false;
 		bool _eof = false;
 		public:
@@ -90,7 +90,7 @@ namespace Rinegine::Kernel {
 	};
 
 
-	// };
+	
 
 #elif defined(RG_SYS_LINUX)
 	struct FileFindType : public dirent {
@@ -98,11 +98,11 @@ namespace Rinegine::Kernel {
 			return this->d_name;
 		}
 	};
-	// typedef dirent FileFindType;
+	
 
 	class FileFinder {
 		DIR* dir;
-		// FileFindType entsat;
+		
 		FileFindType* ent;
 		bool _init;
 		bool _eof;

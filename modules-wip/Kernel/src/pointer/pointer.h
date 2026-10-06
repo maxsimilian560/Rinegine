@@ -4,14 +4,14 @@ namespace Rinegine::Kernel {
   // init test
   bool Raw_Pointer::is_init() const { return ptr != nullptr; }
 
-  // POINTER GET
+  
   void* Raw_Pointer::get() const { return ptr; }
 
-  // CONSTRUCTORs
+  
   Raw_Pointer::Raw_Pointer() : ptr(nullptr) {}
   Raw_Pointer::Raw_Pointer(void* in) : ptr(in) {
     if (Lock::s_memtest(in)) {
-      // typesize = Lock::s_get_typesize(in);
+      
       arrsize = Lock::s_get_size(in);
     }
     else {
@@ -20,7 +20,7 @@ namespace Rinegine::Kernel {
     }
   }
 
-  // INITs
+  
   void Raw_Pointer::init() {
     clear();
     ptr = Lock::s_new(typesize);
@@ -29,7 +29,7 @@ namespace Rinegine::Kernel {
     clear();
     ptr = in;
   }
-  // OPERATORs
+  
   Raw_Pointer& Raw_Pointer::operator=(void* in) {
     clear();
     ptr = in;

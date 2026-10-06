@@ -24,8 +24,8 @@ namespace Rinegine::Kernel {
     Matrix(size_t x, size_t y) { init(x, y); }
     Matrix(size_t x, size_t y, type* arr) { init(x, y, arr); }
     Matrix(size_t x, size_t y, type arr) { init(x, y, arr); }
-    ////////
-    //resize
+    
+    
     /*void resize(size_t x, size_t y){
       if(x*y!=0){
         type* arr = s_calloc<type>(x*y);
@@ -37,7 +37,7 @@ namespace Rinegine::Kernel {
         }
         matrix.clear();
         matrix.fill(x*y,arr);
-        //matrix.resize(x*y);
+        
         width = x;
         height = y;
       }else{
@@ -64,8 +64,8 @@ namespace Rinegine::Kernel {
         clear();
       }
     }
-    //////
-    //fill
+    
+    
     void fill(size_t x, size_t y, type* mat) {
       clear();
       resize(x, y);
@@ -145,8 +145,8 @@ namespace Rinegine::Kernel {
       for (int g = 1; g < a;g++) {
         for (int y = g;y < height * a;y += a) {
           for (int x = g; x < width * a;x += a) {
-            //rg_cout<<x<<" "<<y<<" "<<g<<endl;
-            //rg_cout<<((x-g)/a)<<" "<<((y-g)/a)<<" "<<g<<endl<<endl;
+            
+            
 
             if (((x - g) / a) - g >= 0) {
               mat2.get(x, y) += matrix[(((y - g) / a) + 0) * width + (((x - g) / a) - g)] / (g + 1.);
@@ -169,8 +169,8 @@ namespace Rinegine::Kernel {
       mat2.clear();
 
     }
-    ////////
-    //indexs
+    
+    
     /*type&operator[](size_t i){
       if(i>=0){
         if(i<matrix.size()){
@@ -273,7 +273,7 @@ namespace Rinegine::Kernel {
         }
         rg_cout << std::endl;
       }
-      //matrix.print();
+      
     }
     type* get() {
       return matrix.data();
@@ -281,13 +281,13 @@ namespace Rinegine::Kernel {
     type* get_mat() {
       return matrix.data();
     }
-    ///////
-    //empty
+    
+    
     bool empty() {
       return matrix.empty();
     }
-    //////
-    //size
+    
+    
     size_t size(size_t i) {
       switch (i) {
       case 0: return width;
@@ -302,27 +302,27 @@ namespace Rinegine::Kernel {
     Kernel::vec2<int> size() {
       return { width,height };
     }
-    ///////
-    //clear
+    
+    
     void clear() {
-      //if(!matrix.empty()){
-        //free(array);
+      
+        
       matrix.clear();
       width = 0;
       height = 0;
-      // }
+      
     }
     ~Matrix() {
       clear();
     }
-    ////////////////////////////////////
-    //operators
+    
+    
     void operator*=(Matrix<type>& mat) {
 
       size_t nsizex = width;
       size_t nsizey = mat.size(1);
 
-      //type* mt = (type*)calloc(nsizex*nsizey,sizeof(type));
+      
       type* mt = s_calloc<type>(nsizex * nsizey);
 
       for (size_t y = 0; y < nsizey;y++) {
@@ -339,14 +339,14 @@ namespace Rinegine::Kernel {
     }
     void operator*=(type* mat) {
 
-      //rg_cout<<"div\n";
+      
       size_t nsizex = width;
       size_t nsizey = height;
 
-      //type* mt = (type*)calloc(nsizex*nsizey,sizeof(type));
-      //rg_cout<<"mem\n";
+      
+      
       type* mt = (type*)Kernel::Allocator::GetDefault().allocate(nsizex * nsizey * sizeof(type));
-      //rg_cout<<"cycle\n";
+      
       for (size_t y = 0; y < nsizey;y++) {
         for (size_t x = 0; x < nsizex;x++) {
           for (size_t k = 0; k < nsizex;k++) {
@@ -355,13 +355,13 @@ namespace Rinegine::Kernel {
         }
 
       }
-      //rg_cout<<"end cycle\n";
+      
       clear();
-      //rg_cout<<"clear\n";
+      
       init(nsizex, nsizey, mt);
-      //rg_cout<<"init\n";
+      
       Kernel::Allocator::GetDefault().deallocate(mt);
-      //rg_cout<<"free\n";
+      
     }
 
     Matrix<type>operator*(Matrix<type> mat) {
@@ -369,7 +369,7 @@ namespace Rinegine::Kernel {
       size_t nsizex = width;
       size_t nsizey = mat.size(1);
 
-      //type* mt = (type*)calloc(nsizex*nsizey,sizeof(type));
+      
       type* mt = s_calloc<type>(nsizex * nsizey);
       for (size_t y = 0; y < nsizey;y++) {
         for (size_t x = 0; x < nsizex;x++) {
@@ -407,7 +407,7 @@ namespace Rinegine::Kernel {
     Array<type> matrix;
     Array<size_t> sides;//0 = x, 1 = y, 2 = z...
     size_t size;
-    //size_t width = 0,height = 0;
+    
   public:
     //init
     void init(size_t countSides){
@@ -434,8 +434,8 @@ namespace Rinegine::Kernel {
     Matrix(){}
     Matrix(size_t countSides, type*arr){init(countSides,arr);}
     Matrix(size_t countSides, type*arr, type*mat){init(countSides,arr,mat);}
-    ////////
-    //resize
+    
+    
     void resize(size_t countSides, type*arr){
       if(countSides>0){
         if(countSides!=sides.size()){
@@ -459,8 +459,8 @@ namespace Rinegine::Kernel {
         if(!matrix.empty())clear();
       }
     }
-    //////
-    //fill
+    
+    
     void fill(size_t countSides, type*arr, type*mat){
       clear();
       sides.fill(countSides,arr);
@@ -471,8 +471,8 @@ namespace Rinegine::Kernel {
       matrix.resize(size);
       matrix.fill(size,mat);
     }
-    ////////
-    //indexs
+    
+    
     type&operator[](size_t i){
       if(i>0){
         if(i<matrix.size()){
@@ -501,13 +501,13 @@ namespace Rinegine::Kernel {
     type*get(){
       return matrix.data();
     }
-    ///////
-    //empty
+    
+    
     bool empty(){
       return matrix.empty();
     }
-    //////
-    //size
+    
+    
     size_t size(size_t i){
       switch(i){
         case 0: return width;
@@ -516,8 +516,8 @@ namespace Rinegine::Kernel {
       }
 
     }
-    ///////
-    //clear
+    
+    
     void clear(){
       if(!sides.empty()){
         sides.clear();
@@ -529,14 +529,14 @@ namespace Rinegine::Kernel {
     ~Matrix(){
       clear();
     }
-    ////////////////////////////////////
-    //operators
+    
+    
     void operator*=(Matrix<type>& mat){
 
       size_t nsizex = width;
       size_t nsizey = mat.getSize(1);
 
-      //type* mt = (type*)calloc(nsizex*nsizey,sizeof(type));
+      
       type* mt = s_calloc<type>(nsizex*nsizey);
         for(size_t y = 0; y<nsizey;y++)
         {
@@ -555,14 +555,14 @@ namespace Rinegine::Kernel {
     }
     void operator*=(type* mat){
 
-      //rg_cout<<"div\n";
+      
       size_t nsizex = width;
       size_t nsizey = height;
 
-      //type* mt = (type*)calloc(nsizex*nsizey,sizeof(type));
-      //rg_cout<<"mem\n";
+      
+      
       type* mt = s_calloc<type>(nsizex*nsizey);
-      //rg_cout<<"cycle\n";
+      
         for(size_t y = 0; y<nsizey;y++)
         {
           for(size_t x = 0; x<nsizex ;x++)
@@ -574,13 +574,13 @@ namespace Rinegine::Kernel {
           }
 
         }
-      //rg_cout<<"end cycle\n";
+      
         clear();
-      //rg_cout<<"clear\n";
+      
         init(nsizex,nsizey,mt);
-      //rg_cout<<"init\n";
+      
         free(mt);
-      //rg_cout<<"free\n";
+      
     }
 
     Matrix<type>operator*(Matrix<type> mat){
@@ -588,7 +588,7 @@ namespace Rinegine::Kernel {
       size_t nsizex = width;
       size_t nsizey = mat.getSize(1);
 
-      //type* mt = (type*)calloc(nsizex*nsizey,sizeof(type));
+      
       type* mt = s_calloc<type>(nsizex*nsizey);
         for(size_t y = 0; y<nsizey;y++)
         {
@@ -644,8 +644,8 @@ namespace Rinegine::Kernel {
     RG_3DMatrix() {}
     RG_3DMatrix(size_t x, size_t y, size_t z) { init(x, y, z); }
     RG_3DMatrix(size_t x, size_t y, size_t z, type* arr) { init(x, y, z, arr); }
-    ////////
-    //resize
+    
+    
     void resize(size_t x, size_t y, size_t z) {
       if (x * y * z != 0) {
         matrix.resize(x * y * z);
@@ -670,8 +670,8 @@ namespace Rinegine::Kernel {
         clear();
       }
     }
-    //////
-    //fill
+    
+    
     void fill(size_t x, size_t y, size_t z, type* mat) {
       clear();
       resize(x, y, z);
@@ -721,8 +721,8 @@ namespace Rinegine::Kernel {
         }
       }
     }
-    ////////
-    //indexs
+    
+    
     type& operator[](size_t i) {
       if (i >= 0) {
         if (i < matrix.size()) {
@@ -788,13 +788,13 @@ namespace Rinegine::Kernel {
     type* get_mat() {
       return matrix.data();
     }
-    ///////
-    //empty
+    
+    
     bool empty() {
       return matrix.empty();
     }
-    //////
-    //size
+    
+    
     size_t size(size_t i) {
       switch (i) {
       case 0: return width;
@@ -804,8 +804,8 @@ namespace Rinegine::Kernel {
       }
 
     }
-    ///////
-    //clear
+    
+    
     void clear() {
       if (!matrix.empty()) {
         matrix.clear();
@@ -817,14 +817,14 @@ namespace Rinegine::Kernel {
     ~RG_3DMatrix() {
       clear();
     }
-    ////////////////////////////////////
-    //operators
+    
+    
     /*void operator*=(RG_3DMatrix<type>& mat){
 
       size_t nsizex = width;
       size_t nsizey = mat.getSize(1);
 
-      //type* mt = (type*)calloc(nsizex*nsizey,sizeof(type));
+      
       type* mt = s_calloc<type>(nsizex*nsizey);
         for(size_t y = 0; y<nsizey;y++)
         {
@@ -843,14 +843,14 @@ namespace Rinegine::Kernel {
     }*/
     /*void operator*=(type* mat){
 
-      //rg_cout<<"div\n";
+      
       size_t nsizex = width;
       size_t nsizey = height;
 
-      //type* mt = (type*)calloc(nsizex*nsizey,sizeof(type));
-      //rg_cout<<"mem\n";
+      
+      
       type* mt = s_calloc<type>(nsizex*nsizey);
-      //rg_cout<<"cycle\n";
+      
         for(size_t y = 0; y<nsizey;y++)
         {
           for(size_t x = 0; x<nsizex ;x++)
@@ -862,13 +862,13 @@ namespace Rinegine::Kernel {
           }
 
         }
-      //rg_cout<<"end cycle\n";
+      
         clear();
-      //rg_cout<<"clear\n";
+      
         init(nsizex,nsizey,mt);
-      //rg_cout<<"init\n";
+      
         free(mt);
-      //rg_cout<<"free\n";
+      
     }*/
 
     /*RG_3DMatrix<type>operator*(RG_3DMatrix<type> mat){
@@ -876,7 +876,7 @@ namespace Rinegine::Kernel {
       size_t nsizex = width;
       size_t nsizey = mat.getSize(1);
 
-      //type* mt = (type*)calloc(nsizex*nsizey,sizeof(type));
+      
       type* mt = s_calloc<type>(nsizex*nsizey);
         for(size_t y = 0; y<nsizey;y++)
         {
@@ -908,7 +908,7 @@ namespace Rinegine::Kernel {
     return out;
   }
 
-  //Удалить
+  
   template<class type, class type2>
   bool CountMatMinus(Matrix<type>& mat1, Matrix<type2>& mat2, int pos1, int pos2) {
     bool out = false;

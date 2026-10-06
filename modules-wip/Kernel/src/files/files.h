@@ -5,7 +5,7 @@
 #define RG_ERROR_WSTRING L"E6filenofound"
 namespace Rinegine::Kernel {
 
-	// wstring_convert<codecvt_utf8_utf16<wchar_t>> converter;
+	
 #ifdef RG_SYS_WINDOWS
 	std::wstring utf8_to_utf16(const Rinegine::Kernel::String& str) {
 		if (str.empty()) return {};
@@ -24,10 +24,10 @@ namespace Rinegine::Kernel {
 #endif
 	// namespace Rinegine::Kernel {
 
-		//из файла utf8 в строку utf8
+		
 
 	std::wstring WFileLoad(Rinegine::Kernel::String path) {
-		//uint temp = 0;
+		
 		std::wstring text;
 
 		std::ifstream file;
@@ -38,23 +38,23 @@ namespace Rinegine::Kernel {
 		}
 		file.open(path.c_str());
 
-		//if(!file.is_open()) return L"File no found";
+		
 		if (!file.is_open()) return RG_ERROR_WSTRING;
 
 		wchar_t temp = file.get();
 		while (!file.eof()) {
 			text += temp;
 			temp = file.get();
-			//	temp++;
+			
 		}
-		// std::wstring endText = Rinegine::Kernel::utf8_decode(text);
+		
 		std::wstring endText = text;
 		file.close();
 		return endText;
 	}
-	//из обычного фалйа в обычные строки
+	
 	Rinegine::Kernel::String AFileLoad(Rinegine::Kernel::String path) {
-		//uint temp = 0;
+		
 
 		if (path[0] == '"') {
 			path.erase(0, 1);
@@ -68,12 +68,12 @@ namespace Rinegine::Kernel {
 		file.open(path.c_str());
 
 		if (!file.is_open()) return RG_ERROR_STRING;
-		// char temp = file.get();
-		// while (!file.eof()) {
-		// 	text += temp;
-		// 	temp = file.get();
-		// 	//temp++;
-		// }
+		
+		
+		
+		
+		
+		
 		int ch;
 		while ((ch = file.get()) != EOF) {
 			text += (char)(ch);
@@ -81,22 +81,22 @@ namespace Rinegine::Kernel {
 		file.close();
 		return text;
 	}
-	// std::wstring WFileLoad(std::wstring path) {
-	// 	return WFileLoad(Rinegine::Kernel::utf8_encode(path));
-	// }
-	// #ifdef RG_UTF
-	// 	template <class in_string>
-	// 	rg_string FileLoad(in_string path) {
-	// 		return WFileLoad(rg_to_stringa(path));
-	// 	}
-	// #else
-	// 	template <class in_string>
-	// 	rg_string FileLoad(in_string path) {
-	// 		return AFileLoad(rg_to_stringa(path));
-	// 	}
-	// #endif
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
-		// }
+		
 
 
 	bool RG_IsFile(Rinegine::Kernel::String path) {
@@ -122,13 +122,13 @@ namespace Rinegine::Kernel {
 
 
 #ifdef RG_SYS_WINDOWS
-	// class Kernel::FileFinder {
-	// 	HANDLE hFindFile;
-	// 	FileFindType findFileData; // Используем объект, а не указатель
-	// 	bool _init = false;
-	// 	bool _eof = false;
+	
+	
+	
+	
+	
 
-	// public:
+	
 	bool FileFinder::eof() { return _eof; }
 
 	FileFindType* FileFinder::init(const rg_string& path) {
@@ -170,14 +170,14 @@ namespace Rinegine::Kernel {
 	FileFinder::~FileFinder() {
 		close();
 	}
-	// };
-	// class Kernel::FileFinderA {
-	// 	HANDLE hFindFile;
-	// 	FileFindTypeA findFileData; // Используем объект, а не указатель
-	// 	bool _init = false;
-	// 	bool _eof = false;
+	
+	
+	
+	
+	
+	
 
-	// public:
+	
 	bool FileFinderA::eof() { return _eof; }
 
 	FileFindTypeA* FileFinderA::init(const Rinegine::Kernel::String& path) {
@@ -219,15 +219,15 @@ namespace Rinegine::Kernel {
 	FileFinderA::~FileFinderA() {
 		close();
 	}
-	// };
+	
 
-	// class Kernel::FileFinderW {
-		// HANDLE hFindFile;
-		// FileFindTypeW findFileData; // Используем объект, а не указатель
-		// bool _init = false;
-		// bool _eof = false;
+	
+		
+		
+		
+		
 
-	// public:
+	
 	bool FileFinderW::eof() { return _eof; }
 
 	FileFindTypeW* FileFinderW::init(const std::wstring& path) {
@@ -269,17 +269,17 @@ namespace Rinegine::Kernel {
 	FileFinderW::~FileFinderW() {
 		close();
 	}
-	// };
+	
 
 #elif defined(RG_SYS_LINUX)
 
-	// class Kernel::FileFinder {
-	// 	DIR* dir = nullptr;
-	// 	FileFindType* ent = nullptr;
-	// 	bool _init = false;
-	// 	bool _eof = false;
-	//
-	// public:
+	
+	
+	
+	
+	
+	
+	
 	bool FileFinder::eof() { return _eof; }
 
 	FileFindType* FileFinder::init(const rg_string& path) {
@@ -331,15 +331,15 @@ namespace Rinegine::Kernel {
 	FileFinder::~FileFinder() {
 		close();
 	}
-	// };
+	
 
-	// class Kernel::FileFinderA {
-	// 	DIR* dir = nullptr;
-	// 	FileFindType* ent = nullptr;
-	// 	bool _init = false;
-	// 	bool _eof = false;
-	//
-	// public:
+	
+	
+	
+	
+	
+	
+	
 	bool FileFinderA::eof() { return _eof; }
 
 	FileFindType* FileFinderA::init(const Rinegine::Kernel::String& path) {
@@ -391,20 +391,20 @@ namespace Rinegine::Kernel {
 	FileFinderA::~FileFinderA() {
 		close();
 	}
-	// };
+	
 
-	// class Kernel::FileFinderW {
-	// 	DIR* dir = nullptr;
-	// 	FileFindType* ent = nullptr;
-	// 	bool _init = false;
-	// 	bool _eof = false;
-	//
-	// public:
+	
+	
+	
+	
+	
+	
+	
 	bool FileFinderW::eof() { return _eof; }
 
 	FileFindType* FileFinderW::init(const std::wstring& path) {
 		if (!_init) {
-			// В Linux нет прямой поддержки wchar_t в opendir, конвертируем wstring в UTF-8 string
+			
 			Rinegine::Kernel::String utf8_path = std::filesystem::path(path).string();
 			dir = opendir(utf8_path.c_str());
 			if (!dir) {
@@ -453,9 +453,9 @@ namespace Rinegine::Kernel {
 	FileFinderW::~FileFinderW() {
 		close();
 	}
-	// };
+	
 #endif
-	// }
+	
 
 
 	// namespace Rinegine::Kernel {
@@ -477,8 +477,8 @@ namespace Rinegine::Kernel {
 			* @param {function(char&): void} func - A lambda function that processes each character in the file. The character is passed by reference, so it can be modified.
 			*
 			* @example
-			* // Example usage:
-			* // Collect all characters from a file into a Rinegine::Kernel::String:
+			* 
+			* 
 			* Rinegine::Kernel::String result;
 			* Read("example.txt", [&result](char& file_char_in) {
 			*     result += file_char_in;
@@ -504,6 +504,6 @@ namespace Rinegine::Kernel {
 		file.close();
 	}
 
-	// 	}
-	// }
+	
+	
 }

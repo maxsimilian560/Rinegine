@@ -3,13 +3,13 @@ namespace Rinegine::WIP {
 
   namespace Console {
 
-    // ===== ОБЩЕЕ ДЛЯ ВСЕХ =====
+    
     static int close(void* handle) {
       (void)handle;
       return 0;
     }
 
-    // ===== ПЛАТФОРМЕННАЯ ЧАСТЬ =====
+    
 #if defined(__linux__) || defined(__ANDROID__)
 
     static StreamResult write_raw(void* handle, const void* src, size_t len) {
@@ -56,7 +56,7 @@ namespace Rinegine::WIP {
 
 #endif
 
-    // ===== ОБЩЕЕ ДЛЯ ВСЕХ =====
+    
     inline const StreamOps ops = {
       .read_raw = read_raw,
       .write_raw = write_raw,

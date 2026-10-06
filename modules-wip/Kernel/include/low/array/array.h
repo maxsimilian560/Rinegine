@@ -187,7 +187,7 @@ namespace Rinegine {
           }
           RawArray::data = ndata;
           RawArray::real_size = nreal_size;
-          // RawArray::size = current_size * sizeof(type);
+          
         }
       }
 
@@ -201,14 +201,14 @@ namespace Rinegine {
               data()[i].~type();
             }
           }
-          // RawArray::resize(nsize * sizeof(type));
+          
         }
         else if (nsize > prevsize) {
           reserve(nsize);
           for (size_t i = prevsize; i < nsize; ++i) {
             new (Rinegine::Kernel::Util::addressof(data()[i])) type();
           }
-          // RawArray::resize(nsize * sizeof(type));
+          
         }
         RawArray::size = nsize * sizeof(type);
       }
@@ -222,11 +222,11 @@ namespace Rinegine {
               data()[i].~type();
             }
           }
-          // RawArray::resize(nsize * sizeof(type));
+          
         }
         else if (nsize > prevsize) {
           reserve(nsize);
-          // RawArray::resize(nsize * sizeof(type));
+          
           type* begin = reinterpret_cast<type*>(RawArray::data) + prevsize;
           type* end = reinterpret_cast<type*>(RawArray::data) + nsize;
 

@@ -78,41 +78,41 @@ namespace Rinegine {
       struct ChainNode;
       size_t size_of_allocate;
       static size_t allocator_count;
-      // BYTE* current_end;
+      
       BYTE* next;
-      // struct {
+      
       BYTE* current_pool;
       BYTE* current_end = nullptr;
-      // size_t cell_used = 0;
-    // } current;
+      
+    
 
     //[sys mem id for id all of mem head]
     public:
-      // inline static thread_local uint32_t sys_mem_id = 0;
+      
       //[const by sys page size]
       inline static constexpr size_t max_alloc_page_size = 1024 * 1024 * 1024;
-      // static const std::size_t cache_line_size;
+      
       inline static constexpr size_t base_alloc_page_count = 4096;
       inline static size_t alloc_page_count = base_alloc_page_count;
 
 
-      // static Allocator& instance() {
-      //   alignas(Allocator) static char storage[sizeof(Allocator)];
-      //   static Allocator* actual_allocator = new (storage) Allocator();
-      //   return *actual_allocator;
-      // }
-      // inline static const size_t page_size = low_level::get_page_size();
+      
+      
+      
+      
+      
+      
       static size_t page_size() {
-        static const size_t size = low_level::get_page_size(); // Инициализация при первом вызове
+        static const size_t size = low_level::get_page_size(); 
         return size;
       }
-      // static Allocator Default;
+      
       static Allocator& GetDefault() {
-        // Создается один раз при первом вызове. Варнинг гарантированно исчезнет.
+        
         static Allocator instance;
         return instance;
       }
-      // static Allocator& Default;
+      
       using value_type = BYTE;
       template <typename U>
       struct rebind {
@@ -133,13 +133,13 @@ namespace Rinegine {
       IS_USED = 1 << 1,
       LOCKED = 1 << 2,
       READ_ONLY = 1 << 3,
-      // EXECUTABLE =,
+      
       //[CUSTOM AND SUPPORT]
       IS_POOL = 1 << 16,
       IS_FREE_LIST = 1 << 17,
       NO_TAIL = 1 << 18,
       CUSTOM_POOL = 1 << 19,
-      // IS_MAIN_POOL = 1 << 17,
+      
 
     };
     //[operators for correct work flags]
@@ -163,7 +163,7 @@ namespace Rinegine {
         );
     }
 
-    // Для += и -= (set/clear):
+    
     inline MEM_FLAG& operator|=(MEM_FLAG& a, MEM_FLAG b) {//[done]
       a = a | b;
       return a;
@@ -176,16 +176,16 @@ namespace Rinegine {
 
     //[mag num for check mem]
     constexpr uint32_t RG_MAG_NUM = ('R' << 0) | ('G' << 8) | ('M' << 16) | ('G' << 24);//[done]
-    // //[head mem structure]
+    
     struct MEM_HEAD {//[done i think]
       uint32_t magic;
       uint32_t flags;
       size_t size;
-      // size_t pool_id;
-      // size_t id;
+      
+      
     };
 
-    // extern size_t ALLOC_PAGE_COUNT;
+    
     //[get system mem, return system page with ready mem head]
     inline MEM_HEAD* SYS_GET_MEM(size_t bytes) {//[done it all]
 
@@ -199,7 +199,7 @@ namespace Rinegine {
 #endif
       if (ptr == nullptr) {
         RG_LOG_LOCK_CRITICAL("Allocator: fault alloc new page");
-        // Rinegine::Kernel::Debug::addl(Rinegine::Log::CRITICAL, "Allocator: fault alloc new page", true, RG_HERE_FILE_NAME, -1);
+        
       }
       else {
         RG_LOG_LOCK_DEBUG(std::format("ptr of pool: {:#x}", (long long)ptr));
@@ -207,8 +207,8 @@ namespace Rinegine {
         RG_LOG_LOCK_MEM(std::format("{:d} bytes of memory allocated ({:d} bytes were requested)", align, bytes));
         ptr->size = align;
         ptr->magic = RG_MAG_NUM;
-        // ptr->id = Allocator::sys_mem_id++;
-        // ptr->pool_id = 0;
+        
+        
         ptr->flags = static_cast<uint32_t>(MEM_FLAG::IS_USED | MEM_FLAG::IS_POOL);//[todo | i think it should changing in time some time on time or on always (sor)]
       }
       return ptr;
@@ -239,7 +239,7 @@ namespace Rinegine {
     inline void SYS_DEL_MEM(MEM_HEAD*& in) {//[done]
       if (in != nullptr) {
         if (in->magic == RG_MAG_NUM) [[likely]] {
-          // RG_LOG_LOCK_MEM(Rinegine::Kernel::String("ID: ") + std::to_string(in->id) + "; try deallocate");
+          
           RG_LOG_LOCK_MEM(std::format("ptr: {:#x}| try deallocate", (long long)in));
           if (Rinegine::Kernel::Flags::has(in->flags, MEM_FLAG::IS_USED)) [[likely]] {
             if (!Rinegine::Kernel::Flags::has(in->flags, MEM_FLAG::LOCKED)) [[likely]] {
@@ -258,22 +258,22 @@ namespace Rinegine {
               in = nullptr;
             }
             else {
-              // RG_LOG_LOCK_ERROR("SYS_DEL_MEM: mem " + std::to_string((long long)in) + " is locked");
+              
               RG_LOG_LOCK_ERROR(std::format("SYS_DEL_MEM: mem {:#x} is locked", ((long long)in)));
             }
           }
           else {
-            // RG_LOG_LOCK_ERROR("SYS_DEL_MEM: mem " + std::to_string((long long)in) + " isn't allocated");
+            
             RG_LOG_LOCK_ERROR(std::format("SYS_DEL_MEM: mem {:#x} isn't allocated", ((long long)in)));
           }
         }
         else {
-          // RG_LOG_LOCK_ERROR("SYS_DEL_MEM: mem " + std::to_string((long long)in) + " isn't allocated or isn't Rinegine type");
+          
           RG_LOG_LOCK_ERROR(std::format("SYS_DEL_MEM: mem {:#x} isn't allocated or isn't Rinegine type", ((long long)in)));
         }
       }
       else {
-        // RG_LOG_LOCK_ERROR("SYS_DEL_MEM: mem " + std::to_string((long long)in) + " is nullptr");
+        
         RG_LOG_LOCK_ERROR(std::format("SYS_DEL_MEM: mem {:#x} is nullptr", ((long long)in)));
       }
     }
@@ -313,7 +313,7 @@ namespace Rinegine {
 
         if (head->magic == RG_MAG_NUM) {
           return 0;
-          // RG_LOG_LOCK_ERROR(std::format("Memory {:#x} from pool id {:d} is corrupted!", (long long)head, head->pool_id));
+          
         }
         RG_LOG_LOCK_ERROR("MEM_RAW_CELL_TEST Error: ptr is not rg type");
       }

@@ -7,12 +7,12 @@
 #define TYPE64 long long
 #endif
 //*MODES
-// #define __ATOMIC_RELAXED 0 Самый быстрый режим из всех возможных
-// #define __ATOMIC_CONSUME 1 Используется только при чтении. Облегченная версия ACQUIRE
-// #define __ATOMIC_ACQUIRE 2 Используется только при чтении (load/read)
-// #define __ATOMIC_RELEASE 3 Используется только при записи (store/write)
-// #define __ATOMIC_ACQ_REL 4 Используется для операций типа RMW (Read-Modify-Write) — когда одновременно читается, и пишется (например, __atomic_fetch_add или compare_exchange)
-// #define __ATOMIC_SEQ_CST 5 Это режим по умолчанию, если используется std::atomic и параметры не указываются вручную.
+
+
+
+
+
+
 /**/
 //! MODES
 /*useless i think

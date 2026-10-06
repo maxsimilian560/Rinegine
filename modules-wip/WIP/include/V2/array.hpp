@@ -10,7 +10,7 @@ namespace Rinegine {
       void* data = nullptr;
       size_t _size = 0;
     public:
-      // size_t sizetype = 0;
+      
       virtual void init(size_t nsize) {
         if (data) { RG_LOG_LOCK_ERROR(std::format("RawArray error: mem already init"));return; }
         else {
@@ -27,16 +27,16 @@ namespace Rinegine {
       void resize(size_t nsize) {
         if (!data)init(nsize);
         else {
-          // Kernel::Allocator::GetDefault().reallocate(data, nsize);
+          
           MEM_HEAD* head = (((MEM_HEAD*)data) - 1);
 
-          // if (MEM_RAW_CELL_TEST(head)) {
-          //   RG_LOG_LOCK_CRITICAL("Allocator error: reallocate get corrupted memory");
-          // }
+          
+          
+          
           void* new_cell = allocate(nsize);
           memcpy(new_cell, data, _size);
-          // MEM_HEAD* new_cell_head = (((MEM_HEAD*)new_cell) - 1);
-          // new_cell_head->flags = head->flags;
+          
+          
           Kernel::Allocator::GetDefault().deallocate(head);
         }
       }

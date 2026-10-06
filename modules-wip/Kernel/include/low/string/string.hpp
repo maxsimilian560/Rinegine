@@ -183,22 +183,22 @@ namespace Rinegine {
       }
     };
 
-    // template <class type = char>
-    // inline Base_String<type> operator+(Base_String<type> lhs, const type* rhs) {
-    //   lhs += rhs;
-    //   return lhs;
-    // }
-    // template <class type = char>
-    // inline Base_String<type> operator+(const type* rhs, Base_String<type> lhs) {
-    //   Base_String<type> result(lhs);
-    //   result += rhs;
-    //   return result;
-    // }
-    // template <class type = char>
-    // inline Base_String<type> operator+(Base_String<type> lhs, const Base_String<type>& rhs) {
-    //   lhs += rhs;
-    //   return lhs;
-    // }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     template <typename T>
     concept Base_String_Compare_Add = requires(T t, Base_String<char> str) {
       { t += str } -> Util::convertible_to<Base_String<char>>;
@@ -268,9 +268,9 @@ namespace Rinegine {
     }
 
     typedef Base_String<char> String;
-    // inline Base_String operator""(const char* str, size_t) {
-    //   return Base_String(str);
-    // }
+    
+    
+    
 
   } // namespace Kernel
 } // namespace Rinegine

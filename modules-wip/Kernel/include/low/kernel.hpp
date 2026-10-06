@@ -5,8 +5,8 @@ namespace Rinegine {
   namespace Kernel {
 
     // [Arrays with main arguments]
-    // extern Array<Rinegine::Kernel::String> AMainArguments;  //TODO remove vector, set RG::Array!
-    // extern Array<std::wstring> WMainArguments; //TODO remove vector, set RG::Array!
+    
+    
 
     // [Flags namespace for work with flags]
 
@@ -16,11 +16,11 @@ namespace Rinegine {
     template <class type> class Matrix;
     template <class type> class Array;
     //* vars
-    // inline Rinegine::Kernel::String Main::AFolder;  //[TODO] remove for remove a global vars and constructors
-    // inline std::wstring Main::WFolder; //[TODO] remove for remove a global vars and constructors
-    // inline rg_string Main::Folder;     //[TODO] remove for remove a global vars and constructors
+    
+    
+    
     extern uint8_t RG_D_W_L;
-    // typedef void_func  void(*)(void)
+    
 #ifndef RinegineLib
     int rg_main();
     int InterPoint(int, char**, int (*)() = rg_main);    // [done]
@@ -28,27 +28,27 @@ namespace Rinegine {
 #endif
     void init();                               // [todo]
 
-    namespace Lock { // LOCK
-      // friend class Kernel;
+    namespace Lock { 
+      
 
       struct LogVars;
       extern LogVars _vars;
 
-      // public:
-      // void s_depage(void* addr, size_t count); 
+      
+      
       bool s_rawmemtest(const char*);
-      // template <class type> bool s_memtest(type *);
+      
       int s_memtest(const void*);
 
       size_t s_get_size(const void*);
       size_t s_get_typesize(const void*);
 
-      // template <class type> char s_print(type *);
-        // void* s_page(size_t count = 1, void* addr = nullptr,
-          // int prot = PROT_READ | PROT_WRITE,
-          // int flags = MAP_PRIVATE | MAP_ANONYMOUS, int fd = -1,
-          // off_t offset = 0); //[exp]
-        // char s_print(void *, size_t = 1);
+      
+        
+          
+          
+          
+        
 
       void addl(Log::Types = Log::DEBUG, Rinegine::Kernel::String = "NULL", bool = 1,
         Rinegine::Kernel::String = "NULL", int = -1); // [done]
@@ -57,7 +57,7 @@ namespace Rinegine {
 
       template <class type> struct CountPointers;
     }
-    // code
+    
 
 
     std::wstring to_stringw(const Rinegine::Kernel::String&);  // [done]
@@ -77,22 +77,22 @@ namespace Rinegine {
     int KeyIsPress(int, bool); // [done]
     int TestKeyIs(int, bool);  // [done]
 
-    // #ifdef RG_SYS_WINDOWS
-    //     void SetColorTCMD(WORD); // [done,exp]
-    // #else
+    
+    
+    
     void SetColorConsole(WORD); // [done,exp]
-    // #ifdef RG_SYS_WINDOWS
+    
 #ifdef __WIN32
     inline void SetColorTCMD(WORD col) { // [done,exp]
       static HANDLE HandleMainConsole = GetStdHandle(STD_OUTPUT_HANDLE);
       SetConsoleTextAttribute(HandleMainConsole, col);
     }
 #endif
-    // #ifdef __WIN32 && !defined(RinegineLib)
+    
 
-    // #endif
+    
 
-    // #endif
+    
     bool isSubstringAt(const char&, const Rinegine::Kernel::String&);        // [done]
     bool isSubstringAt(const wchar_t&, const std::wstring&);    // [done]
     bool isSubstringAt(const Rinegine::Kernel::String&, const Rinegine::Kernel::String&); // [done]
@@ -102,15 +102,15 @@ namespace Rinegine {
     void Open(std::wstring);                  // [done,exp]
 
     Rinegine::Kernel::String tolowstr(Rinegine::Kernel::String); // [done]
-    /// @brief Converts the string to lowercase. Does not work with unicode!!!
-    /// Only Latin
-    /// @param wstring any case
-    /// @return `wstring`  lowercase
+    
+    
+    
+    
     std::wstring tolowwstr(std::wstring); // [redo,exp]
 
     //* decode
     char* itoa(int, int = 10, char* = nullptr);            // [done,todo]
-    // Rinegine::Kernel::String itos(long long int, long long int = 10);   // [done]
+    
     Rinegine::Kernel::String itos(size_t, size_t = 10);                 // [done]
     std::wstring itows(long long int, long long int = 10); // [done]
     std::wstring itows(size_t, size_t = 10);               // [done]
@@ -122,18 +122,18 @@ namespace Rinegine {
 
     //*debug
 
-    // std::wstring GetLastErrorStringW(DWORD);//todo... i guess
-    // Rinegine::Kernel::String GetLastErrorStringA(DWORD);//todo... i guess
+    
+    
     rg_string GetLastErrorString(DWORD); // [done]
 
-    // ALLOC
+    
 
-    // template <class type> static type *s_new(int, type &&);
+    
 
-    // template <class type> type *s_new(int, const type &);
+    
 
-    // void *s_fast_new(size_t s, int typesize) { return
-    // Lock::s_fast_new(s, typesize); }
+    
+    
 
     size_t s_get_typesize(void*);
 
@@ -230,9 +230,9 @@ namespace Rinegine {
       return (T&&)obj;
     }
 
-    // template <class type> void s_resize(type *&, to_rvalue(int));
+    
     template <class type>
-    void s_resize(type*& in, to_rvalue(int) n_size) { // 
+    void s_resize(type*& in, to_rvalue(int) n_size) { 
       if (n_size <= 0) {
         s_delete(in);
         return;
@@ -270,7 +270,7 @@ namespace Rinegine {
     uint64_t RG_Rand();
     uint64_t Rand();
     double RandRange(double, double);
-    // encode
+    
     template <class type> class RG_List {
     public:
       operator Array<type>& ();
@@ -287,7 +287,7 @@ namespace Rinegine {
       static int get_id(Rinegine::Kernel::String);
       static RG_ENCODE_VALUE get(Rinegine::Kernel::String);
     };
-    // files
+    
 #ifdef RG_SYS_WINDOWS
     std::wstring utf8_to_utf16(const Rinegine::Kernel::String& str);
     Rinegine::Kernel::String utf16_to_utf8(const std::wstring& wstr);
@@ -300,79 +300,79 @@ namespace Rinegine {
     rg_string FileLoad(in_string path) {
       return AFileLoad(rg_to_stringa(path));
     }
-    // #else
-        // template <class in_string> rg_string FileLoad(in_string path);
-    // #endif
+    
+        
+    
     bool RG_IsFile(Rinegine::Kernel::String path);
     Rinegine::Kernel::String GetTypePath(Rinegine::Kernel::String path);
-// #ifdef RG_SYS_WINDOWS
-//     class FileFinder {
-//       HANDLE hFindFile;
-//       WIN32_FIND_DATA findFileData; // Используем объект, а не указатель
-//       bool _init = false;
-//       bool _eof = false;
-//     public:
-//       bool eof();
-//       WIN32_FIND_DATA* init(const rg_string& path);
-//       WIN32_FIND_DATA* next();
-//       void close();
-//       ~FileFinder();
-//     };
-//     class FileFinderA {
-//       HANDLE hFindFile;
-//       WIN32_FIND_DATAA findFileData; // Используем объект, а не указатель
-//       bool _init = false;
-//       bool _eof = false;
-//     public:
-//       bool eof();
-//       WIN32_FIND_DATAA* init(const Rinegine::Kernel::String& path);
-//       WIN32_FIND_DATAA* next();
-//       void close();
-//       ~FileFinderA();
-//     };
-//     class FileFinderW {
-//       HANDLE hFindFile;
-//       WIN32_FIND_DATAW findFileData; // Используем объект, а не указатель
-//       bool _init = false;
-//       bool _eof = false;
-//     public:
-//       bool eof();
-//       WIN32_FIND_DATAW* init(const std::wstring& path);
-//       WIN32_FIND_DATAW* next();
-//       void close();
-//       ~FileFinderW();
-//     };
-// #endif
-    // otherDef
-    // struct ConfigRunProgram;
 
-// #ifdef RG_SYS_WINDOWS
-//     int RunProgram(ConfigRunProgram conf);
-// #elif defined(RG_SYS_LINUX)
-//     int RunProgram(ConfigRunProgram conf);
-// #endif
-    // Rinegine::Kernel::String RG_AGetMainFolder();
-    // std::wstring RG_WGetMainFolder();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+
+
+
+
+
+
+    
+    
     Rinegine::Kernel::String RG_GetMainFolder();
 
 
-    // Version    // class File {
-    // public:
-    //   template <typename lambda> static void Read(Rinegine::Kernel::String path, lambda func);
-    //   void Write(Rinegine::Kernel::String path, const Rinegine::Kernel::String& in);
-    //   template <typename lambdaw>
-    //   static void ReadW(const wchar_t* path, lambdaw func);
-    //   void WriteW(const char* path, const std::wstring& in);
-    // };
+    
+    
+    
+    
+    
+    
+    
+    
     void RG_GetVersion(int& major, int& minor, int& patch, int& wip);
     void RG_GetVersion(int& major, int& minor, int& patch);
-    // class File {
-    // public:
-    //   template <typename lambda> static void Read(Rinegine::Kernel::String path, lambda func);
-    //   void Write(Rinegine::Kernel::String path, const Rinegine::Kernel::String& in);
-    //   template <typename lambdaw>
-    //   static void ReadW(const wchar_t* path, lambdaw func);
-    //   void WriteW(const char* path, const std::wstring& in);
-    // };
+    
+    
+    
+    
+    
+    
+    
+    
   };
 } // namespace Rinegine

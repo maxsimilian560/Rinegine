@@ -5,9 +5,9 @@
 #ifndef RG_DEBUG
 #define RG_DEBUG
 #endif
-// #ifndef RinegineLib
-// #include "earlyinit.hpp"
-// #endif
+
+
+
 #include "predefine.hpp"
 #include "setup.hpp"
 #include "include.h"
