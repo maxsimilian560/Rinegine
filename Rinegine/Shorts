@@ -1,4 +1,7 @@
 #pragma once
+#ifdef RG_WIP
+#include "WIP/Shorts"
+#else
 #ifdef RINEGINE_WSHORT
 #error The stable version was already connected.
 #endif
@@ -28,3 +31,5 @@ namespace Rinegine {
 #endif
 
 };
+
+#endif

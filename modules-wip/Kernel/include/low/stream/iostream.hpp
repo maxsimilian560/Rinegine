@@ -1,4 +1,13 @@
 #pragma once
+/**
+ * @file
+ * @brief Implementation of standard input/output streams (IOstream).
+ * @author Maximilian Panteleev
+ * @copyright Managed under the Rinemest License (see LICENSE file).
+ * @ingroup Kernel
+ */
+
+
 namespace Rinegine::Kernel {
 
   namespace IOstream {

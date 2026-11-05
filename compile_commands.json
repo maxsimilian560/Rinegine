@@ -1,36 +1,25 @@
 [
   {
-    "file": "modules/Kernel/Kernel.cpp",
+    "file": "main.cpp",
     "arguments": [
       "/usr/bin/clang++",
-      "-c",
-      "modules/Kernel/Kernel.cpp",
-      "-target",
-      "x86_64-pc-windows-msvc",
-      "-Xclang",
-      "-internal-isystem",
-      "-Xclang",
-      "/home/maxsimilian560/.wine/drive_c/msvc/VC/Tools/MSVC/14.51.36231/include",
-      "-Xclang",
-      "-internal-isystem",
-      "-Xclang",
-      "/home/maxsimilian560/.wine/drive_c/msvc/Windows Kits/10/Include/10.0.26100.0/ucrt",
-      "-Xclang",
-      "-internal-isystem",
-      "-Xclang",
-      "/home/maxsimilian560/.wine/drive_c/msvc/Windows Kits/10/Include/10.0.26100.0/um",
-      "-Xclang",
-      "-internal-isystem",
-      "-Xclang",
-      "/home/maxsimilian560/.wine/drive_c/msvc/Windows Kits/10/Include/10.0.26100.0/shared",
-      "-O3",
+      "main.cpp",
+      "-DRG_WIP",
+      "-g",
       "-std=c++23",
-      "-DRG_DEBUG",
-      "-DRG_KERNEL_LINKED_INTERNAL",
+      "-I/usr/local/Rinegine",
+      "-I/usr/local/Rinegine/include",
+      "-I/usr/local/Rinegine/vendor/include",
+      "-I/usr/local/Rinegine/vendor/include/freetype2",
+      "-I/usr/local/Rinegine/vendor/include/glad/4_6/",
       "-o",
-      "Kernel.obj"
+      "wexample",
+      "-I",
+      "/usr/local/Rinegine",
+      "-isystem",
+      "/usr/local/Rinegine"
     ],
     "directory": "/usr/local/Rinegine",
-    "output": "Kernel.obj"
+    "output": "wexample"
   }
 ]

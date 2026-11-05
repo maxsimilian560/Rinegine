@@ -2,5 +2,9 @@
 #ifdef RINEGINE_WGRAPHICS
 #error The stable version was already connected.
 #endif
+#ifdef RG_WIP
+#include "WIP/Graphics"
+#else
 #define RINEGINE_GRAPHICS
 #include "../modules/Graphics/include/set.hpp"
+#endif

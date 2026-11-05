@@ -13,3 +13,6 @@
 
 #include "high/set.hpp"
 */
+namespace Rinegine::Graphics{
+  
+}

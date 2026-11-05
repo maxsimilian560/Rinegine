@@ -1,4 +1,13 @@
 #pragma once
+/**
+ * @file
+ * @brief Implementation of early initialization (even before the framework initializes; be careful, especially with the GCC compiler).
+ * @author Maximilian Panteleev
+ * @copyright Managed under the Rinemest License (see LICENSE file).
+ * @ingroup Kernel
+ */
+
+
 #if defined(__clang__)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wglobal-constructors"

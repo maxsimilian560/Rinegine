@@ -1,4 +1,13 @@
 #pragma once
+/**
+ * @file
+ * @brief TODO1 srcBRIEF
+ * @author Maximilian Panteleev
+ * @copyright Managed under the Rinemest License (see LICENSE file).
+ * @ingroup Kernel
+ */
+
+
 
 namespace Rinegine {
   
@@ -99,7 +108,7 @@ namespace Rinegine {
     
   namespace Kernel {
 
-    int InterPoint(int argc, char** argv, int (*own_main)()) {
+    int EntryPoint(int argc, char** argv, int (*own_main)()) {
 #if defined(RG_SYS_WINDOWS) && defined(RG_UTF)
       _setmode(_fileno(stdout), _O_U16TEXT);
       _setmode(_fileno(stdin), _O_U16TEXT);
@@ -132,7 +141,7 @@ namespace Rinegine {
       return exit_code;
     };
 
-    int InterPoint(int argc, wchar_t** argv, int (*own_main)()) {
+    int EntryPoint(int argc, wchar_t** argv, int (*own_main)()) {
 #if defined(RG_SYS_WINDOWS) && defined(RG_UTF)
       _setmode(_fileno(stdout), _O_U16TEXT);
       _setmode(_fileno(stdin), _O_U16TEXT);

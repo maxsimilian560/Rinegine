@@ -1,4 +1,13 @@
 #pragma once
+/**
+ * @file
+ * @brief Framework setup and flag verification
+ * @author Maximilian Panteleev
+ * @copyright Managed under the Rinemest License (see LICENSE file).
+ * @ingroup Kernel
+ */
+
+
 #undef RG_HERE_FILE_NAME
 #define RG_HERE_FILE_NAME "kernel/setup"
 
@@ -11,13 +20,13 @@
 namespace Rinegine::CompileTest {
   template <auto Standard>
   struct CheckCpp23 {
-    static_assert(Standard >= 202302L, 
+    static_assert(Standard >= 202302L,
       "\n\n============================================================\n"
       "❌ RINEGINE COMPILATION ERROR:\n"
       "👉 Rinegine Framework requires C++23 or higher. 👈\n"
       "👉 Please add '-std=c++23' or '-std=c++2b' to your flags. 👈\n"
       "============================================================\n"
-    );
+      );
   };
   inline CheckCpp23<__cplusplus> trigger;
 }
@@ -140,8 +149,7 @@ typedef __UINT64_TYPE__ uint64;
 
 
 
-
-#ifdef DO_NOT_ENABLE_THIS_FLAG_UNLESS_YOU_WANT_TO_BREAK_THE_BUILD
+#ifdef false
 /*clang*/
 
 #define _LP64 1

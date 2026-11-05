@@ -1,4 +1,13 @@
 #pragma once
+/**
+ * @file
+ * @brief Allocator implementation
+ * @author Maximilian Panteleev
+ * @copyright Managed under the Rinemest License (see LICENSE file).
+ * @ingroup Kernel
+ */
+
+
 
 #undef RG_HERE_FILE_NAME
 #define RG_HERE_FILE_NAME "kernel/allocator"
@@ -78,51 +87,46 @@ namespace Rinegine {
       struct ChainNode;
       size_t size_of_allocate;
       static size_t allocator_count;
-      
-      BYTE* next;
-      
-      BYTE* current_pool;
-      BYTE* current_end = nullptr;
-      
-    
+      struct pool {
+        BYTE* next = nullptr;
+        BYTE* ptr = nullptr;
+        BYTE* end = nullptr;
+        char* owns = nullptr;
+      }heap;
+      // BYTE* next;
+      // BYTE* current_pool;
+      // BYTE* current_end = nullptr;
 
-    //[sys mem id for id all of mem head]
-    public:
-      
+
+
+      //[sys mem id for id all of mem head]
+      public:
+
       //[const by sys page size]
       inline static constexpr size_t max_alloc_page_size = 1024 * 1024 * 1024;
-      
+
       inline static constexpr size_t base_alloc_page_count = 4096;
       inline static size_t alloc_page_count = base_alloc_page_count;
 
-
-      
-      
-      
-      
-      
-      
       static size_t page_size() {
-        static const size_t size = low_level::get_page_size(); 
+        static const size_t size = low_level::get_page_size();
         return size;
       }
-      
+
       static Allocator& GetDefault() {
-        
+
         static Allocator instance;
         return instance;
       }
-      
+
       using value_type = BYTE;
-      template <typename U>
-      struct rebind {
-        using other = Allocator;
-      };
-      bool operator==(const Allocator&) const noexcept = default;
+
+      bool operator==(const Allocator&) const noexcept;
       Allocator();
-      void init();
-       BYTE* allocate(size_t in);
-       void deallocate(void* ptr, size_t n = 0);
+      Allocator(const Allocator& in);
+      bool init();
+      BYTE* allocate(size_t in);
+      void deallocate(void* ptr, size_t n = 0);
       ~Allocator();
     };
 
@@ -133,13 +137,13 @@ namespace Rinegine {
       IS_USED = 1 << 1,
       LOCKED = 1 << 2,
       READ_ONLY = 1 << 3,
-      
+
       //[CUSTOM AND SUPPORT]
       IS_POOL = 1 << 16,
       IS_FREE_LIST = 1 << 17,
       NO_TAIL = 1 << 18,
       CUSTOM_POOL = 1 << 19,
-      
+
 
     };
     //[operators for correct work flags]
@@ -163,7 +167,7 @@ namespace Rinegine {
         );
     }
 
-    
+
     inline MEM_FLAG& operator|=(MEM_FLAG& a, MEM_FLAG b) {//[done]
       a = a | b;
       return a;
@@ -176,46 +180,18 @@ namespace Rinegine {
 
     //[mag num for check mem]
     constexpr uint32_t RG_MAG_NUM = ('R' << 0) | ('G' << 8) | ('M' << 16) | ('G' << 24);//[done]
-    
+
     struct MEM_HEAD {//[done i think]
       uint32_t magic;
       uint32_t flags;
       size_t size;
-      
-      
+
+
     };
-
-    
-    //[get system mem, return system page with ready mem head]
-    inline MEM_HEAD* SYS_GET_MEM(size_t bytes) {//[done it all]
-
-      size_t align = low_level::align_to_page(bytes, Allocator::page_size());
-#ifdef RG_SYS_WINDOWS
-      MEM_HEAD* ptr = (MEM_HEAD*)VirtualAlloc(nullptr, align, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
-#elif defined(RG_SYS_LINUX)
-      MEM_HEAD* ptr = (MEM_HEAD*)mmap(nullptr, align, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-#else
-      MEM_HEAD* ptr = nullptr;
-#endif
-      if (ptr == nullptr) {
-        RG_LOG_LOCK_CRITICAL("Allocator: fault alloc new page");
-        
-      }
-      else {
-        RG_LOG_LOCK_DEBUG(std::format("ptr of pool: {:#x}", (long long)ptr));
-        RG_LOG_LOCK_MEM(std::to_string(align) + " bytes of memory allocated (" + std::to_string(bytes) + " bytes were requested)");
-        RG_LOG_LOCK_MEM(std::format("{:d} bytes of memory allocated ({:d} bytes were requested)", align, bytes));
-        ptr->size = align;
-        ptr->magic = RG_MAG_NUM;
-        
-        
-        ptr->flags = static_cast<uint32_t>(MEM_FLAG::IS_USED | MEM_FLAG::IS_POOL);//[todo | i think it should changing in time some time on time or on always (sor)]
-      }
-      return ptr;
-    }
 
     inline BYTE* SYS_GET_RAW_MEM(size_t bytes) {//[done it all]
       if (bytes == 0) [[unlikely]] return nullptr;
+      // rg_cout << "[DEBUGinline]: " <<
       size_t align = low_level::align_to_page(bytes, Allocator::page_size());
 #ifdef RG_SYS_WINDOWS
       BYTE* ptr = (BYTE*)VirtualAlloc(nullptr, align, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
@@ -229,56 +205,25 @@ namespace Rinegine {
         || ptr == MAP_FAILED
 #endif
         ) {
-        RG_LOG_LOCK_CRITICAL(std::format("Allocator: fault alloc new page. An attempt was made to allocate {:d} ({:d} bytes were requested", align, bytes));
+        RG_LOG_LOCK_CRITICAL(Buffer<256>("Allocator: fault alloc new page. An attempt was made to allocate {:d} ({:d} bytes were requested)", align, bytes));
+        return nullptr;
       }
-      RG_LOG_LOCK_MEM(std::format("{:d} bytes of memory allocated ({:d} bytes were requested)", align, bytes));
+      // RG_LOG_LOCK_MEM(Buffer<256>("{:#x}| {:d} bytes of memory allocated ({:d} bytes were requested)", (long long)ptr, align, bytes));
       return ptr;
     }
 
-    //[deallocate sys mem pages with mem head]
-    inline void SYS_DEL_MEM(MEM_HEAD*& in) {//[done]
-      if (in != nullptr) {
-        if (in->magic == RG_MAG_NUM) [[likely]] {
-          
-          RG_LOG_LOCK_MEM(std::format("ptr: {:#x}| try deallocate", (long long)in));
-          if (Rinegine::Kernel::Flags::has(in->flags, MEM_FLAG::IS_USED)) [[likely]] {
-            if (!Rinegine::Kernel::Flags::has(in->flags, MEM_FLAG::LOCKED)) [[likely]] {
-              RG_LOG_LOCK_MEM(std::format("{:d} bytes of memory deallocated", in->size));
-              RG_LOG_LOCK_DEBUG(std::format("ptr of pool: {:#x}", (long long)in));
-              in->flags = 0;
-              in->magic = 0;
-              in->size = 0;
-#ifdef RG_SYS_WINDOWS
-              VirtualFree(in, 0, MEM_RELEASE);
-#elif defined(RG_SYS_LINUX)
-              munmap(in, in->size);
-#else
-              RG_LOG_LOCK_ERROR("SYS_DEL_MEM: For what?");
-#endif
-              in = nullptr;
-            }
-            else {
-              
-              RG_LOG_LOCK_ERROR(std::format("SYS_DEL_MEM: mem {:#x} is locked", ((long long)in)));
-            }
-          }
-          else {
-            
-            RG_LOG_LOCK_ERROR(std::format("SYS_DEL_MEM: mem {:#x} isn't allocated", ((long long)in)));
-          }
-        }
-        else {
-          
-          RG_LOG_LOCK_ERROR(std::format("SYS_DEL_MEM: mem {:#x} isn't allocated or isn't Rinegine type", ((long long)in)));
-        }
-      }
-      else {
-        
-        RG_LOG_LOCK_ERROR(std::format("SYS_DEL_MEM: mem {:#x} is nullptr", ((long long)in)));
-      }
+    //[get system mem, return system page with ready mem head]
+    inline MEM_HEAD* SYS_GET_MEM(size_t bytes) {//[done it all]
+      size_t align = low_level::align_to_page(bytes, Allocator::page_size());
+      MEM_HEAD* ptr = (MEM_HEAD*)SYS_GET_RAW_MEM(bytes);
+
+      ptr->size = align;
+      ptr->magic = RG_MAG_NUM;
+      ptr->flags = static_cast<uint32_t>(MEM_FLAG::IS_USED | MEM_FLAG::IS_POOL);//[todo | i think it should changing in time some time on time or on always (sor)]
+      return ptr;
     }
 
-    inline void SYS_DEL_RAW_MEM(BYTE*& in, size_t size
+    inline void SYS_DEL_RAW_MEM(BYTE*& in, [[maybe_unused]] size_t size
 #ifdef RG_SYS_WINDOWS
       = 0
 #endif
@@ -289,12 +234,44 @@ namespace Rinegine {
 #elif defined(RG_SYS_LINUX)
         munmap(in, size);
 #else
-        RG_LOG_LOCK_ERROR("SYS_DEL_MEM: For what?");
+        RG_LOG_LOCK_ERROR("SYS_DEL_RAW_MEM: For what?");
 #endif
-        RG_LOG_LOCK_MEM("Some raw mem is deallocated");
+        // RG_LOG_LOCK_MEM("Some raw mem is deallocated");
         in = nullptr;
       }
     }
+
+    //[deallocate sys mem pages with mem head]
+    inline void SYS_DEL_MEM(MEM_HEAD*& in) {//[done]
+      if (in != nullptr) {
+        if (in->magic == RG_MAG_NUM) [[likely]] {
+          // RG_LOG_LOCK_MEM(Buffer<128>("ptr: {:#x}| try deallocate", (long long)in));
+          if (Rinegine::Kernel::Flags::has(in->flags, MEM_FLAG::IS_USED)) [[likely]] {
+            if (!Rinegine::Kernel::Flags::has(in->flags, MEM_FLAG::LOCKED)) [[likely]] {
+              // RG_LOG_LOCK_MEM(Buffer<128>("{:d} bytes of memory deallocated", in->size));
+              // RG_LOG_LOCK_DEBUG(Buffer<128>("ptr of pool: {:#x}", (long long)in));
+              in->flags = 0;
+              in->magic = 0;
+              in->size = 0;
+              SYS_DEL_RAW_MEM((BYTE*&)in,in->size);
+            }
+            else {
+              RG_LOG_LOCK_ERROR(Buffer<128>("SYS_DEL_MEM: mem {:#x} is locked", ((long long)in)));
+            }
+          }
+          else {
+            RG_LOG_LOCK_ERROR(Buffer<128>("SYS_DEL_MEM: mem {:#x} isn't allocated", ((long long)in)));
+          }
+        }
+        else {
+          RG_LOG_LOCK_ERROR(Buffer<128>("SYS_DEL_MEM: mem {:#x} isn't allocated or isn't Rinegine type", ((long long)in)));
+        }
+      }
+      else {
+        RG_LOG_LOCK_ERROR(Buffer<128>("SYS_DEL_MEM: mem {:#x} is nullptr", ((long long)in)));
+      }
+    }
+
     //[mem pool for storage mem cells and other mem pools]
     inline bool MEM_CELL_TEST(const void* ptr) {
       if (ptr) [[likely]] {
@@ -313,7 +290,7 @@ namespace Rinegine {
 
         if (head->magic == RG_MAG_NUM) {
           return 0;
-          
+
         }
         RG_LOG_LOCK_ERROR("MEM_RAW_CELL_TEST Error: ptr is not rg type");
       }

@@ -1,4 +1,13 @@
 #pragma once
+/**
+ * @file
+ * @brief External dependencies for the kernel module
+ * @author Maximilian Panteleev
+ * @copyright Managed under the Rinemest License (see LICENSE file).
+ * @ingroup Kernel
+ */
+
+
 #undef RG_HERE_FILE_NAME
 #define RG_HERE_FILE_NAME "kernel/include"
 

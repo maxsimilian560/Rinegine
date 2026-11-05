@@ -1,4 +1,13 @@
 #pragma once
+/**
+ * @file
+ * @brief Implementation of methods for converting wide (UTF-16) strings to Unicode (UTF-8) strings and vice versa.
+ * @author Maximilian Panteleev
+ * @copyright Managed under the Rinemest License (see LICENSE file).
+ * @ingroup Kernel
+ */
+
+
 
 #if defined(__SSE4_1__)
 #include <smmintrin.h>

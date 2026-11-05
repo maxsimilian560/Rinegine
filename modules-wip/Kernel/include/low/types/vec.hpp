@@ -1,4 +1,13 @@
 #pragma once
+/**
+ * @file
+ * @brief Implementation of vector structures (similar to GLSL vectors like vec2, vec3, vec4, etc.)
+ * @author Maximilian Panteleev
+ * @copyright Managed under the Rinemest License (see LICENSE file).
+ * @ingroup Kernel
+ */
+
+
 #if defined(__clang__)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wgnu-anonymous-struct"

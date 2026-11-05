@@ -1,4 +1,13 @@
 #pragma once
+/**
+ * @file
+ * @brief Various implementations (may be moved to utilities (util))
+ * @author Maximilian Panteleev
+ * @copyright Managed under the Rinemest License (see LICENSE file).
+ * @ingroup Kernel
+ */
+
+
 
 namespace Rinegine::Kernel::Impl {
   struct safe_view_impl {

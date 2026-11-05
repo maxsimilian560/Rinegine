@@ -1,2 +1,2 @@
 #/usr/bin/sh
-echo example | ./bin/rgcmd
+echo wexample | ./bin/rgcmd

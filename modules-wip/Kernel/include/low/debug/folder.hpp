@@ -1,4 +1,13 @@
 #pragma once
+/**
+ * @file
+ * @brief Implementation of folder handling
+ * @author Maximilian Panteleev
+ * @copyright Managed under the Rinemest License (see LICENSE file).
+ * @ingroup Kernel
+ */
+
+
 
 namespace Rinegine {
   namespace Kernel {

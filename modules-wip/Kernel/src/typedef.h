@@ -1,4 +1,13 @@
 #pragma once
+/**
+ * @file
+ * @brief TODO1 srcBRIEF
+ * @author Maximilian Panteleev
+ * @copyright Managed under the Rinemest License (see LICENSE file).
+ * @ingroup Kernel
+ */
+
+
 #undef RG_HERE_FILE_NAME
 #define RG_HERE_FILE_NAME "kernel/typedef"
 
@@ -17,7 +26,7 @@ typedef long int lint;
 typedef long unsigned int luint;
 
 namespace Rinegine {
-  enum CONSOLE_COLOR {
+  enum CONSOLE_COLOR : WORD{
     C_BLACK = 0,
     C_RED,
     C_GREEN,

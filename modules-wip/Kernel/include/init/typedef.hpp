@@ -1,4 +1,13 @@
 #pragma once
+/**
+ * @file
+ * @brief Defining certain elementary types using typedef
+ * @author Maximilian Panteleev
+ * @copyright Managed under the Rinemest License (see LICENSE file).
+ * @ingroup Kernel
+ */
+
+
 #undef RG_HERE_FILE_NAME
 #define RG_HERE_FILE_NAME "kernel/typedef"
 
@@ -23,6 +32,9 @@ typedef long int lint;
 typedef long unsigned int luint;
 
 namespace Rinegine {
+  typedef unsigned char BYTE;
+  typedef BYTE byte;
+
   enum CONSOLE_COLOR {
     C_BLACK = 0,
     C_RED,
@@ -48,7 +60,7 @@ namespace Rinegine {
     MRelease,
   };
   struct Error {
-    enum Log{
+    enum Log {
       RG_OWN_ERROR = -1,                 //-1
       RG_ERROR_WINDOWS_NO_CREATED,       // 0
       RG_ERROR_FREETYPE,                 // 1
@@ -73,50 +85,31 @@ namespace Rinegine {
     operator int() const {
       return static_cast<int>(this->code);
     }
-    inline static const rg_char* const Code[]{
-      RG_L "NULL",                                             //-1
-      RG_L "Error creating window.",                           // 0
-      RG_L "Font loading error.",                              // 1
-      RG_L "Font not found.",                                  // 2
-      RG_L "Out of RAM memory.",                               // 3
-      RG_L "Symbol not found.",                                // 4
-      RG_L "GLFW initialization error.",                       // 5
-      RG_L "File not found.",                                  // 6
-      RG_L "RG_Array access error, RG_Array size = 0.",        // 7
-      RG_L "RG_Array access error, RG_Array size < [i].",      // 8
-      RG_L "RG_Array access error, RG_Array size - i > size.", // 9
-      RG_L "The loaded texture has fewer color channels supported (less than "
-           "4).",                                              // 10
-      RG_L "Incorrect use of the material creation function.", // 11
-      RG_L "RG_Matrix access error, RG_Matrix size = 0 or width < "
-           "getPoint(width).", // 12
-      RG_L "RG_LoadTexture(string path) - the wrong path was passed to the "
-           "function.",                                        // 13
-      RG_L "RG_FindPlanet(string) could not find the planet.", // 14
-      RG_L "RG_GetBlockType could not find the block.",        // 15
-      RG_L "RG_GetTexture could not find the texture.",        // 16
+    inline static const char* const Code[]{
+      "NULL",                                             //-1
+      "Error creating window.",                           // 0
+      "Font loading error.",                              // 1
+      "Font not found.",                                  // 2
+      "Out of RAM memory.",                               // 3
+      "Symbol not found.",                                // 4
+      "GLFW initialization error.",                       // 5
+      "File not found.",                                  // 6
+      "RG_Array access error, RG_Array size = 0.",        // 7
+      "RG_Array access error, RG_Array size < [i].",      // 8
+      "RG_Array access error, RG_Array size - i > size.", // 9
+      "The loaded texture has fewer color channels supported (less than "
+      "4).",                                              // 10
+      "Incorrect use of the material creation function.", // 11
+      "RG_Matrix access error, RG_Matrix size = 0 or width < "
+      "getPoint(width).", // 12
+      "RG_LoadTexture(string path) - the wrong path was passed to the "
+      "function.",                                        // 13
+      "RG_FindPlanet(string) could not find the planet.", // 14
+      "RG_GetBlockType could not find the block.",        // 15
+      "RG_GetTexture could not find the texture.",        // 16
     };
   };
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+
 
   enum s_delete_errors {
     SD_NO_ERR = 0,
@@ -128,4 +121,25 @@ namespace Rinegine {
     size_t size = 0;
     char magnum[2] = { 'R', 'G' };
   };
+  namespace Kernel {
+
+    template <typename T>
+    concept std_string_exist = requires { typename std::string; }&&
+      requires { typename Util::conditional_t < requires { typename std::string; }, std::string, void > ; }&&
+    Util::same_as < T, Util::conditional_t < requires { typename std::string; }, std::string, void >> ;
+
+    template <typename T>
+    concept std_string_like = \
+      !Util::same_as<T, const char*>&&
+      requires(T t) {
+        { t.c_str() } -> Util::same_as<const char*>;
+        { t.size() }  -> Util::same_as<size_t>;
+        { t.empty() } -> Util::same_as<bool>;
+    };
+    struct StdStringViewLike {//[TODO]
+      const char* _c_str;
+      size_t  _size;
+      bool  _empty;
+    };
+  }
 } // namespace Rinegine

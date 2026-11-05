@@ -1,4 +1,13 @@
 #pragma once
+/**
+ * @file
+ * @brief Implementation of Array and RawArray
+ * @author Maximilian Panteleev
+ * @copyright Managed under the Rinemest License (see LICENSE file).
+ * @ingroup Kernel
+ */
+
+
 
 namespace Rinegine {
   namespace Kernel {
@@ -16,8 +25,38 @@ namespace Rinegine {
       RawArray& operator=(RawArray&& other) noexcept;
       void resize(size_t nsize);
       void reserve(size_t nsize);
-      BYTE& operator[](size_t i);
-      const BYTE& operator[](size_t i) const;
+      // BYTE& operator[](size_t i);
+      // const BYTE& operator[](size_t i) const;
+      [[nodiscard]] inline BYTE& operator[](size_t index) {
+#ifdef RG_DEBUG
+        if (index >= real_size) [[unlikely]] {
+          RG_LOG_FATAL(std::format("RawArray Out-of-Bounds: Index {:d} exceeds physical capacity {:d}!", index, real_size));
+          __builtin_trap();
+        }
+        else if (index > size) [[unlikely]] {
+          RG_LOG_WARN(std::format("RawArray Bounds Warning: Index {:d} exceeds logical size {:d} (physical capacity is {:d}).", index, size, real_size));
+        }
+#else
+        __builtin_assume(index < real_size);
+#endif
+
+        return data[index];
+      }
+
+      [[nodiscard]] inline const BYTE& operator[](size_t index) const {
+#ifdef RG_DEBUG
+        if (index >= real_size) [[unlikely]] {
+          RG_LOG_FATAL(std::format("RawArray Out-of-Bounds CRITICAL: Index {:d} exceeds physical capacity {:d}!", index, real_size));
+          __builtin_trap();
+        }
+        else if (index > size) [[unlikely]] {
+          RG_LOG_WARN(std::format("RawArray Bounds Warning: Index {:d} exceeds logical size {:d}.", index, size));
+        }
+#else
+        __builtin_assume(index < real_size);
+#endif
+        return data[index];
+      }
       BYTE* begin() noexcept;
       const BYTE* begin() const noexcept;
 
@@ -187,7 +226,7 @@ namespace Rinegine {
           }
           RawArray::data = ndata;
           RawArray::real_size = nreal_size;
-          
+
         }
       }
 
@@ -201,14 +240,14 @@ namespace Rinegine {
               data()[i].~type();
             }
           }
-          
+
         }
         else if (nsize > prevsize) {
           reserve(nsize);
           for (size_t i = prevsize; i < nsize; ++i) {
             new (Rinegine::Kernel::Util::addressof(data()[i])) type();
           }
-          
+
         }
         RawArray::size = nsize * sizeof(type);
       }
@@ -222,11 +261,11 @@ namespace Rinegine {
               data()[i].~type();
             }
           }
-          
+
         }
         else if (nsize > prevsize) {
           reserve(nsize);
-          
+
           type* begin = reinterpret_cast<type*>(RawArray::data) + prevsize;
           type* end = reinterpret_cast<type*>(RawArray::data) + nsize;
 

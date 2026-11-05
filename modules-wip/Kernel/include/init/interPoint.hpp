@@ -1,27 +1,36 @@
 #pragma once
+/**
+ * @file
+ * @brief Framework entry point function and library checks
+ * @author Maximilian Panteleev
+ * @copyright Managed under the Rinemest License (see LICENSE file).
+ * @ingroup Kernel
+ */
+
+/** @cond INTERNAL_LINK_CHECKS */
 
 namespace Rinegine::LinkTest::Kernel {
 
 #if defined(_WIN32)
-  #if defined(_MSC_VER) || (defined(__clang__) && !defined(__MINGW32__))
-    #pragma comment(linker, "/FAILIFMISMATCH:RINEGINE_KERNEL_LINKED=1")
-    void ERROR_likely_you_forgot_to_link_lrg_kernel();
-  #else
-    
-    void ERROR_likely_you_forgot_to_link_lrg_kernel() __asm__(
-        "\n\n============================================================\n"
-        "❌ RINEGINE LINK ERROR:\n"
-        "👉 You forgot to link the kernel library: -lrg-kernel 👈\n"
-        "============================================================\n\n"
-    );
-  #endif
+#if defined(_MSC_VER) || (defined(__clang__) && !defined(__MINGW32__))
+#pragma comment(linker, "/FAILIFMISMATCH:RINEGINE_KERNEL_LINKED=1")
+  void ERROR_likely_you_forgot_to_link_lrg_kernel();
 #else
-  
+
   void ERROR_likely_you_forgot_to_link_lrg_kernel() __asm__(
-      "\n\n\033[1;31m============================================================\n"
-      "❌ RINEGINE LINK ERROR:\n"
-      "👉 \033[1;4mYou forgot to link the kernel library: -lrg-kernel\033[0m\033[1;31m 👈\n"
-      "============================================================\033[0m\n\n"
+    "\n\n============================================================\n"
+    "❌ RINEGINE LINK ERROR:\n"
+    "👉 You forgot to link the kernel library: -lrg-kernel 👈\n"
+    "============================================================\n\n"
+  );
+#endif
+#else
+
+  void ERROR_likely_you_forgot_to_link_lrg_kernel() __asm__(
+    "\n\n\033[1;31m============================================================\n"
+    "❌ RINEGINE LINK ERROR:\n"
+    "👉 \033[1;4mYou forgot to link the kernel library: -lrg-kernel\033[0m\033[1;31m 👈\n"
+    "============================================================\033[0m\n\n"
   );
 #endif
 
@@ -33,13 +42,13 @@ namespace Rinegine::LinkTest::Kernel {
 }
 
 
-
+/** @endcond */
 #ifndef RinegineLib
-namespace Rinegine::Kernel{}
+namespace Rinegine::Kernel {}
 int rg_main();
 int main(int argc, char* argv[]) {
-  Rinegine::LinkTest::Kernel::LinkChecker __link_check;
-  return Rinegine::Kernel::InterPoint(argc, argv, Rinegine::Kernel::rg_main);
+  [[maybe_unused]] Rinegine::LinkTest::Kernel::LinkChecker __link_check;
+  return Rinegine::Kernel::EntryPoint(argc, argv, Rinegine::Kernel::rg_main);
 }
 #endif
 

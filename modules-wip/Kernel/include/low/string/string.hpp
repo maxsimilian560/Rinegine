@@ -1,17 +1,76 @@
 #pragma once
+/**
+ * @file
+ * @brief Implementation of String and Base_String
+ * @author Maximilian Panteleev
+ * @copyright Managed under the Rinemest License (see LICENSE file).
+ * @ingroup Kernel
+ */
+
+
+
+
 
 namespace Rinegine {
   namespace Kernel {
-    template <typename T>
-    concept std_string_exist = requires { typename std::string; }&& Util::same_as<T, std::string>;
-
 
     template <class type = char>
     class Base_String {
       private:
       Rinegine::Kernel::Array<type> m_buffer;
-
       public:
+
+      Base_String() {};
+      Base_String(const type* str) {
+        if (str != nullptr) {
+          m_buffer.reserve(strlen(str) + 1);
+          m_buffer.resize(strlen(str));
+          memcpy(m_buffer.data(), str, m_buffer.size() + 1);
+        }
+      }
+      Base_String(size_t count) {
+        m_buffer.reserve(count);
+      }
+      Base_String(size_t count, type chr) {
+        if (count > 0) {
+          m_buffer.reserve(count + 1);
+          m_buffer.resize(count);
+          memset(m_buffer.data(), chr, count);
+          m_buffer[m_buffer.size()] = '\0';
+        }
+      }
+      template <typename Iterator>
+      Base_String(Iterator first, Iterator last) {
+        if (first != last && first < last) {
+          size_t count = static_cast<size_t>(last - first);
+          m_buffer.reserve(count + 1);
+          m_buffer.resize(count);
+          memcpy(m_buffer.data(), &(*first), count * sizeof(type));
+          m_buffer[m_buffer.size()] = '\0';
+        }
+      }
+      // requires std_string_exist<S>
+      template <std_string_like S>
+      Base_String(S in) {
+        if (!in.empty()) {
+          size_t count = in.size();
+          m_buffer.reserve(count + 1);
+          m_buffer.resize(count);
+          memcpy(m_buffer.data(), &(*in.c_str()), count * sizeof(type));
+          m_buffer[m_buffer.size()] = '\0';
+        }
+      }
+      Base_String(StdStringViewLike in) {
+        if (!in._empty) {
+          m_buffer.reserve(in._size + 1);
+          m_buffer.resize(in._size);
+          memcpy(m_buffer.data(), in._c_str, in._size);
+        }
+      }
+      Base_String(const Base_String& in) {
+        m_buffer = in.m_buffer;
+      }
+
       type* begin() noexcept { return m_buffer.begin(); }
       const type* begin() const noexcept { return m_buffer.begin(); }
 
@@ -63,46 +122,7 @@ namespace Rinegine {
 
 
 
-      Base_String() = default;
-      Base_String(const type* str) {
-        if (str != nullptr) {
-          for (size_t i = 0; str[i] != '\0'; ++i) {
-            m_buffer.push_back(str[i]);
-          }
-          m_buffer.reserve(m_buffer.size() + 1);
-          m_buffer[m_buffer.size()] = '\0';
-        }
-      }
-      Base_String(size_t count, type chr) {
-        if (count > 0) {
-          m_buffer.reserve(count + 1);
-          m_buffer.resize(count);
-          memset(m_buffer.data(), chr, count);
-          m_buffer[m_buffer.size()] = '\0';
-        }
-      }
-      template <typename Iterator>
-      Base_String(Iterator first, Iterator last) {
-        if (first != last && first < last) {
-          size_t count = static_cast<size_t>(last - first);
-          m_buffer.reserve(count + 1);
-          m_buffer.resize(count);
-          memcpy(m_buffer.data(), &(*first), count * sizeof(type));
-          m_buffer[m_buffer.size()] = '\0';
-        }
-      }
-      template <typename S>
-        requires std_string_exist<S>
-      Base_String(S in) {
-        if (!in.empty()) {
-          size_t count = in.size();
-          m_buffer.reserve(count + 1);
-          m_buffer.resize(count);
-          memcpy(m_buffer.data(), &(*in.c_str()), count * sizeof(type));
-          m_buffer[m_buffer.size()] = '\0';
-        }
-      }
-      Base_String(const Base_String&) = default;
+
 
       const type* c_str() const { return m_buffer.data() ? m_buffer.data() : ""; }
       type* data() { return m_buffer.data(); }
@@ -121,11 +141,21 @@ namespace Rinegine {
       }
       Base_String& operator+=(const type* str) {
         if (str != nullptr) {
-          for (size_t i = 0; str[i] != '\0'; ++i) {
-            m_buffer.push_back(str[i]);
+          // for (size_t i = 0; str[i] != '\0'; ++i) {
+          //   m_buffer.push_back(str[i]);
+          // }
+          // size_t len = strlen(str);
+          // m_buffer.reserve(len + 1);
+          // memcpy(m_buffer.data(), str, len + 1);
+          // m_buffer[m_buffer.size()] = '\0';
+          size_t len = strlen(str);
+          if (len > 0) {
+            size_t old_size = m_buffer.size();
+            m_buffer.reserve(old_size + len + 1);
+            m_buffer.resize(old_size + len);
+            memcpy(m_buffer.data() + old_size, str, len);
+            m_buffer[m_buffer.size()] = '\0';
           }
-          m_buffer.reserve(m_buffer.size() + 1);
-          m_buffer[m_buffer.size()] = '\0';
         }
         return *this;
       }
@@ -136,7 +166,22 @@ namespace Rinegine {
         return *this;
       }
 
-      Base_String& operator+=(const Base_String& other) { return *this += other.c_str(); }
+      Base_String& operator+=(const Base_String& other) {
+        // m_buffer.reserve(m_buffer.size() + other.size() + 1);
+        // type* e = m_buffer.end();
+        // m_buffer.resize(m_buffer.size() + other.size());
+        // memcpy(e, other.c_str(), other.size() + 1);
+        // return *this;
+        size_t other_size = other.size();
+        if (other_size > 0) {
+          size_t old_size = m_buffer.size();
+          m_buffer.reserve(old_size + other_size + 1);
+          m_buffer.resize(old_size + other_size);
+          memcpy(m_buffer.data() + old_size, other.c_str(), other_size);
+          m_buffer[m_buffer.size()] = '\0';
+        }
+        return *this;
+      }
 
       type operator[](size_t index) const { return m_buffer[index]; }
       type& operator[](size_t index) { return m_buffer[index]; }
@@ -178,27 +223,30 @@ namespace Rinegine {
           m_buffer[m_buffer.size()] = '\0';
         }
       }
+      void resize(size_t new_capacity) {
+        m_buffer.resize(new_capacity);
+      }
       void clear() {
         m_buffer.clear();
       }
     };
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     template <typename T>
     concept Base_String_Compare_Add = requires(T t, Base_String<char> str) {
       { t += str } -> Util::convertible_to<Base_String<char>>;
@@ -213,7 +261,7 @@ namespace Rinegine {
     }
 
     template <class type = char, Base_String_Compare_Convert in1, class in2>
-      requires (!Base_String_Compare_Add<in1>)
+      requires (!Base_String_Compare_Add<in1> && !Util::is_enum_v<in1> && !Util::is_integral_v<in1>)
     inline Base_String<type> operator+(in1 lhs, in2 rhs) {
       Base_String<type> result(lhs);
       result += rhs;
@@ -268,9 +316,9 @@ namespace Rinegine {
     }
 
     // typedef Base_String<char> String;
-    
-    
-    
+
+
+
 
   } // namespace Kernel
 } // namespace Rinegine

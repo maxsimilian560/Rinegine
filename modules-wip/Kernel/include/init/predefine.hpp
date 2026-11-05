@@ -1,4 +1,13 @@
 #pragma once
+/**
+ * @file
+ * @brief Studying and using compiler preprocessor definitions
+ * @author Maximilian Panteleev
+ * @copyright Managed under the Rinemest License (see LICENSE file).
+ * @ingroup Kernel
+ */
+
+/** @cond IN-DEPTH_DEVELOPMENT_(WIP) */
 
 /*GCC RAW*/
 #if defined(_LP64) or defined(__LP64__)
@@ -4128,3 +4137,5 @@ struct uint256 {
 #else
 
 #endif
+
+/** @endcond */

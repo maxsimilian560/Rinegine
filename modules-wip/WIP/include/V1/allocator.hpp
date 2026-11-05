@@ -1,4 +1,13 @@
 #pragma once
+/**
+ * @file
+ * @brief TODO1 BRIEF
+ * @author Maximilian Panteleev
+ * @copyright Managed under the Rinemest License (see LICENSE file).
+ * @ingroup TODO1 MODULE
+ */
+
+
 #undef RG_HERE_FILE_NAME
 #define RG_HERE_FILE_NAME "wip/allocator"
 /*
@@ -214,6 +223,15 @@ namespace Rinegine {
 
 //[===============================================]
 #pragma once
+/**
+ * @file
+ * @brief TODO1 BRIEF
+ * @author Maximilian Panteleev
+ * @copyright Managed under the Rinemest License (see LICENSE file).
+ * @ingroup TODO1 MODULE
+ */
+
+
 
 
 

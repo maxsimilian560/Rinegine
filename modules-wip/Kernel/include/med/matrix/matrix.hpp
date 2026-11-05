@@ -1,4 +1,13 @@
 #pragma once
+/**
+ * @file
+ * @brief Template class for mathematical matrix operations.
+ * @author Maximilian Panteleev
+ * @copyright Managed under the Rinemest License (see LICENSE file).
+ * @ingroup Kernel
+ */
+
+
 namespace Rinegine::Kernel {
 
   template<typename type>

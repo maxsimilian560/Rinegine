@@ -1,4 +1,13 @@
 #pragma once
+/**
+ * @file
+ * @brief Post init
+ * @author Maximilian Panteleev
+ * @copyright Managed under the Rinemest License (see LICENSE file).
+ * @ingroup Kernel
+ */
+
+
 
 
 

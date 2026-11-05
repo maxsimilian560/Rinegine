@@ -1,54 +1,43 @@
 #pragma once
+/**
+ * @file
+ * @brief Main implementations of the kernel module
+ * @author Maximilian Panteleev
+ * @copyright Managed under the Rinemest License (see LICENSE file).
+ * @ingroup Kernel
+ */
+
+
 #undef RG_HERE_FILE_NAME
 #define RG_HERE_FILE_NAME "kernel/kernel"
 namespace Rinegine {
   namespace Kernel {
-
-    // [Arrays with main arguments]
-    
-    
-
-    // [Flags namespace for work with flags]
-
 
     template <class type1, class type2> struct MapData;
     //* types
     template <class type> class Matrix;
     template <class type> class Array;
     //* vars
-    
-    
-    
     extern uint8_t RG_D_W_L;
-    
+
 #ifndef RinegineLib
     int rg_main();
-    int InterPoint(int, char**, int (*)() = rg_main);    // [done]
-    int InterPoint(int, wchar_t**, int (*)() = rg_main); // [done]
+    int EntryPoint(int, char**, int (*)() = rg_main);    // [done]
 #endif
     void init();                               // [todo]
 
-    namespace Lock { 
-      
+    namespace Lock {
+
 
       struct LogVars;
       extern LogVars _vars;
-
-      
-      
       bool s_rawmemtest(const char*);
-      
+
       int s_memtest(const void*);
 
       size_t s_get_size(const void*);
       size_t s_get_typesize(const void*);
 
-      
-        
-          
-          
-          
-        
 
       void addl(Log::Types = Log::DEBUG, Rinegine::Kernel::String = "NULL", bool = 1,
         Rinegine::Kernel::String = "NULL", int = -1); // [done]
@@ -57,83 +46,43 @@ namespace Rinegine {
 
       template <class type> struct CountPointers;
     }
-    
-
-
-    std::wstring to_stringw(const Rinegine::Kernel::String&);  // [done]
-    std::wstring to_stringw(const std::wstring&); // [done]
-    Rinegine::Kernel::String to_stringa(const Rinegine::Kernel::String&);   // [done]
-    Rinegine::Kernel::String to_stringa(const std::wstring&);  // [done]
-
-    rg_string
-      to_string(const Rinegine::Kernel::String
-        &); // [outdate], may do some bug. In fact - outdate
-    rg_string
-      to_string(const std::wstring
-        &); // [outdate], may do some bug. In fact - outdate
-
 
     int KeyIs(int, bool);      // [done]
     int KeyIsPress(int, bool); // [done]
     int TestKeyIs(int, bool);  // [done]
 
-    
-    
-    
+
     void SetColorConsole(WORD); // [done,exp]
-    
+
 #ifdef __WIN32
     inline void SetColorTCMD(WORD col) { // [done,exp]
       static HANDLE HandleMainConsole = GetStdHandle(STD_OUTPUT_HANDLE);
       SetConsoleTextAttribute(HandleMainConsole, col);
     }
 #endif
-    
 
-    
 
-    
     bool isSubstringAt(const char&, const Rinegine::Kernel::String&);        // [done]
     bool isSubstringAt(const wchar_t&, const std::wstring&);    // [done]
     bool isSubstringAt(const Rinegine::Kernel::String&, const Rinegine::Kernel::String&); // [done]
     bool isSubstringAt(const Rinegine::Kernel::String&,
       const std::wstring&); // []
     void Open(Rinegine::Kernel::String);                   // [done]
-    void Open(std::wstring);                  // [done,exp]
 
     Rinegine::Kernel::String tolowstr(Rinegine::Kernel::String); // [done]
-    
-    
-    
-    
-    std::wstring tolowwstr(std::wstring); // [redo,exp]
 
     //* decode
     char* itoa(int, int = 10, char* = nullptr);            // [done,todo]
-    
+
     Rinegine::Kernel::String itos(size_t, size_t = 10);                 // [done]
     std::wstring itows(long long int, long long int = 10); // [done]
     std::wstring itows(size_t, size_t = 10);               // [done]
     //*folder
     bool isDirectory(Rinegine::Kernel::String);        // [done]
-    bool isDirectory(std::wstring);       // [done]
-    bool CreateFolder(Rinegine::Kernel::String path);  // [done]
-    bool CreateFolder(std::wstring path); // [done]
+    bool CreateFolder(Rinegine::Kernel::String);  // [done]
 
     //*debug
-
-    
-    
-    rg_string GetLastErrorString(DWORD); // [done]
-
-    
-
-    
-
-    
-
-    
-    
+    Rinegine::Kernel::String GetLastErrorString(DWORD); // [done]
 
     size_t s_get_typesize(void*);
 
@@ -230,9 +179,9 @@ namespace Rinegine {
       return (T&&)obj;
     }
 
-    
+
     template <class type>
-    void s_resize(type*& in, to_rvalue(int) n_size) { 
+    void s_resize(type*& in, to_rvalue(int) n_size) {
       if (n_size <= 0) {
         s_delete(in);
         return;
@@ -259,7 +208,7 @@ namespace Rinegine {
 
     uint64_t wstring_to_seed(const std::wstring&);
     class RG_CRand {
-    public:
+      public:
       RG_CRand();
       RG_CRand(uint64_t);
       void init(uint64_t);
@@ -270,9 +219,9 @@ namespace Rinegine {
     uint64_t RG_Rand();
     uint64_t Rand();
     double RandRange(double, double);
-    
+
     template <class type> class RG_List {
-    public:
+      public:
       operator Array<type>& ();
       int size();
       RG_List(std::initializer_list<type>);
@@ -281,17 +230,17 @@ namespace Rinegine {
     struct RG_ENCODE_TYPE;
     struct RG_ENCODE_VALUE;
     class RG_ENCODE {
-    public:
+      public:
       static bool is_init();
       static wchar_t get_size(Rinegine::Kernel::String);
       static int get_id(Rinegine::Kernel::String);
       static RG_ENCODE_VALUE get(Rinegine::Kernel::String);
     };
-    
-// #ifdef RG_SYS_WINDOWS
-//     std::wstring utf8_to_utf16(const Rinegine::Kernel::String& str);
-//     Rinegine::Kernel::String utf16_to_utf8(const std::wstring& wstr);
-// #endif
+
+    // #ifdef RG_SYS_WINDOWS
+    //     std::wstring utf8_to_utf16(const Rinegine::Kernel::String& str);
+    //     Rinegine::Kernel::String utf16_to_utf8(const std::wstring& wstr);
+    // #endif
     Rinegine::Kernel::String FileLoad(Rinegine::Kernel::String path);
     // std::wstring WFileLoad(Rinegine::Kernel::String path);
     // std::wstring WFileLoad(std::wstring path);
@@ -300,9 +249,9 @@ namespace Rinegine {
     // rg_string FileLoad(in_string path) {
     //   return AFileLoad(rg_to_stringa(path));
     // }
-    
-        
-    
+
+
+
     bool RG_IsFile(Rinegine::Kernel::String path);
     Rinegine::Kernel::String GetTypePath(Rinegine::Kernel::String path);
 
@@ -343,36 +292,36 @@ namespace Rinegine {
 
 
 
-    
-    
 
 
 
 
 
 
-    
-    
+
+
+
+
     Rinegine::Kernel::String RG_GetMainFolder();
 
 
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
     void RG_GetVersion(int& major, int& minor, int& patch, int& wip);
     void RG_GetVersion(int& major, int& minor, int& patch);
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
   };
 } // namespace Rinegine

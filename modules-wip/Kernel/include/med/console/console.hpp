@@ -1,4 +1,13 @@
 #pragma once
+/**
+ * @file
+ * @brief Console-related features
+ * @author Maximilian Panteleev
+ * @copyright Managed under the Rinemest License (see LICENSE file).
+ * @ingroup Kernel
+ */
+
+
 
 namespace Rinegine::Kernel {
   inline bool IsColorSupported() noexcept {

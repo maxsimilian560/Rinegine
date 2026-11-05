@@ -1,5 +1,15 @@
 #pragma once
+/**
+ * @file
+ * @brief Low-level submodule configuration
+ * @author Maximilian Panteleev
+ * @copyright Managed under the Rinemest License (see LICENSE file).
+ * @ingroup Kernel
+ */
+
+
 #include "debug/set.hpp"
+#include "buffer.hpp"
 #include "allocator/set.hpp"
 #include "array/set.hpp"
 #include "string/set.hpp"

@@ -1,11 +1,20 @@
 #pragma once
+/**
+ * @file
+ * @brief TODO1 srcBRIEF
+ * @author Maximilian Panteleev
+ * @copyright Managed under the Rinemest License (see LICENSE file).
+ * @ingroup Kernel
+ */
+
+
 
 namespace Rinegine {
   namespace Kernel {
-    
-    
-    
-    
+
+
+
+
     RawArray::RawArray() :data(nullptr), real_size(0), size(0) {};
 
     RawArray::RawArray(const RawArray& other) :data(nullptr), real_size(0), size(0) {
@@ -25,14 +34,14 @@ namespace Rinegine {
       if (this == &other) [[unlikely]] return *this;
       resize(other.size);
       if (size > 0) [[likely]] {
-        std::memcpy(data, other.data, size);
+        memcpy(data, other.data, size);
       }
       return *this;
     }
     RawArray& RawArray::operator=(std::initializer_list<BYTE> ilist) {
       resize(ilist.size());
       if (ilist.size() > 0) [[likely]] {
-        std::memcpy(data, ilist.begin(), ilist.size());
+        memcpy(data, ilist.begin(), ilist.size());
       }
       return *this;
     }
@@ -54,8 +63,9 @@ namespace Rinegine {
         size = nsize;
       }
       else {
-        RG_LOG_LOCK_MEM(std::format("RawArray resize: {:d} size allocate", RawArray::size));
+        size_t backsize = RawArray::size;
         BYTE* ndata = Kernel::Allocator::GetDefault().allocate(nreal_size);
+        RG_LOG_LOCK_MEM(std::format("RawArray resize: {:d} size allocate", backsize));
         if (data != nullptr)
           memcpy(ndata, data, size);
         RG_LOG_LOCK_MEM(std::format("RawArray resize: {:d} size deallocate", RawArray::size));
@@ -68,8 +78,9 @@ namespace Rinegine {
     void RawArray::reserve(size_t nsize) {
       size_t nreal_size = low_level::align_to_cache_line(nsize);
       if (real_size < nreal_size) {
-        RG_LOG_LOCK_MEM(std::format("RawArray resize: {:d} size allocate", RawArray::size));
+        size_t backsize = RawArray::size;
         BYTE* ndata = Kernel::Allocator::GetDefault().allocate(nreal_size);
+        RG_LOG_LOCK_MEM(std::format("RawArray resize: {:d} size allocate", backsize));
         if (data != nullptr)
           memcpy(ndata, data, size);
         RG_LOG_LOCK_MEM(std::format("RawArray reserve: {:d} size deallocate", RawArray::size));
@@ -78,28 +89,28 @@ namespace Rinegine {
         data = ndata;
       }
     }
-    BYTE& RawArray::operator[](size_t i) {
-      if (i >= size) {
-        if (i >= real_size) {
-          RG_LOG_CRITICAL(std::format("RG::K::Array index error: iterator {:d} > real size {:d}", i, real_size));
-        }
-        else {
-          RG_LOG_WARNING(std::format("RG::K::Array index error: iterator {:d} > size {:d}", i, size));
-        }
-      }
-      return data[i];
-    }
-    const BYTE& RawArray::operator[](size_t i) const {
-      if (i >= size) {
-        if (i >= real_size) {
-          RG_LOG_CRITICAL(std::format("RG::K::Array index error: iterator {:d} > real size {:d}", i, real_size));
-        }
-        else {
-          RG_LOG_WARNING(std::format("RG::K::Array index error: iterator {:d} > size {:d}", i, size));
-        }
-      }
-      return data[i];
-    }
+    // BYTE& RawArray::operator[](size_t i) {
+    //   if (i >= size) {
+    //     if (i >= real_size) {
+    //       RG_LOG_CRITICAL(std::format("RG::K::Array index error: iterator {:d} > real size {:d}", i, real_size));
+    //     }
+    //     else {
+    //       RG_LOG_WARNING(std::format("RG::K::Array index error: iterator {:d} > size {:d}", i, size));
+    //     }
+    //   }
+    //   return data[i];
+    // }
+    // const BYTE& RawArray::operator[](size_t i) const {
+    //   if (i >= size) {
+    //     if (i >= real_size) {
+    //       RG_LOG_CRITICAL(std::format("RG::K::Array index error: iterator {:d} > real size {:d}", i, real_size));
+    //     }
+    //     else {
+    //       RG_LOG_WARNING(std::format("RG::K::Array index error: iterator {:d} > size {:d}", i, size));
+    //     }
+    //   }
+    //   return data[i];
+    // }
     BYTE* RawArray::begin() noexcept { return data; }
     const BYTE* RawArray::begin() const noexcept { return data; }
 
@@ -128,6 +139,6 @@ namespace Rinegine {
         Kernel::Allocator::GetDefault().deallocate(data);
       }
     }
-    
+
   }
 }

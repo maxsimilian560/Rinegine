@@ -1,4 +1,15 @@
 #pragma once
+/**
+ * @file
+ * @brief Framework utilities
+ * @author Maximilian Panteleev
+ * @copyright Managed under the Rinemest License (see LICENSE file).
+ * @ingroup Kernel
+ */
+
+
+
+
 
 #ifndef _GLIBCXX_NOEXCEPT
 #define _GLIBCXX_NOEXCEPT noexcept
@@ -25,6 +36,12 @@ namespace Rinegine::Kernel::Util {
 #define __has_trivial_destructor(T) __is_trivially_destructible(T)
 #endif
 
+  /**
+   * @brief T is U?
+   *
+   * @tparam T
+   * @tparam U
+   */
   template <typename T, typename U>
   struct is_same {
     static constexpr bool value = false;
@@ -144,6 +161,35 @@ namespace Rinegine::Kernel::Util {
   template <bool Condition, typename T = void>
   using enable_if_t = typename enable_if<Condition, T>::type;
 
+
+  template<bool B, typename T, typename F>
+  struct conditional {
+    using type = F;
+  };
+
+  template<typename T, typename F>
+  struct conditional<true, T, F> {
+    using type = T;
+  };
+
+  template<bool B, typename T, typename F>
+  using conditional_t = typename conditional<B, T, F>::type;
+
+  template <typename T>
+  struct is_enum {
+    static constexpr bool value = __is_enum(T);
+  };
+  template <typename T>
+  inline constexpr bool is_enum_v = is_enum<T>::value;
+
+  template <typename T>
+  struct is_integral {
+    static constexpr bool value = __is_integral(T);
+  };
+  template <typename T>
+  inline constexpr bool is_integral_v = is_integral<T>::value;
+
+
   template <typename T, typename Enable = void>
   struct Hash;
 
@@ -196,27 +242,27 @@ namespace Rinegine::Kernel::Util {
     }
   };
 
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
 
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   template <typename T> struct add_rvalue_reference { using type = T&&; };
@@ -243,7 +289,7 @@ namespace Rinegine::Kernel::Util {
 
 
 
-  
+
   template <typename From, typename To>
   concept convertible_to = is_convertible_v<From, To>;
 

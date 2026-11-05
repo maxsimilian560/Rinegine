@@ -1,9 +1,18 @@
 #pragma once
+/**
+ * @file
+ * @brief TODO1 srcBRIEF
+ * @author Maximilian Panteleev
+ * @copyright Managed under the Rinemest License (see LICENSE file).
+ * @ingroup Kernel
+ */
+
+
 
 namespace Rinegine {
   
   int Kernel::RG_CMD(Rinegine::Kernel::String command, bool print) {
-    RG_LOG_LOCK_INFO("Command run: \"" + rg_to_string(command) + "\"", print);
+    RG_LOG_LOCK_INFO("Command run: \"" + command + "\"", print);
     return system(command.c_str());
     (void)print;
   }
@@ -106,7 +115,7 @@ namespace Rinegine {
   namespace Kernel {
     
     
-    int InterPoint(int argc, char** argv, int (*own_main)()) {
+    int EntryPoint(int argc, char** argv, int (*own_main)()) {
 #if defined(RG_SYS_WINDOWS) && defined(RG_UTF)
       _setmode(_fileno(stdout), _O_U16TEXT);
       _setmode(_fileno(stdin), _O_U16TEXT);
@@ -405,42 +414,19 @@ namespace Rinegine {
     
     system(("xdg-open " + path).c_str());
     
-    
-    
   }
 
-  void Kernel::Open(std::wstring path) {
-    
-    
-    system(("xdg-open " + Rinegine::Kernel::String(path.begin(), path.end())).c_str());
-    
-    
-    
-  }
 #else
   void Kernel::Open(Rinegine::Kernel::String path) {
     rg_cout << "\nTrying to open file\nError! MacOS (and other OS other than Windows, Linux and Android) is not supported\n";
     (void)path;
   }
-  void Kernel::Open(std::wstring path) {
-    rg_cout << "\nTrying to open file\nError! MacOS (and other OS other than Windows, Linux and Android) is not supported\n";
-    (void)path;
-  }
 #endif
-  //! Open
   Rinegine::Kernel::String Kernel::tolowstr(Rinegine::Kernel::String str) {
     std::transform(str.begin(), str.end(), str.begin(),
       [](unsigned char c) { return std::tolower(c); });
     return str;
   }
-
-  std::wstring Kernel::tolowwstr(std::wstring str) {
-    std::transform(str.begin(), str.end(), str.begin(), [](wchar_t c) {
-      return towlower(static_cast<wint_t>(c));
-      });
-    return str;
-  }
-  //! tolowstr
 #ifdef RG_SYS_WINDOWS
   int Kernel::RunProgram(ConfigRunProgram conf) {
     if (conf.path == "err")return 0;

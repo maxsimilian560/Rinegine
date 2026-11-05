@@ -1,4 +1,14 @@
 #pragma once
+/**
+ * @file
+ * @brief Implementation of smart pointers.
+ * @todo Not tested.
+ * @author Maximilian Panteleev
+ * @copyright Managed under the Rinemest License (see LICENSE file).
+ * @ingroup Kernel
+ */
+
+
 
 namespace Rinegine {
   namespace Kernel {

@@ -1,12 +1,12 @@
 set{
   var{
-    name = example, //Имя выходного файла. На windows автоматически добавляется .exe 
+    name = wexample, //Имя выходного файла. На windows автоматически добавляется .exe 
     bit = 64, //Разрядность выходной программы, 32,64,all
     source = "main.cpp",//Файл с исходным кодом
-    include = "-I/usr/local/Rinegine -I/usr/local/Rinegine/include -I/usr/local/Rinegine/vendor/include -I/usr/local/Rinegine/vendor/include/freetype2 -I/usr/local/Rinegine/vendor/include/glad/4_6/",//Путь до заголовков
+    include = "-I./ -Iinclude/ -Ivendor/include/ -Ivendor/x86_64/linux/include/freetype2/ -Ivendor/include/glad/4_6/",//Путь до заголовков
     link = "-lrg-wip-kernel ", //Аргументы линковки
-    libs = "-L/usr/local/Rinegine -L/usr/local/Rinegine/vendor/x86_64/linux/lib/glad4_6 ",//Путь до библиотек
-    flags = "-g -std=c++23", //Дополнительные флаги
+    libs = "-L./ -Lvendor/x86_64/linux/lib/glad4_6 ",//Путь до библиотек
+    flags = "-DRG_WIP -g -std=c++23", //Дополнительные флаги
     //Больше переменных в подсказках из расширения RG_Extens
   },
   mode{

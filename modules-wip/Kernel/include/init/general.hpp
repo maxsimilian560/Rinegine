@@ -1,14 +1,23 @@
 #pragma once
-
-
 /**
- * @typedef uint
- * @brief Unsigned integer alias for `unsigned int`.
- *
- * Provided for convenience and shorter syntax.
- *
- * @ingroup config
+ * @file
+ * @brief Implementation of core definitions (to be removed in 0.4.0)
+ * @author Maximilian Panteleev
+ * @copyright Managed under the Rinemest License (see LICENSE file).
+ * @ingroup Kernel
  */
+
+
+
+
+ /**
+  * @typedef uint
+  * @brief Unsigned integer alias for `unsigned int`.
+  *
+  * Provided for convenience and shorter syntax.
+  *
+  * @ingroup config
+  */
 typedef unsigned int uint;
 /**
  * @def RG_x86
@@ -197,7 +206,7 @@ template <typename T>
   for (type name = count; name-- > 0;)
 
                 //todo
-                
+
 
     /**
      * @def rg_cout
@@ -252,7 +261,7 @@ template <typename T>
 #define RG_Lc
 
 
-           
+
 
            /**
             * @def elif
@@ -266,15 +275,15 @@ template <typename T>
 #define to_rrvalue(type) const type  // todo
 
 
-            
+
             //              * @def RG_GLOBAL_ARRAY_PUSH_RESERVE_PREDER
             //              * @brief Default reserve size for dynamic arrays (e.g., in vector growth).
             //              * @value 16
             //              * @ingroup config
             //              */
-            
-            
-            
+
+
+
 
                          /**
                           * @def RG_ERROR_STRING
@@ -290,11 +299,11 @@ template <typename T>
                            */
 #define RG_ERROR_WSTRING L"E6filenofound"
 
-                           
 
-                           
 
-                           
+
+
+
                            /**
                             * @var rg_count_temp
                             * @brief Global counter for use with `rg_count` macro.
@@ -310,7 +319,7 @@ template <typename T>
  * @ingroup debug
  * @par Example:
  * @code
- * rg_count; 
+ * rg_count;
  * @endcode
  */
 #define rg_count                                                               \
@@ -346,13 +355,13 @@ template <typename T>
   * @ingroup debug
   */
 #define rg_count_deb_clear rg_count_temp_deb = 0
-  
-
-  
 
 
 
-   //TODO description
+
+
+
+  //TODO description
 
 
 
@@ -392,14 +401,14 @@ template <typename T>
 
 //TODO^description
 
-   
+
 #define GET_MACRO(_1, _2, NAME, ...) NAME
 
 #define RG_LOG_FATAL(...)                                                      \
   GET_MACRO(__VA_ARGS__, RG_LOG_FATAL_2, RG_LOG_FATAL_1)(__VA_ARGS__)
 
 #define RG_LOG_CRITICAL(...)                                                   \
-  GET_MACRO(__VA_ARGS__, RG_LOG_FATAL_2, RG_LOG_FATAL_1)(__VA_ARGS__)
+  GET_MACRO(__VA_ARGS__, RG_LOG_FATAL_2, RG_LOG_FATAL_1)(__VA_ARGS__) 
 
 #define RG_LOG_FATAL_2(__msg, ...)                                             \
   Rinegine::Kernel::Debug::addl(__msg,Rinegine::Log::CRITICAL,  __VA_ARGS__,   \

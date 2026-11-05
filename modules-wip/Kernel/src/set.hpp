@@ -1,4 +1,13 @@
 #pragma once
+/**
+ * @file
+ * @brief TODO1 srcBRIEF
+ * @author Maximilian Panteleev
+ * @copyright Managed under the Rinemest License (see LICENSE file).
+ * @ingroup Kernel
+ */
+
+
 namespace Rinegine::LinkTest::Kernel {
   
   void ERROR_likely_you_forgot_to_link_lrg_kernel() {}
