@@ -1,4 +1,6 @@
 #define RinegineLib
 #define RinegineKernel
-#include "include/set.hpp"
-#include "src/set.hpp"
+
+#include "Kernel.hpp"
+#include "src/earlyinit.hpp"
+namespace Rinegine::LinkTest::Kernel { void ERROR_likely_you_forgot_to_link_lrg_kernel() {} }

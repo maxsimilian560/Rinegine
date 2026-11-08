@@ -6,7 +6,7 @@
  * @copyright Managed under the Rinemest License (see LICENSE file).
  * @ingroup Kernel
  */
-
+#include "other-include.hpp"
 
 #if defined(__clang__)
 #pragma clang diagnostic push

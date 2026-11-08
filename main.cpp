@@ -1,7 +1,7 @@
 #define RG_DEBUG
 #include <Rinegine/Kernel>                
 // #include <Rinegine/Tokenize>                
-#include <Rinegine/Graphics>
+// #include <Rinegine/Graphics>
 #include <Rinegine/Shorts>
 // #include <Rinegine/WIP/Net>                
 // #include <Rinegine/WIP/Neural>                

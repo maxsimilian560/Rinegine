@@ -28,6 +28,13 @@ namespace Rinegine {
           memcpy(m_buffer.data(), str, m_buffer.size() + 1);
         }
       }
+      Base_String(type* str) {
+        if (str != nullptr) {
+          m_buffer.reserve(strlen(str) + 1);
+          m_buffer.resize(strlen(str));
+          memcpy(m_buffer.data(), str, m_buffer.size() + 1);
+        }
+      }
       Base_String(size_t count) {
         m_buffer.reserve(count);
       }
