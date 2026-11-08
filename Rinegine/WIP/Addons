@@ -1,0 +1,6 @@
+#pragma once
+#ifdef RINEGINE_ADDONS
+#error The stable version was already connected.
+#endif
+#define RINEGINE_WADDONS
+#include "../../modules-wip/Addons/include/set.h"

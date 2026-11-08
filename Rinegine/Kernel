@@ -1,0 +1,10 @@
+#pragma once
+#ifdef RINEGINE_WKERNEL
+#error The stable version was already connected.
+#endif
+#ifdef RG_WIP
+#include "WIP/Kernel"
+#else
+#define RINEGINE_KERNEL
+#include "../modules/Kernel/include/set.h"
+#endif

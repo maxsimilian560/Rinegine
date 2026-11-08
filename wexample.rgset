@@ -1,0 +1,17 @@
+set{
+  var{
+    name = wexample, //Имя выходного файла. На windows автоматически добавляется .exe 
+    bit = 64, //Разрядность выходной программы, 32,64,all
+    source = "main.cpp",//Файл с исходным кодом
+    include = "-I./ -Iinclude/ -Ivendor/include/ -Ivendor/x86_64/linux/include/freetype2/ -Ivendor/include/glad/4_6/",//Путь до заголовков
+    link = "-lrg-wip-kernel ", //Аргументы линковки
+    libs = "-L./ -Lvendor/x86_64/linux/lib/glad4_6 ",//Путь до библиотек
+    flags = "-DRG_WIP -g -std=c++23", //Дополнительные флаги
+    //Больше переменных в подсказках из расширения RG_Extens
+  },
+  mode{
+    debug, //Режим отладки, добавляет -DRG_DEBUG
+    console //Консольный режим, только для Windows
+    //Больше режимов в подсказках из расширения RG_Extens
+  }
+}

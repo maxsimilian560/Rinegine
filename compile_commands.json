@@ -1,0 +1,25 @@
+[
+  {
+    "file": "main.cpp",
+    "arguments": [
+      "/usr/bin/clang++",
+      "main.cpp",
+      "-DRG_WIP",
+      "-g",
+      "-std=c++23",
+      "-I/usr/local/Rinegine",
+      "-I/usr/local/Rinegine/include",
+      "-I/usr/local/Rinegine/vendor/include",
+      "-I/usr/local/Rinegine/vendor/include/freetype2",
+      "-I/usr/local/Rinegine/vendor/include/glad/4_6/",
+      "-o",
+      "wexample",
+      "-I",
+      "/usr/local/Rinegine",
+      "-isystem",
+      "/usr/local/Rinegine"
+    ],
+    "directory": "/usr/local/Rinegine",
+    "output": "wexample"
+  }
+]
