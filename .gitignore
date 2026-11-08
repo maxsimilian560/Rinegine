@@ -22,7 +22,7 @@ vendor/.venv/
 modules/Kernel/include/kernel old.h
 *.o
 *.obj
-test.exe
+*copy*
 
 !vendor/
 !vendor/include/
