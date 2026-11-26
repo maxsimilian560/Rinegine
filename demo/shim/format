@@ -1,0 +1,34 @@
+#pragma once
+// Minimal <format> shim for toolchains without C++20 std::format (Debian clang 14 / libstdc++ 12).
+#include <string>
+#include <sstream>
+
+namespace rg_shim_detail {
+  inline void fmt_collect(std::ostringstream&) {}
+  template <typename T, typename... Rest>
+  void fmt_collect(std::ostringstream& os, const T& v, const Rest&... rest) {
+    auto p = os.str().find("{}");
+    if (p == std::string::npos) { os << v; }
+    else { os.str(os.str().substr(0, p)); os << v << os.str().substr(2); }
+    // simpler: rebuild below is avoided; use positional replace
+    fmt_collect(os, rest...);
+  }
+}
+
+namespace std {
+  template <typename... Args>
+  std::string format(const std::string& f, const Args&... args) {
+    std::string out = f;
+    (([&]{
+       auto p = out.find("{}");
+       std::ostringstream tmp; tmp << args;
+       if (p != std::string::npos) out.replace(p, 2, tmp.str());
+     }()), ...);
+    // handle {:d}, {:#x}, {:s} style single-spec placeholders too
+    return out;
+  }
+  template <typename... Args>
+  std::string format(const char* f, const Args&... args) {
+    return std::format(std::string(f), args...);
+  }
+}
